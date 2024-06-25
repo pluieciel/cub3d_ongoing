@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   my_gc.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yuzhao <yuzhao@student.42.fr>              +#+  +:+       +#+        */
+/*   By: jlefonde <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/15 15:23:58 by yuzhao            #+#    #+#             */
-/*   Updated: 2024/06/24 16:02:05 by yuzhao           ###   ########.fr       */
+/*   Updated: 2024/06/25 10:20:11 by jlefonde         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "my_gc.h"
+#include "../includes/my_gc.h"
 #include <unistd.h>
 #include <string.h>
 

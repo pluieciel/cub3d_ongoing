@@ -1,61 +1,45 @@
-# **************************************************************************** #
-#                                                                              #
-#                                                         :::      ::::::::    #
-#    Makefile                                           :+:      :+:    :+:    #
-#                                                     +:+ +:+         +:+      #
-#    By: yuzhao <yuzhao@student.42.fr>              +#+  +:+       +#+         #
-#                                                 +#+#+#+#+#+   +#+            #
-#    Created: 2024/06/18 14:56:25 by yuzhao            #+#    #+#              #
-#    Updated: 2024/06/25 11:32:34 by yuzhao           ###   ########.fr        #
-#                                                                              #
-# **************************************************************************** #
+NAME = cub3D
 
-NAME		= cub3D
-	
-CC			= gcc
-FLAGS		= -Wall -Wextra -Werror
-RM			= rm -rf
+SOURCES_DIR = srcs
+HEADERS_DIR = includes
+OBJECTS_DIR = objs
 
-OBJDIR = .objFiles
+SOURCES = check_map.c  hook.c  init.c  main.c  parse_map.c  render.c  time.c
 
-FILES		= main parse_map init get_next_line my_gc hook check_map time render
+OBJECTS = $(addprefix $(OBJECTS_DIR)/, $(SOURCES:.c=.o))
 
-SRC			= $(FILES:=.c)
-OBJ			= $(addprefix $(OBJDIR)/, $(FILES:=.o))
-MLX_FLAGS	= -L./minilibx-linux -lmlx_Linux -lXext -lX11 -lm -lXrender 
+CFLAGS = -Wall -Wextra -Werror -I$(HEADERS_DIR)
+LDFLAGS = -L./libft_gc -L./minilibx -lft_gc -lmlx_Linux -lXext -lX11 -lm
+AR = ar -rcs
 
-#Colors:
-GREEN		=	\e[92;5;118m
-YELLOW		=	\e[93;5;226m
-GRAY		=	\e[33;2;37m
-RESET		=	\e[0m
-CURSIVE		=	\e[33;3m
+$(OBJECTS_DIR)/%.o: $(SOURCES_DIR)/%.c
+	@mkdir -p $(OBJECTS_DIR)
+	$(CC) $(CFLAGS) -c $< -o $@
 
-#Debug 
-ifeq ($(DEBUG), 1)
-   OPTS = -g
-endif
+$(NAME): $(OBJECTS)
+	make bonus -C ./libft_gc
+	make -C ./minilibx
+	$(CC) $(CFLAGS) $(OBJECTS) -o $@ $(LDFLAGS)
 
-.PHONY: all clean fclean re bonus norm
+bonus: ${NAME}
 
-all: $(NAME)
-
-$(NAME): $(OBJ)
-	@make -C minilibx-linux
-	@$(CC) -o $(NAME) $(OBJ) $(MLX_FLAGS) $(OPTS)
-	@printf "$(GREEN) - Executable ready.\n$(RESET)"
-
-$(OBJDIR)/%.o: %.c
-	@mkdir -p $(dir $@)
-	@$(CC) $(FLAGS) $(OPTS) -c $< -o $@
+all: ${NAME}
 
 clean:
-	@$(RM) $(OBJDIR) $(OBJ)
-	make -C minilibx-linux clean
-	@printf "$(YELLOW) - Object files removed.$(RESET)\n"
+	@make clean -C ./libft_gc
+	@make clean -C ./minilibx
+	${RM} -rf ${OBJECTS_DIR}
 
 fclean: clean
-	@$(RM) $(NAME)
-	@printf "$(YELLOW) - Executable removed.$(RESET)\n"
+	@make fclean -C ./libft_gc
+	${RM} -r ${NAME}
 
 re: fclean all
+
+mlx:
+	@mkdir -p minilibx
+	@wget -O minilibx/minilibx-linux.tgz https://cdn.intra.42.fr/document/document/24023/minilibx-linux.tgz
+	@tar -xzvf minilibx/minilibx-linux.tgz -C minilibx/ --strip-components=1
+	${RM} -rf minilibx/minilibx-linux.tgz
+
+.PHONY: all clean fclean re bonus mlx
