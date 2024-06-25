@@ -6,7 +6,7 @@
 /*   By: yuzhao <yuzhao@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/24 12:47:38 by yuzhao            #+#    #+#             */
-/*   Updated: 2024/06/25 09:16:24 by yuzhao           ###   ########.fr       */
+/*   Updated: 2024/06/25 10:30:05 by yuzhao           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,3 +62,4 @@ typedef struct s_data
 void	init(t_data *game);
 void	parse_map(t_data *game, char *filename);
 void	hook(t_data *game);
+int		check_map(t_data *game);

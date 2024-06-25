@@ -5,18 +5,16 @@ void    get_init_pos(t_data *game, char dir, int i, int j)
     if (game->player.dir[0] != 0 || game->player.dir[1] != 0)
         exit(gc_free(game->gc, "Error: multiple player position\n", 2));
     game->map[i][j] = 0;
-    game->start_pos[0] = j;
-    game->start_pos[1] = i;
+    game->player.pos[0] = j;
+    game->player.pos[1] = i;
     if (dir == 'N')
-        game->start_dir[1] = -1;
+        game->player.dir[1] = -1;
     else if (dir == 'E')
-        game->start_dir[0] = 1;
+        game->player.dir[0] = 1;
     else if (dir == 'S')
-        game->start_dir[1] = 1;
+        game->player.dir[1] = 1;
     else if (dir == 'W')
-        game->start_dir[0] = -1;
-
-
+        game->player.dir[0] = -1;
 }
 
 void	parse_map(t_data *game, char *filename)
@@ -28,7 +26,7 @@ void	parse_map(t_data *game, char *filename)
 
     fd = open(filename, O_RDONLY);
     if (fd < 0)
-        exit(gc_free(game->gc, "Error: invalid file\n", 2);
+        exit(gc_free(game->gc, "Error: invalid file\n", 2));
     /*parse NO ./path_to_the_north_texture
     SO ./path_to_the_south_texture
     WE ./path_to_the_west_texture
