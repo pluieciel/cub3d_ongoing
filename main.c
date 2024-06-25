@@ -5,10 +5,7 @@ int	main(int ac, char *av[])
     t_data	game;
 
     if (ac != 2)
-    {
-        write(1, "Error1\n", 7);
-        return (0);
-    }
+        exit(gc_free(game.gc, "Error: invalid argument\n", 2)
     init(&game);
     parse_map(&game, av[1]);
     printf("%d, %d\n", game.start_pos[0], game.start_pos[1]);

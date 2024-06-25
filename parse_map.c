@@ -1,5 +1,24 @@
 #include "cub3D.h"
 
+void    get_init_pos(t_data *game, char dir, int i, int j)
+{
+    if (game->player.dir[0] != 0 || game->player.dir[1] != 0)
+        exit(gc_free(game->gc, "Error: multiple player position\n", 2));
+    game->map[i][j] = 0;
+    game->start_pos[0] = j;
+    game->start_pos[1] = i;
+    if (dir == 'N')
+        game->start_dir[1] = -1;
+    else if (dir == 'E')
+        game->start_dir[0] = 1;
+    else if (dir == 'S')
+        game->start_dir[1] = 1;
+    else if (dir == 'W')
+        game->start_dir[0] = -1;
+
+
+}
+
 void	parse_map(t_data *game, char *filename)
 {
     int     fd;
@@ -9,10 +28,7 @@ void	parse_map(t_data *game, char *filename)
 
     fd = open(filename, O_RDONLY);
     if (fd < 0)
-    {
-        write(1, "Error2\n", 7);
-        exit(0);
-    }
+        exit(gc_free(game->gc, "Error: invalid file\n", 2);
     /*parse NO ./path_to_the_north_texture
     SO ./path_to_the_south_texture
     WE ./path_to_the_west_texture
@@ -32,34 +48,8 @@ void	parse_map(t_data *game, char *filename)
                 game->map[i][j] = 1;
             else if (line[j] == '0')
                 game->map[i][j] = 0;
-            else if (line[j] == 'N')
-            {
-                game->map[i][j] = 0;
-                game->start_pos[0] = j;
-                game->start_pos[1] = i;
-                game->start_dir[1] = -1;
-            }
-            else if (line[j] == 'E')
-            {
-                game->map[i][j] = 0;
-                game->start_pos[0] = j;
-                game->start_pos[1] = i;
-                game->start_dir[0] = 1;
-            }
-            else if (line[j] == 'S')
-            {
-                game->map[i][j] = 0;
-                game->start_pos[0] = j;
-                game->start_pos[1] = i;
-                game->start_dir[1] = 1;
-            }
-            else if (line[j] == 'W')
-            {
-                game->map[i][j] = 0;
-                game->start_pos[0] = j;
-                game->start_pos[1] = i;
-                game->start_dir[0] = -1;
-            }
+            else if (line[j] == 'N' || line[j] == 'S' || line[j] == 'W' || line[j] == 'E')
+                get_init_pos(game, line[j], i, j);
             j++;
         }
         i++;

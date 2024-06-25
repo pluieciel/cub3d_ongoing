@@ -6,7 +6,7 @@
 /*   By: yuzhao <yuzhao@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/24 12:47:38 by yuzhao            #+#    #+#             */
-/*   Updated: 2024/06/24 16:26:23 by yuzhao           ###   ########.fr       */
+/*   Updated: 2024/06/25 09:16:24 by yuzhao           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,14 +31,32 @@
 # define MAP_W 1024
 # define MAP_H 1024
 
+typedef struct s_player
+{
+	int		pos[2];
+	int		dir[2];
+}	t_player;
+
+typedef struct s_key
+{
+	int	w;
+	int	a;
+	int	s;
+	int	d;
+	int	left;
+	int	right;
+	int	up;
+	int	down;
+}	t_key;
+
 typedef struct s_data
 {
-	void	*mlx_ptr;
-	void	*win_ptr;
-	int		map[MAP_W][MAP_H]; // put error if >1024
-	int		start_pos[2];
-	int		start_dir[2];
-	t_gc	*gc;
+	void		*mlx_ptr;
+	void		*win_ptr;
+	int			map[MAP_W][MAP_H]; // put error if over size
+	t_player	player;
+	t_key		key;
+	t_gc		*gc;
 }	t_data;
 
 void	init(t_data *game);

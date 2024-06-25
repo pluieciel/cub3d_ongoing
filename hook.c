@@ -6,7 +6,7 @@
 /*   By: yuzhao <yuzhao@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/18 15:17:45 by yuzhao            #+#    #+#             */
-/*   Updated: 2024/06/24 16:31:09 by yuzhao           ###   ########.fr       */
+/*   Updated: 2024/06/25 09:17:13 by yuzhao           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ int	handle_keypress(int keysym, t_data *game)
 	if (keysym == XK_Escape)
 		close_window(game);
 	else if (keysym == 119)
-		{}//doup(game);
+		{game->key.w = 1}//doup(game);
 	else if (keysym == 97)
 		{}//doleft(game);
 	else if (keysym == 115)
