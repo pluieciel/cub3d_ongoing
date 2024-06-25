@@ -6,7 +6,7 @@
 #    By: yuzhao <yuzhao@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/06/18 14:56:25 by yuzhao            #+#    #+#              #
-#    Updated: 2024/06/24 16:32:53 by yuzhao           ###   ########.fr        #
+#    Updated: 2024/06/25 10:30:28 by yuzhao           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -18,7 +18,7 @@ RM			= rm -rf
 
 OBJDIR = .objFiles
 
-FILES		= main parse_map init get_next_line my_gc hook
+FILES		= main parse_map init get_next_line my_gc hook check_map
 
 SRC			= $(FILES:=.c)
 OBJ			= $(addprefix $(OBJDIR)/, $(FILES:=.o))
