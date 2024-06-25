@@ -6,7 +6,7 @@
 /*   By: yuzhao <yuzhao@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/24 12:47:38 by yuzhao            #+#    #+#             */
-/*   Updated: 2024/06/25 10:30:05 by yuzhao           ###   ########.fr       */
+/*   Updated: 2024/06/25 11:31:59 by yuzhao           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,7 @@
 # define WIN_H 768
 # define MAP_W 1024
 # define MAP_H 1024
+# define FPS 20
 
 typedef struct s_player
 {
@@ -57,9 +58,12 @@ typedef struct s_data
 	t_player	player;
 	t_key		key;
 	t_gc		*gc;
+	long long	time;
 }	t_data;
 
-void	init(t_data *game);
-void	parse_map(t_data *game, char *filename);
-void	hook(t_data *game);
-int		check_map(t_data *game);
+void		init(t_data *game);
+void		parse_map(t_data *game, char *filename);
+void		hook(t_data *game);
+int			check_map(t_data *game);
+long long	millitimestamp(void);
+int			render(t_data *game);

@@ -23,6 +23,7 @@ void init(t_data *game)
     game->key.right = 0;
     game->key.up = 0;
     game->key.down = 0;
+    game->time = millitimestamp();
     game->mlx_ptr = mlx_init();
     game->gc = (t_gc *)gc_insert(game->gc, game->mlx_ptr);
     game->win_ptr = mlx_new_window(game->mlx_ptr, WIN_W, WIN_H, "cub3D");

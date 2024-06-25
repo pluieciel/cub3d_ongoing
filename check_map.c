@@ -7,10 +7,8 @@ int check_pos(t_data *game, int x, int y, int visited[MAP_H][MAP_W])
     if (visited[y][x] || game->map[y][x] == 1)
         return 0;
     visited[y][x] = 1;
-    if (check_pos(game, x + 1, y, visited) || check_pos(game, x - 1, y, visited)
-    || check_pos(game, x, y + 1, visited) || check_pos(game, x, y - 1, visited))
-        return 1;
-    return 0;
+    return (check_pos(game, x + 1, y, visited) || check_pos(game, x - 1, y, visited)
+    || check_pos(game, x, y + 1, visited) || check_pos(game, x, y - 1, visited));
 }
 
 int	check_map(t_data *game)
