@@ -2,17 +2,11 @@
 
 void	init(t_data *game)
 {
-	int i;
-	int j;
-
-	i = -1;
-	while (++i < MAP_H)
-	{
-		j = -1;
-		while (++j < MAP_W)
-			game->map[i][j] = -1;
-	}
 	game->gc = NULL;
+	game->win_ptr = NULL;
+	game->mlx_ptr = NULL;
+	game->player.pos[0] = 0;
+	game->player.pos[1] = 0;
 	game->player.dir[0] = 0;
 	game->player.dir[1] = 0;
 	game->key.w = 0;

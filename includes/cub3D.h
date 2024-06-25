@@ -15,14 +15,14 @@
 
 # define WIN_W 1280
 # define WIN_H 768
-# define MAP_W 1024
-# define MAP_H 1024
+# define MAP_W 50
+# define MAP_H 50
 # define FPS 20
 
 typedef struct s_player
 {
 	int		pos[2];
-	int		dir[2];
+	float	dir[2];
 }	t_player;
 
 typedef struct s_key
@@ -41,7 +41,10 @@ typedef struct s_data
 {
 	void		*mlx_ptr;
 	void		*win_ptr;
-	int			map[MAP_W][MAP_H]; // put error if over size
+	char		**map;
+	char		**visited;
+	int			map_h;
+	int			map_w;
 	t_player	player;
 	t_key		key;
 	t_gc		*gc;
