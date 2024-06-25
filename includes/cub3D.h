@@ -12,11 +12,10 @@
 # include "../libft_gc/includes/libft_gc.h"
 # include <X11/X.h>
 # include <sys/time.h>
+# include <math.h>
 
 # define WIN_W 1280
 # define WIN_H 768
-# define MAP_W 50
-# define MAP_H 50
 # define FPS 20
 
 typedef struct s_player
