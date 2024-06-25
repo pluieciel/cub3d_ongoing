@@ -1,15 +1,3 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   hook.c                                             :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: yuzhao <yuzhao@student.42.fr>              +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/04/18 15:17:45 by yuzhao            #+#    #+#             */
-/*   Updated: 2024/06/25 09:54:06 by yuzhao           ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #include "cub3D.h"
 
 int	handle_no_event(void *data)
@@ -71,16 +59,11 @@ int	handle_keyrelease(int keysym, t_data *game)
 	return (0);
 }
 
-int	render(t_data *game)
-{
-	(void)game;
-	return (0);
-}
-
 void	hook(t_data *game)
 {
 	mlx_loop_hook(game->mlx_ptr, &render, game);
 	mlx_hook(game->win_ptr, KeyPress, KeyPressMask, &handle_keypress, game);
-	mlx_hook(game->win_ptr, KeyRelease, KeyReleaseMask, &handle_keyrelease, game);
+	mlx_hook(game->win_ptr, KeyRelease, KeyReleaseMask, &handle_keyrelease,
+		game);
 	mlx_hook(game->win_ptr, 17, 0, &close_window, game);
 }

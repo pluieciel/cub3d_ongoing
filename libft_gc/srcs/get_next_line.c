@@ -1,5 +1,4 @@
-#include "get_next_line.h"
-#include "my_gc.h"
+#include "../includes/get_next_line.h"
 
 char	*ft_strchr(char *s, int c)
 {
@@ -15,7 +14,7 @@ char	*ft_strchr(char *s, int c)
 size_t	ft_strlen(const char *s)
 {
 	size_t	i = 0;
-	
+
 	while (s[i])
 		i++;
 	return (i);
@@ -23,7 +22,7 @@ size_t	ft_strlen(const char *s)
 
 void	ft_strcpy(char *dst, const char *src)
 {
-	while (*src)	
+	while (*src)
 		*dst++ = *src++;
 	*dst = '\0';
 }
@@ -32,7 +31,7 @@ char	*ft_strdup(const char *src)
 {
 	size_t	len = ft_strlen(src) + 1;
 	char	*dst = malloc(len);
-	
+
 	if (dst == NULL)
 		return (NULL);
 	ft_strcpy(dst, src);

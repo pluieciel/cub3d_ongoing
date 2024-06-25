@@ -1,0 +1,8 @@
+{
+	"files.associations": {
+		"mlx.h": "c",
+		"libft_gc.h": "c",
+		"x.h": "c",
+		"mlx_int.h": "c"
+	}
+}
