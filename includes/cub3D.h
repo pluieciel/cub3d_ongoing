@@ -37,6 +37,17 @@ typedef struct s_key
 	int	down;
 }	t_key;
 
+typedef struct s_img1
+{
+	void			*img_ptr;
+	char			*addr;
+	int				h;
+	int				w;
+	int				bpp;
+	int				endian;
+	int				line_len;
+}	t_img1;
+
 typedef struct s_data
 {
 	void		*mlx_ptr;
@@ -49,6 +60,7 @@ typedef struct s_data
 	t_key		key;
 	t_gc		*gc;
 	long long	time;
+	t_img1		img;
 }	t_data;
 
 void	init(t_data *game);
