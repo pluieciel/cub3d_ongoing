@@ -12,6 +12,7 @@ int	main(int ac, char *av[])
 		exit(gc_free(game.gc, "Error: invalid map\n", 2));
 	hook(&game);
 	mlx_loop(game.mlx_ptr);
+	mlx_destroy_image(game.mlx_ptr, game.img.img_ptr);
 	mlx_destroy_display(game.mlx_ptr);
 	gc_free(game.gc, "", 1);
 	return (0);

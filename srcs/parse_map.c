@@ -38,9 +38,25 @@ void	parse_map(t_data *game, char *filename)
 		line = get_next_line(fd);
 		game->gc = gc_insert(game->gc, line);
 	}
-	i = 0;
 	line = get_next_line(fd);
 	game->gc = gc_insert(game->gc, line);
+	game->map_h = 20; // temp
+	game->map_w = 40; // temp
+	game->map = gc_malloc(sizeof(int *) * game->map_h, &game->gc);
+	game->visited = gc_malloc(sizeof(int *) * game->map_h, &game->gc);
+	i = -1;
+	while (++i < game->map_h)
+	{
+		game->map[i] = gc_malloc(sizeof(int) * game->map_w, &game->gc);
+		game->visited[i] = gc_malloc(sizeof(int) * game->map_w, &game->gc);
+		j = -1;
+		while (++j < game->map_w)
+		{
+			game->map[i][j] = -1;
+			game->visited[i][j] = 0;
+		}
+	}
+	i = 0;
 	while (line)
 	{
 		j = 0;
@@ -53,6 +69,10 @@ void	parse_map(t_data *game, char *filename)
 			else if (line[j] == 'N' || line[j] == 'S' || line[j] == 'W'
 				|| line[j] == 'E')
 				get_init_pos(game, line[j], i, j);
+			else if (line[j] == ' ' || line[j] == '\t' || line[j] == '\n')
+				;
+			else
+				exit(gc_free(game->gc, "Error: invalid char in map\n", 2));
 			j++;
 		}
 		i++;
