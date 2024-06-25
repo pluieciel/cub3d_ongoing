@@ -41,6 +41,8 @@ typedef struct s_data
 {
 	void		*mlx_ptr;
 	void		*win_ptr;
+	int			map_w;
+	int			map_h;
 	int			map[MAP_W][MAP_H]; // put error if over size
 	t_player	player;
 	t_key		key;
@@ -58,3 +60,4 @@ void		hook(t_data *game);
 int			check_map(t_data *game);
 long long	millitimestamp(void);
 int			render(t_data *game);
+int parse_element(t_data *game, char *filename);

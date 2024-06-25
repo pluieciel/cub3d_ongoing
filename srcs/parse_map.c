@@ -24,23 +24,24 @@ void	parse_map(t_data *game, char *filename)
 	int		i;
 	int		j;
 
-	fd = open(filename, O_RDONLY);
-	if (fd < 0)
-		exit(gc_free(game->gc, "Error: invalid file\n", 2));
 	/*parse NO ./path_to_the_north_texture
 	SO ./path_to_the_south_texture
 	WE ./path_to_the_west_texture
 	EA ./path_to_the_east_texture
 	F 220,100,0
 	C 225,30,0*/
+	parse_element(game, filename);
+	fd = open(filename, O_RDONLY);
+	if (fd < 0)
+		exit(gc_free(game->gc, "Error: invalid file\n", 2));
 	for (int k = 0; k < 6; k++)
 	{
 		line = get_next_line(fd);
 		game->gc = gc_insert(game->gc, line);
 	}
-	i = 0;
 	line = get_next_line(fd);
 	game->gc = gc_insert(game->gc, line);
+	i = 0;
 	while (line)
 	{
 		j = 0;

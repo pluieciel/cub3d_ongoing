@@ -3,6 +3,7 @@
 		"mlx.h": "c",
 		"libft_gc.h": "c",
 		"x.h": "c",
-		"mlx_int.h": "c"
+		"mlx_int.h": "c",
+		"time.h": "c"
 	}
 }
