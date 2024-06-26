@@ -8,7 +8,7 @@ SOURCES = check_map.c  hook.c  init.c  main.c  parse_element.c parse_map.c  rend
 
 OBJECTS = $(addprefix $(OBJECTS_DIR)/, $(SOURCES:.c=.o))
 
-CFLAGS = -Wall -Wextra -Werror -I$(HEADERS_DIR)
+CFLAGS = -Wall -Wextra -Werror -I$(HEADERS_DIR) -g
 LDFLAGS = -L./libft_gc -L./minilibx -lft_gc -lmlx_Linux -lXext -lX11 -lm
 AR = ar -rcs
 
@@ -27,7 +27,7 @@ all: ${NAME}
 
 clean:
 	@make clean -C ./libft_gc
-	@make clean -C ./minilibx
+	#@make clean -C ./minilibx
 	${RM} -rf ${OBJECTS_DIR}
 
 fclean: clean
