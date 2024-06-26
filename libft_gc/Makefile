@@ -52,7 +52,6 @@ SOURCES = ft_isalpha.c \
     ft_fprintf/ft_fprintf.c \
     ft_fprintf/ft_put_fd.c \
     ft_fprintf/ft_put_flags_fd.c \
-    get_next_line.c \
     my_gc.c
 
 SOURCES_BONUS = ft_lstnew_bonus.c \
@@ -64,7 +63,9 @@ SOURCES_BONUS = ft_lstnew_bonus.c \
     ft_lstdelone_bonus.c \
     ft_lstclear_bonus.c \
     ft_lstiter_bonus.c \
-    ft_lstmap_bonus.c
+    ft_lstmap_bonus.c \
+    get_next_line/get_next_line_bonus.c \
+    get_next_line/get_next_line_utils_bonus.c
 
 OBJECTS = $(addprefix $(OBJECTS_DIR)/, $(SOURCES:.c=.o))
 OBJECTS_BONUS = $(addprefix $(OBJECTS_DIR)/, $(SOURCES_BONUS:.c=.o))

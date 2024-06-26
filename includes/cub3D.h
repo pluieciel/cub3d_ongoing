@@ -18,6 +18,7 @@
 # define MAP_W 1024
 # define MAP_H 1024
 # define FPS 20
+# define ELEM_N 6
 
 typedef struct s_player
 {
@@ -44,6 +45,13 @@ typedef struct s_data
 	int			map_w;
 	int			map_h;
 	int			map[MAP_W][MAP_H]; // put error if over size
+	char		*path_no;
+	char		*path_so;
+	char		*path_ea;
+	char		*path_we;
+	int			floor_color;
+	int			ceiling_color;
+	int			elem_n;
 	t_player	player;
 	t_key		key;
 	t_gc		*gc;

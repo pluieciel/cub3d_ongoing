@@ -6,7 +6,7 @@
 /*   By: jlefonde <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 11:43:46 by jlefonde          #+#    #+#             */
-/*   Updated: 2024/06/25 10:22:34 by jlefonde         ###   ########.fr       */
+/*   Updated: 2024/06/26 09:10:20 by jlefonde         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,6 @@
 # define LIBFT_GC_H
 
 # include "my_gc.h"
-# include "get_next_line.h"
 # include <stdarg.h>
 # include <stdio.h>
 # include <string.h>
@@ -115,5 +114,22 @@ void				ft_putptr_fd(void *p, int fd);
 int					ft_fprintf(int fd, const char *format, ...);
 
 # endif // FT_FPRINTF_H
+
+# ifndef GET_NEXT_LINE_BONUS_H
+#  define GET_NEXT_LINE_BONUS_H
+
+#  ifndef BUFFER_SIZE
+#   define BUFFER_SIZE 42
+#  endif
+
+#  ifndef FD_MAX
+#   define FD_MAX 4096
+#  endif
+
+char	*ft_substr_gnl(char const *s, unsigned int start, size_t len);
+char	*ft_strjoin_gnl(const char *s1, const char *s2);
+char	*get_next_line(int fd);
+
+# endif // GET_NEXT_LINE_BONUS_H
 
 #endif // LIBFT_GC_H
