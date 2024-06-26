@@ -31,12 +31,15 @@ static int	get_color(t_data *game, char *line)
 	color = 0;
 	i = 0;
 	while (line_split[i])
-	{
-		value = ft_atoi(line_split[i]);
-		if (value < 0 || value > 255 || (i == 2 && line_split[i + 1]))
-			exit(gc_free(game->gc, "Error: invalid rgb color\n", 2));
-		color |= value << ((2 - i++) * 8);
-	}
+    {
+        value = ft_atoi(line_split[i]);
+        if (value < 0 || value > 255)
+       		exit(gc_free(game->gc, "Error: invalid rgb color\n", 2));
+        color |= value << ((2 - i) * 8);
+        i++;
+    }
+	if (i != 3)
+		exit(gc_free(game->gc, "Error: invalid rgb color\n", 2));
 	game->elem_n++;
 	gc_free_ptr(&game->gc, line_trim);
 	gc_free_ptr(&game->gc, line_split);
@@ -63,7 +66,7 @@ static void	set_elements(t_data *game, char *line)
 	gc_free_ptr(&game->gc, line_split);
 }
 
-int	parse_element(t_data *game, char *filename)
+void parse_element(t_data *game, char *filename)
 {
 	char	*line;
 	int		fd;
@@ -105,5 +108,6 @@ int	parse_element(t_data *game, char *filename)
 		i++;
 	}
 	close(fd);
-	return (0);
+	if (game->elem_n != ELEM_N)
+		exit(gc_free(game->gc, "Error: not enough elements\n", 2));
 }

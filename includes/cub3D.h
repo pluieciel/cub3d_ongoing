@@ -100,4 +100,4 @@ void		hook(t_data *game);
 int			check_map(t_data *game);
 long long	millitimestamp(void);
 int			render(t_data *game);
-int parse_element(t_data *game, char *filename);
+void parse_element(t_data *game, char *filename);
