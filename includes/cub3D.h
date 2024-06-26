@@ -23,6 +23,8 @@
 # define MM_POS_X WIN_W/2
 # define MM_POS_Y WIN_H/2
 # define MM_RANGE 4
+# define DIS_P_S WIN_W/2
+# define RAYCAST_RANGE 8
 
 typedef struct s_player
 {
@@ -66,6 +68,8 @@ typedef struct s_data
 	t_gc		*gc;
 	long long	time;
 	t_img1		img;
+	int			res_rc_h[2];
+	int			res_rc_v[2];
 }	t_data;
 
 void	init(t_data *game);
@@ -78,3 +82,5 @@ void		hook(t_data *game);
 int			check_map(t_data *game);
 long long	millitimestamp(void);
 int			render(t_data *game);
+float		distance(int x1, int y1, int x2, int y2);
+float 		raycast_h(t_data *game, float x, float y);

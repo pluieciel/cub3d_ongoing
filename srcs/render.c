@@ -12,7 +12,7 @@ void	clear_img(t_img1 *img)
 	}
 }
 
-int	distance(int x1, int y1, int x2, int y2)
+float	distance(int x1, int y1, int x2, int y2)
 {
 	return (sqrt((x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2)));
 }
@@ -160,7 +160,9 @@ int	render(t_data *game)
 		clear_img(&game->img);
 		//(((unsigned int *)game->img.addr)[y * WIN_W + x]) = color;
 		move_player(game);
-		draw_map2(game);
+		draw_map1(game);
+		if (raycast_h(game, -game->player.dir[0] * DIS_P_S + game->player.dir[1] * DIS_P_S, -game->player.dir[1] * DIS_P_S - game->player.dir[0] * DIS_P_S) < 200)
+			((unsigned int *)game->img.addr)[(game->res_rc_h[1] / MM_FACTOR + MM_POS_Y - game->player.pos[1] / MM_FACTOR) * WIN_W + (game->res_rc_h[0] / MM_FACTOR + MM_POS_X - game->player.pos[0] / MM_FACTOR)] = 0x00FFFFFF;
 		mlx_put_image_to_window(game->mlx_ptr, game->win_ptr,
 				game->img.img_ptr, 0, 0);
 	}
