@@ -5,8 +5,8 @@ void	get_init_pos(t_data *game, char dir, int i, int j)
 	if (game->player.dir[0] != 0 || game->player.dir[1] != 0)
 		exit(gc_free(game->gc, "Error: multiple player position\n", 2));
 	game->map[i][j] = 0;
-	game->player.pos[0] = j;
-	game->player.pos[1] = i;
+	game->player.pos[0] = j * B_SIZE + B_SIZE / 2;
+	game->player.pos[1] = i * B_SIZE + B_SIZE / 2;
 	if (dir == 'N')
 		game->player.dir[1] = -1;
 	else if (dir == 'E')
