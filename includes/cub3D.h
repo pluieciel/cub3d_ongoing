@@ -17,6 +17,12 @@
 # define WIN_W 1280
 # define WIN_H 768
 # define FPS 20
+# define B_SIZE 64
+# define ROT_SPEED 0.1
+# define MM_FACTOR 2
+# define MM_POS_X WIN_W/2
+# define MM_POS_Y WIN_H/2
+# define MM_RANGE 4
 
 typedef struct s_player
 {

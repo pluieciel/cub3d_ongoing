@@ -24,23 +24,23 @@ void	draw_map1(t_data *game)
 	int i;
 	int j;
 
-	((unsigned int *)game->img.addr)[WIN_H / 2 * WIN_W + WIN_W / 2] = 0x00FFFF00;
-	((unsigned int *)game->img.addr)[(WIN_H / 2 + (int)round(game->player.dir[1] / 6)) * WIN_W + WIN_W / 2 + (int)round(game->player.dir[0] / 6)] = 0x00FFFF00;
-	y = game->player.pos[1] / 64 - 8;
-	while (y <= game->player.pos[1] / 64 + 8)
+	((unsigned int *)game->img.addr)[MM_POS_Y * WIN_W + MM_POS_X] = 0x00FFFF00;
+	((unsigned int *)game->img.addr)[(MM_POS_Y + (int)round(game->player.dir[1] * 10)) * WIN_W + MM_POS_X + (int)round(game->player.dir[0] * 10)] = 0x00FFFF00;
+	y = game->player.pos[1] / B_SIZE - 8;
+	while (y <= game->player.pos[1] / B_SIZE + 8)
 	{
-		x = game->player.pos[0] / 64 - 8;
-		while (x < game->player.pos[0] / 64 + 8)
+		x = game->player.pos[0] / B_SIZE - 8;
+		while (x < game->player.pos[0] / B_SIZE + 8)
 		{
 			if (x >= 0 && y >= 0 && x < game->map_w && y < game->map_h && game->map[y][x] == 1)
 			{
-				i = y * 32 + WIN_H / 2 - game->player.pos[1] / 2 + 1;
-				while (i < y * 32 + WIN_H / 2 - game->player.pos[1] / 2 + 32 - 1)
+				i = y * B_SIZE / MM_FACTOR + MM_POS_Y - game->player.pos[1] / MM_FACTOR + 1;
+				while (i < y * B_SIZE / MM_FACTOR + MM_POS_Y - game->player.pos[1] / MM_FACTOR + B_SIZE / MM_FACTOR - 1)
 				{
-					j = x * 32 + WIN_W / 2 - game->player.pos[0] / 2 + 1;
-					while (j < x * 32 + WIN_W / 2 - game->player.pos[0] / 2 + 32 - 1)
+					j = x * B_SIZE / MM_FACTOR + MM_POS_X - game->player.pos[0] / MM_FACTOR + 1;
+					while (j < x * B_SIZE / MM_FACTOR + MM_POS_X - game->player.pos[0] / MM_FACTOR + B_SIZE / MM_FACTOR - 1)
 					{	
-						if (distance(i, j, WIN_H / 2, WIN_W / 2) < 200)//(i >= 0 && j >= 0 && i < WIN_H && j < WIN_W)
+						if (i >= 0 && j >= 0 && i < WIN_H && j < WIN_W)//(distance(i, j, MM_POS_Y, MM_POS_X) < 200)//
 							((unsigned int *)game->img.addr)[i * WIN_W + j] = 0x00AAAAFF;
 						j++;
 					}
@@ -62,26 +62,26 @@ void	draw_map2(t_data *game)
 	int newi;
 	int newj;
 
-	((unsigned int *)game->img.addr)[WIN_H / 2 * WIN_W + WIN_W / 2] = 0x00FFFF00;
-	//((unsigned int *)game->img.addr)[(WIN_H / 2 + (int)round(game->player.dir[1] / 6)) * WIN_W + WIN_W / 2 + (int)round(game->player.dir[0] / 6)] = 0x00FFFF00;
-	y = game->player.pos[1] / 64 - 8;
-	while (y <= game->player.pos[1] / 64 + 8)
+	((unsigned int *)game->img.addr)[MM_POS_Y * WIN_W + MM_POS_X] = 0x00FFFF00;
+	//((unsigned int *)game->img.addr)[(MM_POS_Y + (int)round(game->player.dir[1] / 6)) * WIN_W + MM_POS_X + (int)round(game->player.dir[0] / 6)] = 0x00FFFF00;
+	y = game->player.pos[1] / B_SIZE - MM_RANGE;
+	while (y <= game->player.pos[1] / B_SIZE + MM_RANGE)
 	{
-		x = game->player.pos[0] / 64 - 8;
-		while (x < game->player.pos[0] / 64 + 8)
+		x = game->player.pos[0] / B_SIZE - MM_RANGE;
+		while (x < game->player.pos[0] / B_SIZE + MM_RANGE)
 		{
 			if (x >= 0 && y >= 0 && x < game->map_w && y < game->map_h && game->map[y][x] == 1)
 			{
-				i = y * 32 + WIN_H / 2 - game->player.pos[1] / 2 + 1;
-				while (i < y * 32 + WIN_H / 2 - game->player.pos[1] / 2 + 32 - 1)
+				i = y * B_SIZE / MM_FACTOR + MM_POS_Y - game->player.pos[1] / MM_FACTOR + 1;
+				while (i < y * B_SIZE / MM_FACTOR + MM_POS_Y - game->player.pos[1] / MM_FACTOR + B_SIZE / MM_FACTOR - 1)
 				{
-					j = x * 32 + WIN_W / 2 - game->player.pos[0] / 2 + 1;
-					while (j < x * 32 + WIN_W / 2 - game->player.pos[0] / 2 + 32 - 1)
+					j = x * B_SIZE / MM_FACTOR + MM_POS_X - game->player.pos[0] / MM_FACTOR + 1;
+					while (j < x * B_SIZE / MM_FACTOR + MM_POS_X - game->player.pos[0] / MM_FACTOR + B_SIZE / MM_FACTOR - 1)
 					{	
-						if (distance(i, j, WIN_H / 2, WIN_W / 2) < 200)
+						if (distance(i, j, MM_POS_Y, MM_POS_X) < 100)
 						{
-							newj = -round((j - WIN_W / 2) * game->player.dir[1] / 64 - -(i - WIN_H / 2) * -game->player.dir[0] / 64) + WIN_W / 2;
-							newi = round((j - WIN_W / 2) * -game->player.dir[0] / 64 + -(i - WIN_H / 2) * game->player.dir[1] / 64) + WIN_H / 2;
+							newj = round(-(j - MM_POS_X) * game->player.dir[1] + (i - MM_POS_Y) * game->player.dir[0]) + MM_POS_X;
+							newi = round((j - MM_POS_X) * -game->player.dir[0] - (i - MM_POS_Y) * game->player.dir[1]) + MM_POS_Y;
 							((unsigned int *)game->img.addr)[newi * WIN_W + newj] = 0x00AAAAFF;
 						}
 						j++;
@@ -101,33 +101,33 @@ void	move_player(t_data *game)
 	float oldDirY = game->player.dir[1];
 	if (game->key.w)
 	{
-		game->player.pos[0] += round(oldDirX * 5 / 64);
-		game->player.pos[1] += round(oldDirY * 5 / 64);
+		game->player.pos[0] += round(oldDirX * 5);
+		game->player.pos[1] += round(oldDirY * 5);
 	}
 	else if (game->key.s)
 	{
-		game->player.pos[0] -= round(oldDirX * 5 / 64);
-		game->player.pos[1] -= round(oldDirY * 5 / 64);
+		game->player.pos[0] -= round(oldDirX * 5);
+		game->player.pos[1] -= round(oldDirY * 5);
 	}
 	if (game->key.a)
 	{
-		game->player.pos[0] += round(oldDirY * 5 / 64);
-		game->player.pos[1] -= round(oldDirX * 5 / 64);
+		game->player.pos[0] += round(oldDirY * 5);
+		game->player.pos[1] -= round(oldDirX * 5);
 	}
 	else if (game->key.d)
 	{
-		game->player.pos[0] -= round(oldDirY * 5 / 64);
-		game->player.pos[1] += round(oldDirX * 5 / 64);
+		game->player.pos[0] -= round(oldDirY * 5);
+		game->player.pos[1] += round(oldDirX * 5);
 	}
 	if (game->key.left)
 	{
-		game->player.dir[0] = oldDirX * cos(-0.1) - oldDirY * sin(-0.1);
-		game->player.dir[1] = oldDirX * sin(-0.1) + oldDirY * cos(-0.1);
+		game->player.dir[0] = oldDirX * cos(-ROT_SPEED) - oldDirY * sin(-ROT_SPEED);
+		game->player.dir[1] = oldDirX * sin(-ROT_SPEED) + oldDirY * cos(-ROT_SPEED);
 	}
 	else if (game->key.right)
 	{
-		game->player.dir[0] = oldDirX * cos(0.1) - oldDirY * sin(0.1);
-		game->player.dir[1] = oldDirX * sin(0.1) + oldDirY * cos(0.1);
+		game->player.dir[0] = oldDirX * cos(ROT_SPEED) - oldDirY * sin(ROT_SPEED);
+		game->player.dir[1] = oldDirX * sin(ROT_SPEED) + oldDirY * cos(ROT_SPEED);
 	}
 }
 
