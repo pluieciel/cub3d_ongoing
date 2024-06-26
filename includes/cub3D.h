@@ -20,6 +20,19 @@
 # define FPS 20
 # define ELEM_N 6
 
+typedef struct s_point
+{
+	int	x;
+	int	y;
+	int	color;
+}			t_point;
+
+typedef struct s_delta
+{
+	int	dx;
+	int	dy;
+}			t_delta;
+
 typedef struct s_player
 {
 	int		pos[2];
@@ -57,6 +70,7 @@ typedef struct s_data
 	char		**visited;
 	int			map_w;
 	int			map_h;
+	int			map_index;
 	char		*path_no;
 	char		*path_so;
 	char		*path_ea;

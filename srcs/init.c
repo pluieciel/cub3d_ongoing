@@ -17,6 +17,10 @@ void	init(t_data *game)
 	game->key.right = 0;
 	game->key.up = 0;
 	game->key.down = 0;
+	game->elem_n = 0;
+	game->map_index = -1;
+	game->map_h = 0;
+	game->map_w = 0;
 	game->time = millitimestamp();
 	game->mlx_ptr = mlx_init();
 	game->gc = (t_gc *)gc_insert(game->gc, game->mlx_ptr);

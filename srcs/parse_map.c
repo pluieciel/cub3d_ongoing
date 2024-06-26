@@ -28,15 +28,13 @@ void	parse_map(t_data *game, char *filename)
 	fd = open(filename, O_RDONLY);
 	if (fd < 0)
 		exit(gc_free(game->gc, "Error: invalid file\n", 2));
-	for (int k = 0; k < 16; k++)
+	for (int k = 0; k < game->map_index; k++)
 	{
 		line = get_next_line(fd);
 		game->gc = gc_insert(game->gc, line);
 	}
 	line = get_next_line(fd);
 	game->gc = gc_insert(game->gc, line);
-	game->map_h = 20; // temp
-	game->map_w = 40; // temp
 	game->map = gc_malloc(sizeof(int *) * game->map_h, &game->gc);
 	game->visited = gc_malloc(sizeof(int *) * game->map_h, &game->gc);
 	i = -1;
