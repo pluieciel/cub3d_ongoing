@@ -4,3 +4,4 @@ test*
 *.o
 *.out
 cub3D
+.vscode
