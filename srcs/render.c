@@ -94,6 +94,21 @@ void	draw_map2(t_data *game)
 		y++;
 	}
 }
+//not good, cannot handle corners
+int	no_collision(int dir, t_data *game, int pn)
+{
+	if (dir == 0)
+	{
+		if (game->map[game->player.pos[1] / B_SIZE][(game->player.pos[0] + pn * 20) / B_SIZE] == 1)
+			return (0);
+	}
+	else if (dir == 1)
+	{
+		if (game->map[(game->player.pos[1] + pn * 20) / B_SIZE][game->player.pos[0] / B_SIZE] == 1)
+			return (0);
+	}
+	return (1);
+}
 
 void	move_player(t_data *game)
 {
