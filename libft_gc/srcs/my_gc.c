@@ -6,7 +6,7 @@
 /*   By: jlefonde <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/15 15:23:58 by yuzhao            #+#    #+#             */
-/*   Updated: 2024/06/25 10:20:11 by jlefonde         ###   ########.fr       */
+/*   Updated: 2024/06/26 09:04:45 by jlefonde         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,4 +74,22 @@ int	gc_free(t_gc *head, char *str, int stdout)
 		temp = head;
 	}
 	return (1);
+}
+
+void gc_free_ptr(t_gc **head, void *ptr)
+{
+    t_gc *temp;
+
+    while (*head)
+    {
+        if ((*head)->ptr == ptr)
+        {
+            temp = (*head);
+            *head = (*head)->next;
+            free(temp->ptr);
+			free(temp);
+            return ;
+        }
+        head = &((*head)->next);
+    }
 }

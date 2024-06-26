@@ -24,12 +24,6 @@ void	parse_map(t_data *game, char *filename)
 	int		i;
 	int		j;
 
-	/*parse NO ./path_to_the_north_texture
-	SO ./path_to_the_south_texture
-	WE ./path_to_the_west_texture
-	EA ./path_to_the_east_texture
-	F 220,100,0
-	C 225,30,0*/
 	parse_element(game, filename);
 	fd = open(filename, O_RDONLY);
 	if (fd < 0)

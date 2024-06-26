@@ -19,6 +19,7 @@ int parse_element(t_data *game, char *filename)
 		line_split = ft_split_gc(line, ' ', &game->gc);
 		if (ft_strcmp(line_split[0], "NO") == 0)
 			printf("test\n");
+		gc_free_ptr(&game->gc, line_split);
 		line = get_next_line(fd);
 		game->gc = gc_insert(game->gc, line);
 	}
