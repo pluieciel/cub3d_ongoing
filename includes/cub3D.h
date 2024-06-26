@@ -23,6 +23,20 @@
 # define MM_POS_X WIN_W/2
 # define MM_POS_Y WIN_H/2
 # define MM_RANGE 4
+# define ELEM_N 6
+
+typedef struct s_point
+{
+	int	x;
+	int	y;
+	int	color;
+}			t_point;
+
+typedef struct s_delta
+{
+	int	dx;
+	int	dy;
+}			t_delta;
 
 typedef struct s_player
 {
@@ -59,8 +73,16 @@ typedef struct s_data
 	void		*win_ptr;
 	char		**map;
 	char		**visited;
-	int			map_h;
 	int			map_w;
+	int			map_h;
+	int			map_index;
+	char		*path_no;
+	char		*path_so;
+	char		*path_ea;
+	char		*path_we;
+	int			floor_color;
+	int			ceiling_color;
+	int			elem_n;
 	t_player	player;
 	t_key		key;
 	t_gc		*gc;
@@ -78,3 +100,4 @@ void		hook(t_data *game);
 int			check_map(t_data *game);
 long long	millitimestamp(void);
 int			render(t_data *game);
+int parse_element(t_data *game, char *filename);
