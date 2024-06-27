@@ -230,8 +230,8 @@ void	draw_line(t_data *game, int col)
 		float yy = y - game->player.pos[1];
 		float xxx = xx / sqrt(xx * xx + yy * yy);
 		float yyy = yy / sqrt(xx * xx + yy * yy);
-		int tempx = round(xxx * 320 * sqrt(3) * factor + game->player.pos[0]);
-		int tempy = round(yyy * 320 * sqrt(3) * factor + game->player.pos[1]);
+		int tempx = round(xxx * sqrt(col * col + 320 * 320 * 3) * factor + game->player.pos[0]);
+		int tempy = round(yyy * sqrt(col * col + 320 * 320 * 3) * factor + game->player.pos[1]);
 		if (tempx % B_SIZE <= 1 || tempy % B_SIZE <= 1 || tempx % B_SIZE >= (B_SIZE - 1)|| tempy % B_SIZE >= (B_SIZE - 1))
 			((unsigned int *)game->img.addr)[wall_row * WIN_W + col] = 0xFFFFFF;
 		wall_row++;
