@@ -165,10 +165,14 @@ int	render(t_data *game)
 		draw_map1(game);
 		dis_h = raycast_h(game, 0, 0);
 		dis_v = raycast_v(game, 0, 0);
-		if (dis_h > 0 && dis_h < WIN_H)
-			((unsigned int *)game->img.addr)[(game->res_rc_h[1] / MM_FACTOR + MM_POS_Y - game->player.pos[1] / MM_FACTOR) * WIN_W + (game->res_rc_h[0] / MM_FACTOR + MM_POS_X - game->player.pos[0] / MM_FACTOR)] = 0x00FF00;
-		if (dis_v > 0 && dis_v < WIN_H)
-			((unsigned int *)game->img.addr)[(game->res_rc_v[1] / MM_FACTOR + MM_POS_Y - game->player.pos[1] / MM_FACTOR) * WIN_W + (game->res_rc_v[0] / MM_FACTOR + MM_POS_X - game->player.pos[0] / MM_FACTOR)] = 0xFF0000;
+		int y = (game->res_rc_h[1] / MM_FACTOR + MM_POS_Y - game->player.pos[1] / MM_FACTOR);
+		int x = (game->res_rc_h[0] / MM_FACTOR + MM_POS_X - game->player.pos[0] / MM_FACTOR);
+		if (dis_h > 0 && dis_h < RAYCAST_RANGE * B_SIZE && 0<=y && y<WIN_H && 0<=x && x<WIN_W)
+			((unsigned int *)game->img.addr)[y * WIN_W + x] = 0x00FF00;
+		y = (game->res_rc_v[1] / MM_FACTOR + MM_POS_Y - game->player.pos[1] / MM_FACTOR);
+		x = (game->res_rc_v[0] / MM_FACTOR + MM_POS_X - game->player.pos[0] / MM_FACTOR);
+		if (dis_v > 0 && dis_v < RAYCAST_RANGE * B_SIZE && 0<=y && y<WIN_H && 0<=x && x<WIN_W)
+			((unsigned int *)game->img.addr)[y * WIN_W + x] = 0xFF0000;
 		mlx_put_image_to_window(game->mlx_ptr, game->win_ptr,
 				game->img.img_ptr, 0, 0);
 	}
