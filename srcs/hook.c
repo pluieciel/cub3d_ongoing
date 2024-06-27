@@ -8,11 +8,15 @@ int	handle_no_event(void *data)
 	return (0);
 }
 
-int	close_window(t_data *game)
+int close_window(t_data *game)
 {
 	mlx_destroy_window(game->mlx_ptr, game->win_ptr);
 	game->win_ptr = NULL;
-	return (0);
+	if (game->img.img_ptr != NULL)
+		mlx_destroy_image(game->mlx_ptr, game->img.img_ptr);
+	mlx_destroy_display(game->mlx_ptr);
+	gc_free(game->gc, "", 1);
+	exit(EXIT_SUCCESS);
 }
 
 int	handle_keypress(int keysym, t_data *game)

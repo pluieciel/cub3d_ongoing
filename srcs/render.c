@@ -170,8 +170,8 @@ int	render(t_data *game)
 		i = 0;
 		while (i < WIN_W)
 		{
-			dis_h = raycast_h(game, temp_x, temp_y);
-			dis_v = raycast_v(game, temp_x, temp_y);
+			dis_h = game->res_rc_h[2] = raycast_h(game, temp_x, temp_y);
+			dis_v = game->res_rc_v[2] = raycast_v(game, temp_x, temp_y);
 			t_point a;
 			t_point b;
 
