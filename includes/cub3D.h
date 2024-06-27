@@ -104,3 +104,4 @@ void			parse_element(t_data *game, char *filename);
 float			distance(int x1, int y1, int x2, int y2);
 float			raycast_h(t_data *game, float x, float y);
 float			raycast_v(t_data *game, float x, float y);
+void	ft_bresenham(t_point a, t_point b, t_img1 *img);

@@ -165,10 +165,17 @@ int	render(t_data *game)
 		draw_map1(game);
 		dis_h = raycast_h(game, 0, 0);
 		dis_v = raycast_v(game, 0, 0);
+		t_point a;
+		t_point b;
+
+		a.x = MM_POS_X;
+		a.y = MM_POS_Y;
+		b.x = game->res_rc_h[0] / MM_FACTOR + MM_POS_X - game->player.pos[0] / MM_FACTOR;
+		b.y = game->res_rc_h[1] / MM_FACTOR + MM_POS_Y - game->player.pos[1] / MM_FACTOR;
 		if (dis_h > 0 && dis_h < WIN_H)
-			((unsigned int *)game->img.addr)[(game->res_rc_h[1] / MM_FACTOR + MM_POS_Y - game->player.pos[1] / MM_FACTOR) * WIN_W + (game->res_rc_h[0] / MM_FACTOR + MM_POS_X - game->player.pos[0] / MM_FACTOR)] = 0x00FF00;
+			ft_bresenham(a, b, &game->img);
 		if (dis_v > 0 && dis_v < WIN_H)
-			((unsigned int *)game->img.addr)[(game->res_rc_v[1] / MM_FACTOR + MM_POS_Y - game->player.pos[1] / MM_FACTOR) * WIN_W + (game->res_rc_v[0] / MM_FACTOR + MM_POS_X - game->player.pos[0] / MM_FACTOR)] = 0xFF0000;
+			ft_bresenham(a, b, &game->img);
 		mlx_put_image_to_window(game->mlx_ptr, game->win_ptr,
 				game->img.img_ptr, 0, 0);
 	}
