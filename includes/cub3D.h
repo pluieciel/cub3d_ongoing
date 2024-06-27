@@ -90,8 +90,8 @@ typedef struct s_data
 	t_gc		*gc;
 	long long	time;
 	t_img1		img;
-	float		res_rc_h[2];
-	float		res_rc_v[2];
+	float		res_rc_h[3];
+	float		res_rc_v[3];
 }				t_data;
 
 void			init(t_data *game);

@@ -163,33 +163,52 @@ int	render(t_data *game)
 		//(((unsigned int *)game->img.addr)[y * WIN_W + x]) = color;
 		move_player(game);
 		draw_map1(game);
-		dis_h = raycast_h(game, 0, 0);
-		dis_v = raycast_v(game, 0, 0);
-		t_point a;
-		t_point b;
+		float temp_x = game->player.dir[1] * DIS_P_S;
+		float temp_y = -game->player.dir[0] * DIS_P_S;
+		int i;
 
-		a.x = MM_POS_X;
-		a.y = MM_POS_Y;
-		a.color = 0xFF0000;
-		b.color = 0xFF0000;
-		b.x = game->res_rc_h[0] / MM_FACTOR + MM_POS_X - game->player.pos[0] / MM_FACTOR;
-		b.y = game->res_rc_h[1] / MM_FACTOR + MM_POS_Y - game->player.pos[1] / MM_FACTOR;
-		if (dis_h > 0 && dis_h < RAYCAST_RANGE * B_SIZE)
-			ft_bresenham(a, b, &game->img);
-		b.x = game->res_rc_v[0] / MM_FACTOR + MM_POS_X - game->player.pos[0] / MM_FACTOR;
-		b.y = game->res_rc_v[1] / MM_FACTOR + MM_POS_Y - game->player.pos[1] / MM_FACTOR;
-		a.color = 0x00FF00;
-		b.color = 0x00FF00;
-		if (dis_v > 0 && dis_v < RAYCAST_RANGE * B_SIZE)
-			ft_bresenham(a, b, &game->img);
-		int y = (game->res_rc_h[1] / MM_FACTOR + MM_POS_Y - game->player.pos[1] / MM_FACTOR);
+		i = 0;
+		while (i < WIN_W)
+		{
+			dis_h = raycast_h(game, temp_x, temp_y);
+			dis_v = raycast_v(game, temp_x, temp_y);
+			t_point a;
+			t_point b;
+
+			a.x = MM_POS_X;
+			a.y = MM_POS_Y;
+			a.color = 0xFF0000;
+			b.color = 0xFF0000;
+			b.x = game->res_rc_h[0] / MM_FACTOR + MM_POS_X - game->player.pos[0] / MM_FACTOR;
+			b.y = game->res_rc_h[1] / MM_FACTOR + MM_POS_Y - game->player.pos[1] / MM_FACTOR;
+			if (dis_h > 0 && dis_h < RAYCAST_RANGE * B_SIZE)
+				ft_bresenham(a, b, &game->img);
+			b.x = game->res_rc_v[0] / MM_FACTOR + MM_POS_X - game->player.pos[0] / MM_FACTOR;
+			b.y = game->res_rc_v[1] / MM_FACTOR + MM_POS_Y - game->player.pos[1] / MM_FACTOR;
+			a.color = 0x00FF00;
+			b.color = 0x00FF00;
+			if (dis_v > 0 && dis_v < RAYCAST_RANGE * B_SIZE)
+				ft_bresenham(a, b, &game->img);
+			int y = (game->res_rc_h[1] / MM_FACTOR + MM_POS_Y - game->player.pos[1] / MM_FACTOR);
+			int x = (game->res_rc_h[0] / MM_FACTOR + MM_POS_X - game->player.pos[0] / MM_FACTOR);
+			if (dis_h > 0 && dis_h < RAYCAST_RANGE * B_SIZE && 0<=y && y<WIN_H && 0<=x && x<WIN_W)
+				((unsigned int *)game->img.addr)[y * WIN_W + x] = 0xFFFFFF;
+			y = (game->res_rc_v[1] / MM_FACTOR + MM_POS_Y - game->player.pos[1] / MM_FACTOR);
+			x = (game->res_rc_v[0] / MM_FACTOR + MM_POS_X - game->player.pos[0] / MM_FACTOR);
+			if (dis_v > 0 && dis_v < RAYCAST_RANGE * B_SIZE && 0<=y && y<WIN_H && 0<=x && x<WIN_W)
+				((unsigned int *)game->img.addr)[y * WIN_W + x] = 0xFFFFFF;
+			temp_x -= game->player.dir[1];
+			temp_y += game->player.dir[0];
+			i++;
+			}
+		/*int y = (game->res_rc_h[1] / MM_FACTOR + MM_POS_Y - game->player.pos[1] / MM_FACTOR);
 		int x = (game->res_rc_h[0] / MM_FACTOR + MM_POS_X - game->player.pos[0] / MM_FACTOR);
 		if (dis_h > 0 && dis_h < RAYCAST_RANGE * B_SIZE && 0<=y && y<WIN_H && 0<=x && x<WIN_W)
 			((unsigned int *)game->img.addr)[y * WIN_W + x] = 0xFFFFFF;
 		y = (game->res_rc_v[1] / MM_FACTOR + MM_POS_Y - game->player.pos[1] / MM_FACTOR);
 		x = (game->res_rc_v[0] / MM_FACTOR + MM_POS_X - game->player.pos[0] / MM_FACTOR);
 		if (dis_v > 0 && dis_v < RAYCAST_RANGE * B_SIZE && 0<=y && y<WIN_H && 0<=x && x<WIN_W)
-			((unsigned int *)game->img.addr)[y * WIN_W + x] = 0xFFFFFF;
+			((unsigned int *)game->img.addr)[y * WIN_W + x] = 0xFFFFFF;*/
 		mlx_put_image_to_window(game->mlx_ptr, game->win_ptr,
 				game->img.img_ptr, 0, 0);
 	}

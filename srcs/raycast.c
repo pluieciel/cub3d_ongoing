@@ -25,13 +25,13 @@ float raycast_h(t_data *game, float x, float y)
 		game->res_rc_h[0] = game->player.pos[0];
 		game->res_rc_h[1] = game->player.pos[1];
 	}
-	while (range < RAYCAST_RANGE && game->res_rc_h[0] / B_SIZE >= 0 && game->res_rc_h[0] / B_SIZE < game->map_w)
+	while (range < RAYCAST_RANGE && game->res_rc_h[0] / B_SIZE > 0 && game->res_rc_h[0] / B_SIZE < game->map_w)
 	{
 		int temp_x;
 		int temp_y;
 
-		temp_x = round(game->res_rc_h[0]);
-		temp_y = round(game->res_rc_h[1]);
+		temp_x = game->res_rc_h[0];
+		temp_y = game->res_rc_h[1];
 		if (dir_y != 0
 		&& game->res_rc_h[1] / B_SIZE > 0 && game->res_rc_h[1] / B_SIZE < game->map_h
 		&& game->map[temp_y / B_SIZE - (dir_y < 0)][temp_x / B_SIZE] == 1)
@@ -68,13 +68,13 @@ float raycast_v(t_data *game, float x, float y)
 		game->res_rc_v[0] = game->player.pos[0];
 		game->res_rc_v[1] = game->player.pos[1];
 	}
-	while (range < RAYCAST_RANGE && game->res_rc_v[1] / B_SIZE >= 0 && game->res_rc_v[1] / B_SIZE < game->map_h)
+	while (range < RAYCAST_RANGE && game->res_rc_v[1] / B_SIZE > 0 && game->res_rc_v[1] / B_SIZE < game->map_h)
 	{
 		int temp_x;
 		int temp_y;
 
-		temp_x = round(game->res_rc_v[0]);
-		temp_y = round(game->res_rc_v[1]);
+		temp_x = game->res_rc_v[0];
+		temp_y = game->res_rc_v[1];
 		if (dir_x != 0
 		&& game->res_rc_v[0] / B_SIZE > 0 && game->res_rc_v[0] / B_SIZE < game->map_w
 		&& game->map[temp_y / B_SIZE][temp_x / B_SIZE - (dir_x < 0)] == 1)
