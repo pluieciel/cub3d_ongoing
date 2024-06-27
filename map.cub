@@ -6,7 +6,7 @@ WE ./textures/we.xpm
 
 EA ./textures/ea.xpm
 
-F 220,100
+F 220,100,20
 C 225,30,0
 
 

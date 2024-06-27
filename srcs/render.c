@@ -12,7 +12,7 @@ void	clear_img(t_img1 *img)
 	}
 }
 
-int	distance(int x1, int y1, int x2, int y2)
+float	distance(int x1, int y1, int x2, int y2)
 {
 	return (sqrt((x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2)));
 }
@@ -39,7 +39,7 @@ void	draw_map1(t_data *game)
 				{
 					j = x * B_SIZE / MM_FACTOR + MM_POS_X - game->player.pos[0] / MM_FACTOR + 1;
 					while (j < x * B_SIZE / MM_FACTOR + MM_POS_X - game->player.pos[0] / MM_FACTOR + B_SIZE / MM_FACTOR - 1)
-					{	
+					{
 						if (i >= 0 && j >= 0 && i < WIN_H && j < WIN_W)//(distance(i, j, MM_POS_Y, MM_POS_X) < 200)//
 							((unsigned int *)game->img.addr)[i * WIN_W + j] = 0x00AAAAFF;
 						j++;
@@ -77,7 +77,7 @@ void	draw_map2(t_data *game)
 				{
 					j = x * B_SIZE / MM_FACTOR + MM_POS_X - game->player.pos[0] / MM_FACTOR + 1;
 					while (j < x * B_SIZE / MM_FACTOR + MM_POS_X - game->player.pos[0] / MM_FACTOR + B_SIZE / MM_FACTOR - 1)
-					{	
+					{
 						if (distance(i, j, MM_POS_Y, MM_POS_X) < 100)
 						{
 							newj = round(-(j - MM_POS_X) * game->player.dir[1] + (i - MM_POS_Y) * game->player.dir[0]) + MM_POS_X;
@@ -150,6 +150,8 @@ int	render(t_data *game)
 {
 	long long	now;
 	long long	diff_millisecs;
+	float dis_h;
+	float dis_v;
 
 	now = millitimestamp();
 	diff_millisecs = now - game->time;
@@ -160,7 +162,13 @@ int	render(t_data *game)
 		clear_img(&game->img);
 		//(((unsigned int *)game->img.addr)[y * WIN_W + x]) = color;
 		move_player(game);
-		draw_map2(game);
+		draw_map1(game);
+		dis_h = raycast_h(game, 0, 0);
+		dis_v = raycast_v(game, 0, 0);
+		if (dis_h > 0 && dis_h < WIN_H)
+			((unsigned int *)game->img.addr)[(game->res_rc_h[1] / MM_FACTOR + MM_POS_Y - game->player.pos[1] / MM_FACTOR) * WIN_W + (game->res_rc_h[0] / MM_FACTOR + MM_POS_X - game->player.pos[0] / MM_FACTOR)] = 0x00FF00;
+		if (dis_v > 0 && dis_v < WIN_H)
+			((unsigned int *)game->img.addr)[(game->res_rc_v[1] / MM_FACTOR + MM_POS_Y - game->player.pos[1] / MM_FACTOR) * WIN_W + (game->res_rc_v[0] / MM_FACTOR + MM_POS_X - game->player.pos[0] / MM_FACTOR)] = 0xFF0000;
 		mlx_put_image_to_window(game->mlx_ptr, game->win_ptr,
 				game->img.img_ptr, 0, 0);
 	}
