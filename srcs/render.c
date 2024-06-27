@@ -53,7 +53,7 @@ void	draw_map1(t_data *game)
 	}
 }
 
-void	draw_map2(t_data *game)
+void	draw_minimap(t_data *game)
 {
 	int	x;
 	int	y;
@@ -78,7 +78,7 @@ void	draw_map2(t_data *game)
 					j = x * B_SIZE / MM_FACTOR + MM_POS_X - game->player.pos[0] / MM_FACTOR + 1;
 					while (j < x * B_SIZE / MM_FACTOR + MM_POS_X - game->player.pos[0] / MM_FACTOR + B_SIZE / MM_FACTOR - 1)
 					{
-						if (distance(i, j, MM_POS_Y, MM_POS_X) < 100)
+						if (distance(i, j, MM_POS_Y, MM_POS_X) < MM_RADIUS)
 						{
 							newj = round(-(j - MM_POS_X) * game->player.dir[1] + (i - MM_POS_Y) * game->player.dir[0]) + MM_POS_X;
 							newi = round((j - MM_POS_X) * -game->player.dir[0] - (i - MM_POS_Y) * game->player.dir[1]) + MM_POS_Y;
@@ -145,24 +145,9 @@ void	move_player(t_data *game)
 		game->player.dir[1] = oldDirX * sin(ROT_SPEED) + oldDirY * cos(ROT_SPEED);
 	}
 }
-
-int	render(t_data *game)
-{
-	long long	now;
-	long long	diff_millisecs;
-	float dis_h;
-	float dis_v;
-
-	now = millitimestamp();
-	diff_millisecs = now - game->time;
-	if (game->win_ptr != NULL && diff_millisecs > 1000 / FPS)
-	{
-		game->time = now;
-		mlx_clear_window(game->mlx_ptr, game->win_ptr);
-		clear_img(&game->img);
-		//(((unsigned int *)game->img.addr)[y * WIN_W + x]) = color;
-		move_player(game);
-		draw_map1(game);
+/*
+float dis_h;
+		float dis_v;
 		float temp_x = game->player.dir[1] * DIS_P_S;
 		float temp_y = -game->player.dir[0] * DIS_P_S;
 		int i;
@@ -200,15 +185,92 @@ int	render(t_data *game)
 			temp_x -= game->player.dir[1];
 			temp_y += game->player.dir[0];
 			i++;
-			}
-		/*int y = (game->res_rc_h[1] / MM_FACTOR + MM_POS_Y - game->player.pos[1] / MM_FACTOR);
-		int x = (game->res_rc_h[0] / MM_FACTOR + MM_POS_X - game->player.pos[0] / MM_FACTOR);
-		if (dis_h > 0 && dis_h < RAYCAST_RANGE * B_SIZE && 0<=y && y<WIN_H && 0<=x && x<WIN_W)
-			((unsigned int *)game->img.addr)[y * WIN_W + x] = 0xFFFFFF;
-		y = (game->res_rc_v[1] / MM_FACTOR + MM_POS_Y - game->player.pos[1] / MM_FACTOR);
-		x = (game->res_rc_v[0] / MM_FACTOR + MM_POS_X - game->player.pos[0] / MM_FACTOR);
-		if (dis_v > 0 && dis_v < RAYCAST_RANGE * B_SIZE && 0<=y && y<WIN_H && 0<=x && x<WIN_W)
-			((unsigned int *)game->img.addr)[y * WIN_W + x] = 0xFFFFFF;*/
+			}*/
+
+void	draw_line(t_data *game, int col)
+{
+	float	x;
+	float	y;
+	float	dis;
+	float	dir;
+	int		color;
+
+	if (game->res_rc_h[2] < game->res_rc_v[2])
+	{
+		x = game->res_rc_h[0];
+		y = game->res_rc_h[1];
+		dis = game->res_rc_h[2];
+		dir = game->res_rc_h[3];
+		color = 0x00556622;
+	}
+	else
+	{
+		x = game->res_rc_v[0];
+		y = game->res_rc_v[1];
+		dis = game->res_rc_v[2];
+		dir = game->res_rc_v[3];
+		color = 0x00113322;
+	}
+	if (dir == 0)
+		return ;
+	float wall_h = WIN_W / 2 / (dis / B_SIZE);
+	if (wall_h > WIN_H)
+		wall_h = WIN_H;
+	int wall_row = (WIN_H - wall_h) / 2;
+	while (wall_row < (WIN_H + wall_h) / 2)
+	{
+		((unsigned int *)game->img.addr)[wall_row * WIN_W + col] = color;
+		wall_row++;
+	}
+	while (wall_row < WIN_H)
+	{
+		float factor = (B_SIZE / 2.0) / (wall_row - WIN_H / 2);
+		//printf("factor: %f\n", factor);
+		float xx = x - game->player.pos[0];
+		float yy = y - game->player.pos[1];
+		float xxx = xx / sqrt(xx * xx + yy * yy);
+		float yyy = yy / sqrt(xx * xx + yy * yy);
+		int tempx = round(xxx * sqrt(col * col + 320 * 320 * 3) * factor + game->player.pos[0]);
+		int tempy = round(yyy * sqrt(col * col + 320 * 320 * 3) * factor + game->player.pos[1]);
+		if (tempx % B_SIZE <= 1 || tempy % B_SIZE <= 1 || tempx % B_SIZE >= (B_SIZE - 1)|| tempy % B_SIZE >= (B_SIZE - 1))
+			((unsigned int *)game->img.addr)[wall_row * WIN_W + col] = 0xFFFFFF;
+		wall_row++;
+	}
+}
+
+void	draw_walls(t_data *game)
+{
+	float temp_x = game->player.dir[1] * DIS_P_S;
+	float temp_y = -game->player.dir[0] * DIS_P_S;
+	int col;
+	col = 0;
+	while (col < WIN_W)
+	{
+		game->res_rc_h[2] = raycast_h(game, temp_x, temp_y);
+		game->res_rc_v[2] = raycast_v(game, temp_x, temp_y);
+		draw_line(game, col);
+		temp_x -= game->player.dir[1];
+		temp_y += game->player.dir[0];
+		col++;
+	}
+}
+
+int	render(t_data *game)
+{
+	long long	now;
+	long long	diff_millisecs;
+
+	now = millitimestamp();
+	diff_millisecs = now - game->time;
+	if (game->win_ptr != NULL && diff_millisecs > 1000 / FPS)
+	{
+		game->time = now;
+		mlx_clear_window(game->mlx_ptr, game->win_ptr);
+		clear_img(&game->img);
+		//(((unsigned int *)game->img.addr)[y * WIN_W + x]) = color;
+		move_player(game);
+		draw_walls(game);
+		draw_minimap(game);
 		mlx_put_image_to_window(game->mlx_ptr, game->win_ptr,
 				game->img.img_ptr, 0, 0);
 	}
