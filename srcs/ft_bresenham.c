@@ -21,7 +21,7 @@ static void	ft_bresenham_low(t_point *a, t_point *b, t_delta delta,
 	start = *a;
 	while (a->x != b->x)
 	{
-		ft_put_pixel(img, a->x, a->y, ft_lerp_color(*a, *b, start, delta));
+		ft_put_pixel(img, a->x, a->y, a->color);
 		if (a->x < b->x)
 			a->x += 1;
 		else
@@ -49,7 +49,7 @@ static void	ft_bresenham_high(t_point *a, t_point *b, t_delta delta,
 	start = *a;
 	while (a->y != b->y)
 	{
-		ft_put_pixel(img, a->x, a->y, ft_lerp_color(*a, *b, start, delta));
+		ft_put_pixel(img, a->x, a->y, a->color);
 		if (a->y < b->y)
 			a->y += 1;
 		else
