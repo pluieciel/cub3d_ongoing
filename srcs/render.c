@@ -222,14 +222,13 @@ void	draw_line(t_data *game, int col)
 		((unsigned int *)game->img.addr)[wall_row * WIN_W + col] = color;
 		wall_row++;
 	}
+	float xx = x - game->player.pos[0];
+	float yy = y - game->player.pos[1];
+	float xxx = xx / sqrt(xx * xx + yy * yy);
+	float yyy = yy / sqrt(xx * xx + yy * yy);
 	while (wall_row < WIN_H)
 	{
 		float factor = (B_SIZE / 2.0) / (wall_row - WIN_H / 2);
-		//printf("factor: %f\n", factor);
-		float xx = x - game->player.pos[0];
-		float yy = y - game->player.pos[1];
-		float xxx = xx / sqrt(xx * xx + yy * yy);
-		float yyy = yy / sqrt(xx * xx + yy * yy);
 		int tempx = round(xxx * sqrt(col * col + 320 * 320 * 3) * factor + game->player.pos[0]);
 		int tempy = round(yyy * sqrt(col * col + 320 * 320 * 3) * factor + game->player.pos[1]);
 		if (tempx % B_SIZE <= 1 || tempy % B_SIZE <= 1 || tempx % B_SIZE >= (B_SIZE - 1)|| tempy % B_SIZE >= (B_SIZE - 1))
