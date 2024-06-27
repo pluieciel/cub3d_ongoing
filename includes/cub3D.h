@@ -90,8 +90,8 @@ typedef struct s_data
 	t_gc		*gc;
 	long long	time;
 	t_img1		img;
-	int			res_rc_h[2];
-	int			res_rc_v[2];
+	float		res_rc_h[2];
+	float		res_rc_v[2];
 }				t_data;
 
 void			init(t_data *game);
@@ -101,7 +101,7 @@ int				check_map(t_data *game);
 long long		millitimestamp(void);
 int				render(t_data *game);
 void			parse_element(t_data *game, char *filename);
-float			distance(int x1, int y1, int x2, int y2);
+float			distance(float x1, float y1, float x2, float y2);
 float			raycast_h(t_data *game, float x, float y);
 float			raycast_v(t_data *game, float x, float y);
-void	ft_bresenham(t_point a, t_point b, t_img1 *img);
+void			ft_bresenham(t_point a, t_point b, t_img1 *img);

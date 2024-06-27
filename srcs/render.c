@@ -12,7 +12,7 @@ void	clear_img(t_img1 *img)
 	}
 }
 
-float	distance(int x1, int y1, int x2, int y2)
+float	distance(float x1, float y1, float x2, float y2)
 {
 	return (sqrt((x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2)));
 }
@@ -170,12 +170,26 @@ int	render(t_data *game)
 
 		a.x = MM_POS_X;
 		a.y = MM_POS_Y;
+		a.color = 0xFF0000;
+		b.color = 0xFF0000;
 		b.x = game->res_rc_h[0] / MM_FACTOR + MM_POS_X - game->player.pos[0] / MM_FACTOR;
 		b.y = game->res_rc_h[1] / MM_FACTOR + MM_POS_Y - game->player.pos[1] / MM_FACTOR;
-		if (dis_h > 0 && dis_h < WIN_H)
+		if (dis_h > 0 && dis_h < RAYCAST_RANGE * B_SIZE)
 			ft_bresenham(a, b, &game->img);
-		if (dis_v > 0 && dis_v < WIN_H)
+		b.x = game->res_rc_v[0] / MM_FACTOR + MM_POS_X - game->player.pos[0] / MM_FACTOR;
+		b.y = game->res_rc_v[1] / MM_FACTOR + MM_POS_Y - game->player.pos[1] / MM_FACTOR;
+		a.color = 0x00FF00;
+		b.color = 0x00FF00;
+		if (dis_v > 0 && dis_v < RAYCAST_RANGE * B_SIZE)
 			ft_bresenham(a, b, &game->img);
+		int y = (game->res_rc_h[1] / MM_FACTOR + MM_POS_Y - game->player.pos[1] / MM_FACTOR);
+		int x = (game->res_rc_h[0] / MM_FACTOR + MM_POS_X - game->player.pos[0] / MM_FACTOR);
+		if (dis_h > 0 && dis_h < RAYCAST_RANGE * B_SIZE && 0<=y && y<WIN_H && 0<=x && x<WIN_W)
+			((unsigned int *)game->img.addr)[y * WIN_W + x] = 0xFFFFFF;
+		y = (game->res_rc_v[1] / MM_FACTOR + MM_POS_Y - game->player.pos[1] / MM_FACTOR);
+		x = (game->res_rc_v[0] / MM_FACTOR + MM_POS_X - game->player.pos[0] / MM_FACTOR);
+		if (dis_v > 0 && dis_v < RAYCAST_RANGE * B_SIZE && 0<=y && y<WIN_H && 0<=x && x<WIN_W)
+			((unsigned int *)game->img.addr)[y * WIN_W + x] = 0xFFFFFF;
 		mlx_put_image_to_window(game->mlx_ptr, game->win_ptr,
 				game->img.img_ptr, 0, 0);
 	}
