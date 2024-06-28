@@ -1,6 +1,6 @@
 #include "cub3D.h"
 
-float raycast_h(t_data *game, float x, float y)
+float	raycast_h(t_data *game, float x, float y)
 {
 	float	dir_x;
 	float	dir_y;
@@ -47,7 +47,7 @@ float raycast_h(t_data *game, float x, float y)
 	return (float)(RAYCAST_RANGE + 1) * B_SIZE;
 }
 
-float raycast_v(t_data *game, float x, float y)
+float	raycast_v(t_data *game, float x, float y)
 {
 	float	dir_x;
 	float	dir_y;
@@ -92,4 +92,14 @@ float raycast_v(t_data *game, float x, float y)
 		game->res_rc_v[0] += ((dir_x > 0) * 2 - 1) * B_SIZE;
 	}
 	return (float)(RAYCAST_RANGE + 1) * B_SIZE;
+}
+
+void	raycast(t_data *game, float x, float y)
+{
+	game->res_rc_h[2] = raycast_h(game, x, y);
+	game->res_rc_v[2] = raycast_v(game, x, y);
+	if (game->res_rc_h[2] < game->res_rc_v[2])
+		game->res_rc = game->res_rc_h;
+	else
+		game->res_rc = game->res_rc_v;
 }

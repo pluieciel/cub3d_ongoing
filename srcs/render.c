@@ -95,41 +95,34 @@ void	draw_minimap(t_data *game)
 	}
 }
 //not good, cannot handle corners
-int	no_collision(int dir, t_data *game, int pn)
+int	no_collision(t_data *game, float dir_x, float dir_y)
 {
-	if (dir == 0)
-	{
-		if (game->map[game->player.pos[1] / B_SIZE][(game->player.pos[0] + pn * 20) / B_SIZE] == 1)
-			return (0);
-	}
-	else if (dir == 1)
-	{
-		if (game->map[(game->player.pos[1] + pn * 20) / B_SIZE][game->player.pos[0] / B_SIZE] == 1)
-			return (0);
-	}
-	return (1);
+	raycast(game, dir_x, dir_y);
+	return (game->res_rc[2] > COLL_DIS);
 }
 
 void	move_player(t_data *game)
 {
 	float oldDirX = game->player.dir[0];
 	float oldDirY = game->player.dir[1];
-	if (game->key.w)
+	if (game->key.w && no_collision(game, 0, 0))
 	{
 		game->player.pos[0] += round(oldDirX * 5);
 		game->player.pos[1] += round(oldDirY * 5);
 	}
-	else if (game->key.s)
+	else if (game->key.s && no_collision(game, -game->player.dir[0] * DIS_P_S * 2, -game->player.dir[1] * DIS_P_S * 2))
 	{
 		game->player.pos[0] -= round(oldDirX * 5);
 		game->player.pos[1] -= round(oldDirY * 5);
 	}
-	if (game->key.a)
+	if (game->key.a
+	&& no_collision(game, (-game->player.dir[0] + game->player.dir[1]) * DIS_P_S, (-game->player.dir[1] - game->player.dir[0]) * DIS_P_S))
 	{
 		game->player.pos[0] += round(oldDirY * 5);
 		game->player.pos[1] -= round(oldDirX * 5);
 	}
-	else if (game->key.d)
+	else if (game->key.d
+	&& no_collision(game, (-game->player.dir[0] - game->player.dir[1]) * DIS_P_S, (-game->player.dir[1] + game->player.dir[0]) * DIS_P_S))
 	{
 		game->player.pos[0] -= round(oldDirY * 5);
 		game->player.pos[1] += round(oldDirX * 5);
@@ -189,20 +182,9 @@ float dis_h;
 
 void	draw_line(t_data *game, int col)
 {
-	//int		color;
-	int		wall_h, wall_row;
-	float	x, y, xx, yy;
+	int		wall_h, wall_row, temp_x, temp_y;
+	float	x, y, xx, yy, factor;
 
-	if (game->res_rc_h[2] < game->res_rc_v[2])
-	{
-		game->res_rc = game->res_rc_h;
-		//color = 0x00556622;
-	}
-	else
-	{
-		game->res_rc = game->res_rc_v;
-		//color = 0x00113322;
-	}
 	if (game->res_rc[3] == 0)
 		wall_h = 0;
 	else
@@ -222,10 +204,10 @@ void	draw_line(t_data *game, int col)
 	yy = y / sqrt(x * x + y * y) * sqrt(col * col + 640 * 640);
 	while (wall_row < WIN_H)
 	{
-		float factor = (B_SIZE / 2.0) / (wall_row - WIN_H / 2);
-		int tempx = round(xx * factor + game->player.pos[0]);
-		int tempy = round(yy * factor + game->player.pos[1]);
-		if (tempx % B_SIZE <= 1 || tempy % B_SIZE <= 1 || tempx % B_SIZE >= (B_SIZE - 1)|| tempy % B_SIZE >= (B_SIZE - 1))
+		factor = (B_SIZE / 2.0) / (wall_row - WIN_H / 2);
+		temp_x = round(xx * factor + game->player.pos[0]);
+		temp_y = round(yy * factor + game->player.pos[1]);
+		if (temp_x % B_SIZE == 0 || temp_y % B_SIZE == 0 || temp_x % B_SIZE == (B_SIZE - 1) || temp_y % B_SIZE == (B_SIZE - 1))
 			((unsigned int *)game->img.addr)[wall_row * WIN_W + col] = 0xFFFFFF;
 		wall_row++;
 	}
@@ -239,8 +221,7 @@ void	draw_walls(t_data *game)
 	col = 0;
 	while (col < WIN_W)
 	{
-		game->res_rc_h[2] = raycast_h(game, temp_x, temp_y);
-		game->res_rc_v[2] = raycast_v(game, temp_x, temp_y);
+		raycast(game, temp_x, temp_y);
 		draw_line(game, col);
 		temp_x -= game->player.dir[1];
 		temp_y += game->player.dir[0];

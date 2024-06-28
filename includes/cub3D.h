@@ -27,6 +27,7 @@
 #define DIS_P_S (WIN_W / 2)
 #define RAYCAST_RANGE 20
 #define ELEM_N 6
+#define COLL_DIS 20
 
 typedef struct s_point
 {
@@ -99,14 +100,15 @@ typedef struct s_data
 	float		*res_rc;
 }				t_data;
 
-void			init(t_data *game);
-void			parse_map(t_data *game, char *filename);
-void			hook(t_data *game);
-int				check_map(t_data *game);
-long long		millitimestamp(void);
-int				render(t_data *game);
-void			parse_element(t_data *game, char *filename);
-float			distance(float x1, float y1, float x2, float y2);
-float			raycast_h(t_data *game, float x, float y);
-float			raycast_v(t_data *game, float x, float y);
-void			ft_bresenham(t_point a, t_point b, t_img1 *img);
+void		init(t_data *game);
+void		parse_map(t_data *game, char *filename);
+void		hook(t_data *game);
+int			check_map(t_data *game);
+long long	millitimestamp(void);
+int			render(t_data *game);
+void		parse_element(t_data *game, char *filename);
+float		distance(float x1, float y1, float x2, float y2);
+float		raycast_h(t_data *game, float x, float y);
+float		raycast_v(t_data *game, float x, float y);
+void		raycast(t_data *game, float x, float y);
+void		ft_bresenham(t_point a, t_point b, t_img1 *img);
