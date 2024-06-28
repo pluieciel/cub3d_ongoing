@@ -95,37 +95,45 @@ void	draw_minimap(t_data *game)
 	}
 }
 //not good, cannot handle corners
-int	no_collision(t_data *game, float dir_x, float dir_y)
+int	collision(t_data *game, float dir_x, float dir_y)
 {
 	raycast(game, dir_x, dir_y);
-	return (game->res_rc[2] > COLL_DIS);
+	if (game->res_rc_h[2] < COLL_DIS)
+		return (1);
+	else if (game->res_rc_v[2] < COLL_DIS)
+		return (2);
+	else
+		return (0);
 }
 
 void	move_player(t_data *game)
 {
-	float oldDirX = game->player.dir[0];
-	float oldDirY = game->player.dir[1];
-	if (game->key.w && no_collision(game, 0, 0))
+	float	oldDirX = game->player.dir[0];
+	float	oldDirY = game->player.dir[1];
+	int		coll;
+	if (game->key.w)
 	{
-		game->player.pos[0] += round(oldDirX * 5);
-		game->player.pos[1] += round(oldDirY * 5);
+		coll = collision(game, 0, 0);
+		game->player.pos[0] += round(oldDirX * 5) * (coll != 2);
+		game->player.pos[1] += round(oldDirY * 5) * (coll != 1);
 	}
-	else if (game->key.s && no_collision(game, -game->player.dir[0] * DIS_P_S * 2, -game->player.dir[1] * DIS_P_S * 2))
+	else if (game->key.s)
 	{
-		game->player.pos[0] -= round(oldDirX * 5);
-		game->player.pos[1] -= round(oldDirY * 5);
+		coll = collision(game, -game->player.dir[0] * DIS_P_S * 2, -game->player.dir[1] * DIS_P_S * 2);
+		game->player.pos[0] -= round(oldDirX * 5) * (coll != 2);
+		game->player.pos[1] -= round(oldDirY * 5) * (coll != 1);
 	}
-	if (game->key.a
-	&& no_collision(game, (-game->player.dir[0] + game->player.dir[1]) * DIS_P_S, (-game->player.dir[1] - game->player.dir[0]) * DIS_P_S))
+	if (game->key.a)
 	{
-		game->player.pos[0] += round(oldDirY * 5);
-		game->player.pos[1] -= round(oldDirX * 5);
+		coll = collision(game, (-game->player.dir[0] + game->player.dir[1]) * DIS_P_S, (-game->player.dir[1] - game->player.dir[0]) * DIS_P_S);
+		game->player.pos[0] += round(oldDirY * 5) * (coll != 2);
+		game->player.pos[1] -= round(oldDirX * 5) * (coll != 1);
 	}
-	else if (game->key.d
-	&& no_collision(game, (-game->player.dir[0] - game->player.dir[1]) * DIS_P_S, (-game->player.dir[1] + game->player.dir[0]) * DIS_P_S))
+	else if (game->key.d)
 	{
-		game->player.pos[0] -= round(oldDirY * 5);
-		game->player.pos[1] += round(oldDirX * 5);
+		coll = collision(game, (-game->player.dir[0] - game->player.dir[1]) * DIS_P_S, (-game->player.dir[1] + game->player.dir[0]) * DIS_P_S);
+		game->player.pos[0] -= round(oldDirY * 5) * (coll != 2);
+		game->player.pos[1] += round(oldDirX * 5) * (coll != 1);
 	}
 	if (game->key.left)
 	{
