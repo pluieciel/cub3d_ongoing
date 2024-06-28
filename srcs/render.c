@@ -189,48 +189,42 @@ float dis_h;
 
 void	draw_line(t_data *game, int col)
 {
-	float	x;
-	float	y;
-	float	dis;
-	float	dir;
-	int		color;
+	//int		color;
+	int		wall_h, wall_row;
+	float	x, y, xx, yy;
 
 	if (game->res_rc_h[2] < game->res_rc_v[2])
 	{
-		x = game->res_rc_h[0];
-		y = game->res_rc_h[1];
-		dis = game->res_rc_h[2];
-		dir = game->res_rc_h[3];
-		color = 0x00556622;
+		game->res_rc = game->res_rc_h;
+		//color = 0x00556622;
 	}
 	else
 	{
-		x = game->res_rc_v[0];
-		y = game->res_rc_v[1];
-		dis = game->res_rc_v[2];
-		dir = game->res_rc_v[3];
-		color = 0x00113322;
+		game->res_rc = game->res_rc_v;
+		//color = 0x00113322;
 	}
-	if (dir == 0)
-		return ;
-	float wall_h = WIN_W / 2 / (dis / B_SIZE);
+	if (game->res_rc[3] == 0)
+		wall_h = 0;
+	else
+		wall_h = round(B_SIZE * (WIN_W / 2) / game->res_rc[2]);
 	if (wall_h > WIN_H)
 		wall_h = WIN_H;
-	int wall_row = (WIN_H - wall_h) / 2;
+	wall_row = (WIN_H - wall_h) / 2;
 	while (wall_row < (WIN_H + wall_h) / 2)
 	{
-		((unsigned int *)game->img.addr)[wall_row * WIN_W + col] = color;
+		if (wall_row == (WIN_H - wall_h) / 2 || wall_row == (WIN_H + wall_h) / 2 - 1)
+			((unsigned int *)game->img.addr)[wall_row * WIN_W + col] = 0x00557766;
 		wall_row++;
 	}
-	float xx = x - game->player.pos[0];
-	float yy = y - game->player.pos[1];
-	float xxx = xx / sqrt(xx * xx + yy * yy);
-	float yyy = yy / sqrt(xx * xx + yy * yy);
+	x = game->res_rc[0] - game->player.pos[0];
+	y = game->res_rc[1] - game->player.pos[1];
+	xx = x / sqrt(x * x + y * y) * sqrt(col * col + 640 * 640);
+	yy = y / sqrt(x * x + y * y) * sqrt(col * col + 640 * 640);
 	while (wall_row < WIN_H)
 	{
 		float factor = (B_SIZE / 2.0) / (wall_row - WIN_H / 2);
-		int tempx = round(xxx * sqrt(col * col + 320 * 320 * 3) * factor + game->player.pos[0]);
-		int tempy = round(yyy * sqrt(col * col + 320 * 320 * 3) * factor + game->player.pos[1]);
+		int tempx = round(xx * factor + game->player.pos[0]);
+		int tempy = round(yy * factor + game->player.pos[1]);
 		if (tempx % B_SIZE <= 1 || tempy % B_SIZE <= 1 || tempx % B_SIZE >= (B_SIZE - 1)|| tempy % B_SIZE >= (B_SIZE - 1))
 			((unsigned int *)game->img.addr)[wall_row * WIN_W + col] = 0xFFFFFF;
 		wall_row++;

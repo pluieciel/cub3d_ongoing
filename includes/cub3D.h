@@ -96,6 +96,7 @@ typedef struct s_data
 	// 3 -> dir
 	float		res_rc_h[4];
 	float		res_rc_v[4];
+	float		*res_rc;
 }				t_data;
 
 void			init(t_data *game);
