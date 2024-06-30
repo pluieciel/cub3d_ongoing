@@ -53,18 +53,30 @@ point *ro_back_on_z(point p)
     return newp;
 }
 
+point *cross(point p1, point p2)
+{
+    point *newp = (point *)malloc(sizeof(point));
+    newp->x = p1.y * p2.z - p1.z * p2.y;
+    newp->y = p1.z * p2.x - p1.x * p2.z;
+    newp->z = p1.x * p2.y - p1.y * p2.x;
+    newp->angle = 0;
+    return newp;
+}
+
 int main()
 {
-    point p = {1, 1, 1, M_PI / 4};
+    point p = {0, 1, 0, M_PI / 2};
     point *newp;
     newp = &p;
-    printf("x: %f, y: %f, z: %f\n", newp->x, newp->y, newp->z); fflush(stdout);
-    newp = ro_on_z_to_xz(p);
-    printf("x: %f, y: %f, z: %f\n", newp->x, newp->y, newp->z); fflush(stdout);
-    newp = ro_on_y(*newp, -asin(1 / sqrt(3)));
-    printf("x: %f, y: %f, z: %f\n", newp->x, newp->y, newp->z); fflush(stdout);
+    printf("1, x: %f, y: %f, z: %f\n", newp->x, newp->y, newp->z); fflush(stdout);
+    newp = ro_on_z_to_xz(*newp);
+    //printf("x: %f, y: %f, z: %f\n", newp->x, newp->y, newp->z); fflush(stdout);
+    newp = ro_on_y(*newp, -M_PI / 2);
+    //printf("x: %f, y: %f, z: %f\n", newp->x, newp->y, newp->z); fflush(stdout);
     newp = ro_back_on_z(*newp);
-    printf("x: %f, y: %f, z: %f\n", newp->x, newp->y, newp->z); fflush(stdout);
+    printf("2, x: %f, y: %f, z: %f\n", newp->x, newp->y, newp->z); fflush(stdout);
+    newp = cross(*newp, p);
+    printf("3, x: %f, y: %f, z: %f\n", newp->x, newp->y, newp->z); fflush(stdout);
     
     return 0;
 }
