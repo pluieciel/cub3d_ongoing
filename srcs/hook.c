@@ -39,6 +39,10 @@ int	handle_keypress(int keysym, t_data *game)
 		game->key.up = 1;
 	else if (keysym == 65364)
 		game->key.down = 1;
+	else if (keysym == 65451 && game->dis_p_s < 10000)
+		game->dis_p_s += 300;
+	else if (keysym == 65453 && game->dis_p_s > 400)
+		game->dis_p_s -= 300;
 	return (0);
 }
 
