@@ -25,7 +25,7 @@ void	draw_map1(t_data *game)
 	int j;
 
 	((unsigned int *)game->img.addr)[MM_POS_Y * WIN_W + MM_POS_X] = 0x00FFFF00;
-	((unsigned int *)game->img.addr)[(MM_POS_Y + (int)round(game->player.dir[1] * 10)) * WIN_W + MM_POS_X + (int)round(game->player.dir[0] * 10)] = 0x00FFFF00;
+	//((unsigned int *)game->img.addr)[(MM_POS_Y + (int)round(game->player.dir[1] * 10)) * WIN_W + MM_POS_X + (int)round(game->player.dir[0] * 10)] = 0x00FFFF00;
 	y = game->player.pos[1] / B_SIZE - 8;
 	while (y <= game->player.pos[1] / B_SIZE + 8)
 	{
@@ -95,45 +95,72 @@ void	draw_minimap(t_data *game)
 	}
 }
 //not good, cannot handle corners
-int	collision(t_data *game, float dir_x, float dir_y)
+int	collision(t_data *game, float dir_x, float dir_y, int coll)
 {
+	float oldDis = *game->res_rc;
 	raycast(game, dir_x, dir_y);
+	t_point a;
+	t_point b;
+
+	(void)coll;
+	a.x = MM_POS_X;
+	a.y = MM_POS_Y;
+	a.color = 0xFF0000;
+	b.x = game->res_rc_h[0] / MM_FACTOR + MM_POS_X - game->player.pos[0] / MM_FACTOR;
+	b.y = game->res_rc_h[1] / MM_FACTOR + MM_POS_Y - game->player.pos[1] / MM_FACTOR;
+	if (game->res_rc_h[2] > 0 && game->res_rc_h[2] < RAYCAST_RANGE * B_SIZE)
+		ft_bresenham(a, b, &game->img);
+	a.color = 0x00FF00;
+	b.x = game->res_rc_v[0] / MM_FACTOR + MM_POS_X - game->player.pos[0] / MM_FACTOR;
+	b.y = game->res_rc_v[1] / MM_FACTOR + MM_POS_Y - game->player.pos[1] / MM_FACTOR;
+	if (game->res_rc_v[2] > 0 && game->res_rc_v[2] < RAYCAST_RANGE * B_SIZE)
+		ft_bresenham(a, b, &game->img);
+	if (*game->res_rc < oldDis)
+	{
+		game->bestColl = 0;
+		return (0);
+	}
 	if (game->res_rc_h[2] < COLL_DIS)
 		return (1);
 	else if (game->res_rc_v[2] < COLL_DIS)
 		return (2);
-	else
-		return (0);
+	return (0);
 }
 
 void	move_player(t_data *game)
 {
 	float	oldDirX = game->player.dir[0];
 	float	oldDirY = game->player.dir[1];
-	int		coll;
+	int		coll[5];
+
 	if (game->key.w)
 	{
-		coll = collision(game, 0, 0);
-		game->player.pos[0] += round(oldDirX * 5) * (coll != 2);
-		game->player.pos[1] += round(oldDirY * 5) * (coll != 1);
+		coll[0] = collision(game, 0, 0, 0);
+		coll[1] = collision(game, (-game->player.dir[0] + game->player.dir[1]) * DIS_P_S, (-game->player.dir[1] - game->player.dir[0]) * DIS_P_S, 1);
+		coll[2] = collision(game, (-game->player.dir[0] - game->player.dir[1]) * DIS_P_S, (-game->player.dir[1] + game->player.dir[0]) * DIS_P_S, 2);
+		coll[3] = collision(game, (sqrt(2)/2) * (game->player.dir[0] - game->player.dir[1]) * DIS_P_S - game->player.dir[0] * DIS_P_S, (sqrt(2)/2) * (game->player.dir[0] + game->player.dir[1]) * DIS_P_S - game->player.dir[1] * DIS_P_S, 3);
+		coll[4] = collision(game, (sqrt(2)/2) * (game->player.dir[0] + game->player.dir[1]) * DIS_P_S - game->player.dir[0] * DIS_P_S, (sqrt(2)/2) * (-game->player.dir[0] + game->player.dir[1]) * DIS_P_S - game->player.dir[1] * DIS_P_S, 4);
+
+		game->player.pos[0] += round(oldDirX * 5) * (coll[0] != 2);
+		game->player.pos[1] += round(oldDirY * 5) * (coll[0] != 1);
 	}
 	else if (game->key.s)
 	{
-		coll = collision(game, -game->player.dir[0] * DIS_P_S * 2, -game->player.dir[1] * DIS_P_S * 2);
-		game->player.pos[0] -= round(oldDirX * 5) * (coll != 2);
-		game->player.pos[1] -= round(oldDirY * 5) * (coll != 1);
+		coll[0] = collision(game, 0, -game->player.dir[1] * DIS_P_S * 2, 0);
+		game->player.pos[0] -= round(oldDirX * 5) * (coll[0] != 2);
+		game->player.pos[1] -= round(oldDirY * 5) * (coll[0] != 1);
 	}
 	if (game->key.a)
 	{
-		coll = collision(game, (-game->player.dir[0] + game->player.dir[1]) * DIS_P_S, (-game->player.dir[1] - game->player.dir[0]) * DIS_P_S);
-		game->player.pos[0] += round(oldDirY * 5) * (coll != 2);
-		game->player.pos[1] -= round(oldDirX * 5) * (coll != 1);
+		coll[0] = collision(game, (-game->player.dir[0] + game->player.dir[1]) * DIS_P_S, (-game->player.dir[1] - game->player.dir[0]) * DIS_P_S, 0);
+		game->player.pos[0] += round(oldDirY * 5) * (coll[0] != 2);
+		game->player.pos[1] -= round(oldDirX * 5) * (coll[0] != 1);
 	}
 	else if (game->key.d)
 	{
-		coll = collision(game, (-game->player.dir[0] - game->player.dir[1]) * DIS_P_S, (-game->player.dir[1] + game->player.dir[0]) * DIS_P_S);
-		game->player.pos[0] -= round(oldDirY * 5) * (coll != 2);
-		game->player.pos[1] += round(oldDirX * 5) * (coll != 1);
+		coll[0] = collision(game, (-game->player.dir[0] - game->player.dir[1]) * DIS_P_S, (-game->player.dir[1] + game->player.dir[0]) * DIS_P_S, 0);
+		game->player.pos[0] -= round(oldDirY * 5) * (coll[0] != 2);
+		game->player.pos[1] += round(oldDirX * 5) * (coll[0] != 1);
 	}
 	if (game->key.left)
 	{
@@ -204,12 +231,16 @@ void	draw_line(t_data *game, int col)
 	{
 		if (wall_row == (WIN_H - wall_h) / 2 || wall_row == (WIN_H + wall_h) / 2 - 1)
 			((unsigned int *)game->img.addr)[wall_row * WIN_W + col] = 0x00557766;
+		else if (game->res_rc == game->res_rc_h)
+			((unsigned int *)game->img.addr)[wall_row * WIN_W + col] = 0x00330000;
+		else
+			((unsigned int *)game->img.addr)[wall_row * WIN_W + col] = 0x00003300;
 		wall_row++;
 	}
 	x = game->res_rc[0] - game->player.pos[0];
 	y = game->res_rc[1] - game->player.pos[1];
-	xx = x / sqrt(x * x + y * y) * sqrt(col * col + 640 * 640);
-	yy = y / sqrt(x * x + y * y) * sqrt(col * col + 640 * 640);
+	xx = x / sqrt(x * x + y * y) * sqrt((640 - col) * (640 - col) + 640 * 640);
+	yy = y / sqrt(x * x + y * y) * sqrt((640 - col) * (640 - col) + 640 * 640);
 	while (wall_row < WIN_H)
 	{
 		factor = (B_SIZE / 2.0) / (wall_row - WIN_H / 2);
@@ -250,9 +281,10 @@ int	render(t_data *game)
 		mlx_clear_window(game->mlx_ptr, game->win_ptr);
 		clear_img(&game->img);
 		//(((unsigned int *)game->img.addr)[y * WIN_W + x]) = color;
+		//draw_walls(game);
 		move_player(game);
-		draw_walls(game);
-		draw_minimap(game);
+		//draw_minimap(game);
+		draw_map1(game);
 		mlx_put_image_to_window(game->mlx_ptr, game->win_ptr,
 				game->img.img_ptr, 0, 0);
 	}

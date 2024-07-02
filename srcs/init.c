@@ -9,6 +9,9 @@ void	init(t_data *game)
 	game->player.pos[1] = 0;
 	game->player.dir[0] = 0;
 	game->player.dir[1] = 0;
+	game->res_rc_h[2] = 0;
+	game->res_rc_v[2] = 0;
+	game->bestColl = 0;
 	game->key.w = 0;
 	game->key.a = 0;
 	game->key.s = 0;

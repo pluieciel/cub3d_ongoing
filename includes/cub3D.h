@@ -28,6 +28,9 @@
 #define RAYCAST_RANGE 20
 #define ELEM_N 6
 #define COLL_DIS 20
+#ifndef M_PI
+    #define M_PI 3.14159265358979323846
+#endif
 
 typedef struct s_point
 {
@@ -98,6 +101,7 @@ typedef struct s_data
 	float		res_rc_h[4];
 	float		res_rc_v[4];
 	float		*res_rc;
+	int			bestColl;
 }				t_data;
 
 void		init(t_data *game);
