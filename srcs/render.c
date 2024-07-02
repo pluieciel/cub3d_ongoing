@@ -61,9 +61,37 @@ void	draw_minimap(t_data *game)
 	int j;
 	int newi;
 	int newj;
+	unsigned int	t;
+	float	angle;
 
-	((unsigned int *)game->img.addr)[MM_POS_Y * WIN_W + MM_POS_X] = 0x00FFFF00;
+	((unsigned int *)game->img.addr)[MM_POS_Y * WIN_W + MM_POS_X] = 0x00FFFF00; //player pos
 	//((unsigned int *)game->img.addr)[(MM_POS_Y + (int)round(game->player.dir[1] / 6)) * WIN_W + MM_POS_X + (int)round(game->player.dir[0] / 6)] = 0x00FFFF00;
+	angle = atan(1.0 * (WIN_W / 2) / game->dis_p_s);
+	i = MM_POS_X - MM_RADIUS;
+	while (i <= MM_POS_X + MM_RADIUS)
+	{
+		j = MM_POS_Y - MM_RADIUS;
+		while (j <= MM_POS_Y + MM_RADIUS)
+		{
+			if (distance(i, j, MM_POS_X, MM_POS_Y) < MM_RADIUS)
+			{
+				t = ((unsigned int *)game->img.addr)[j * WIN_W + i];
+				if (MM_POS_Y > j && atan(1.0 * abs(i - MM_POS_X) / (MM_POS_Y - j)) < angle)
+					((unsigned int *)game->img.addr)[j * WIN_W + i]
+						= ((((((t >> 16) & 0xff) * 2 + 0x11) / 3) & 0xff) << 16)
+						+ ((((((t >> 8) & 0xff) * 2 + 0xff) / 3) & 0xff) << 8)
+						+ (((((t) & 0xff) * 2 + 0x11) / 3) & 0xff);
+				else
+					((unsigned int *)game->img.addr)[j * WIN_W + i]
+						= ((((((t >> 16) & 0xff) * 2 + 0xff) / 3) & 0xff) << 16)
+						+ ((((((t >> 8) & 0xff) * 2 + 0xff) / 3) & 0xff) << 8)
+						+ (((((t) & 0xff) * 2 + 0xff) / 3) & 0xff);
+			}
+			j++;
+		}
+		i++;
+	}
+	
 	y = game->player.pos[1] / B_SIZE - MM_RANGE;
 	while (y <= game->player.pos[1] / B_SIZE + MM_RANGE)
 	{
@@ -162,7 +190,7 @@ void	move_player(t_data *game)
 		else
 			game->player.dir3D.angle = ((game->player.dir[1] > 0) * 2 - 1) * M_PI / 2;
 	}
-	if (game->key.up && game->player.dir3D.z < 0.85)
+	if (game->key.up && game->player.dir3D.z < 0.95)
 	{
 		p1 = ro_on_z_to_xz(game->player.dir3D);
 		p2 = ro_on_y(*p1, ROT_SPEED);
@@ -174,7 +202,7 @@ void	move_player(t_data *game)
 		game->player.dir3D.z = p1->z;
 		free(p1);
 	}
-	else if (game->key.down && game->player.dir3D.z > -0.85)
+	else if (game->key.down && game->player.dir3D.z > -0.95)
 	{
 		p1 = ro_on_z_to_xz(game->player.dir3D);
 		p2 = ro_on_y(*p1, -ROT_SPEED);
@@ -286,6 +314,11 @@ void	draw_walls(t_data *game)
 
 void	draw_pixel(t_data *game, int col, int row)
 {
+	float	temp_x;
+	float	temp_y;
+	float	r;
+	float	c;
+
 	if (game->res_rc_3D[4] != 0
 	&& game->res_rc_3D[2] >= -32 && game->res_rc_3D[2] <= 32)
 	{
@@ -296,8 +329,8 @@ void	draw_pixel(t_data *game, int col, int row)
 	}
 	else if (game->res_rc_3D[2] < -32)
 	{
-		float temp_x = game->res_rc_3D[0] - game->player.pos[0];
-		float temp_y = game->res_rc_3D[1] - game->player.pos[1];
+		temp_x = game->res_rc_3D[0] - game->player.pos[0];
+		temp_y = game->res_rc_3D[1] - game->player.pos[1];
 		game->res_rc_3D[0] = temp_x * -32 / game->res_rc_3D[2] + game->player.pos[0];
 		game->res_rc_3D[1] = temp_y * -32 / game->res_rc_3D[2] + game->player.pos[1];
 		if (((int)game->res_rc_3D[0]) % (B_SIZE / 4) == 0
@@ -305,6 +338,21 @@ void	draw_pixel(t_data *game, int col, int row)
 		|| ((int)game->res_rc_3D[0]) % (B_SIZE / 4) == (B_SIZE / 4) - 1
 		|| ((int)game->res_rc_3D[1]) % (B_SIZE / 4) == (B_SIZE / 4) - 1)
 		((unsigned int *)game->img.addr)[row * WIN_W + col] = 0x00FFFFFF;
+	}
+	else if (game->res_rc_3D[2] >= 0)
+	{
+		temp_x = game->res_rc_3D[0] - game->player.pos[0];
+		temp_y = game->res_rc_3D[1] - game->player.pos[1];
+		r = game->res_rc_3D[2] / sqrt(temp_x * temp_x + temp_y * temp_y + game->res_rc_3D[2] * game->res_rc_3D[2]);
+		r = fmin(1.0, r);
+		r = 1.0 - asin(r) / (M_PI / 2);
+		if (temp_x != 0)
+			c = (atan(temp_y / temp_x) + M_PI * (temp_x < 0) + (M_PI / 2)) / (M_PI * 2);
+		else
+			c = 1.0 / 4 + 1.0 / 2 * (temp_y < 0);
+		r *= game->img_sky.h;
+		c *= game->img_sky.w;
+		((unsigned int *)game->img.addr)[row * WIN_W + col] = ((unsigned int *)game->img_sky.addr)[((int)round(r)) * game->img_sky.w + (int)round(c)];
 	}
 }
 

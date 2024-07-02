@@ -36,4 +36,8 @@ void	init(t_data *game)
 			game->img.w, game->img.h);
 	game->img.addr = mlx_get_data_addr(game->img.img_ptr,
 			&game->img.bpp, &game->img.line_len, &game->img.endian);
+	game->img_sky.img_ptr = mlx_xpm_file_to_image(game->mlx_ptr, "textures/sky.xpm", &game->img_sky.w, &game->img_sky.h);
+	game->img_sky.addr = mlx_get_data_addr(game->img_sky.img_ptr,
+			&game->img_sky.bpp, &game->img_sky.line_len, &game->img_sky.endian);
+	//printf("%d, %d\n", w, h);
 }
