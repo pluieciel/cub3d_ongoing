@@ -318,14 +318,39 @@ void	draw_pixel(t_data *game, int col, int row)
 	float	temp_y;
 	float	r;
 	float	c;
+	float	shadow;
+	unsigned int	t;
 
 	if (game->res_rc_3D[4] != 0
 	&& game->res_rc_3D[2] >= -32 && game->res_rc_3D[2] <= 32)
 	{
+		shadow = 1.0 - (fmin(game->res_rc_3D[3], 8 * B_SIZE) / (8 * B_SIZE));
 		if (game->res_rc_3D == game->res_rc_h_3D)
-			((unsigned int *)game->img.addr)[row * WIN_W + col] = 0x00557766;
+		{
+			if (game->res_rc_3D[4] == -1)
+				c = round(fmod(game->res_rc_3D[0], B_SIZE) / B_SIZE * game->img_wall.w);
+			else
+				c = round((1 - fmod(game->res_rc_3D[0], B_SIZE) / B_SIZE) * game->img_wall.w);
+			r = round((1 - fmod(game->res_rc_3D[2] + 32, B_SIZE) / B_SIZE) * game->img_wall.h);
+			t = ((unsigned int *)game->img_wall.addr)[(int)r * game->img_wall.w + (int)c];
+			((unsigned int *)game->img.addr)[row * WIN_W + col]
+			= (((int)round(((t >> 16) & 0xff) * shadow) & 0xff) << 16)
+				+ (((int)round(((t >> 8) & 0xff) * shadow) & 0xff) << 8)
+				+ ((int)round(((t) & 0xff) * shadow) & 0xff);
+		}
 		else
-			((unsigned int *)game->img.addr)[row * WIN_W + col] = 0x00224411;
+		{
+			if (game->res_rc_3D[4] == 1)
+				c = round(fmod(game->res_rc_3D[1], B_SIZE) / B_SIZE * game->img_wall.w);
+			else
+				c = round((1 - fmod(game->res_rc_3D[1], B_SIZE) / B_SIZE) * game->img_wall.w);
+			r = round((1 - fmod(game->res_rc_3D[2] + 32, B_SIZE) / B_SIZE) * game->img_wall.h);
+			t = ((unsigned int *)game->img_wall.addr)[(int)r * game->img_wall.w + (int)c];
+			((unsigned int *)game->img.addr)[row * WIN_W + col]
+			= (((int)round(((t >> 16) & 0xff) * shadow) & 0xff) << 16)
+				+ (((int)round(((t >> 8) & 0xff) * shadow) & 0xff) << 8)
+				+ ((int)round(((t) & 0xff) * shadow) & 0xff);
+		}
 	}
 	else if (game->res_rc_3D[2] < -32)
 	{
@@ -333,11 +358,19 @@ void	draw_pixel(t_data *game, int col, int row)
 		temp_y = game->res_rc_3D[1] - game->player.pos[1];
 		game->res_rc_3D[0] = temp_x * -32 / game->res_rc_3D[2] + game->player.pos[0];
 		game->res_rc_3D[1] = temp_y * -32 / game->res_rc_3D[2] + game->player.pos[1];
-		if (((int)game->res_rc_3D[0]) % (B_SIZE / 4) == 0
-		|| ((int)game->res_rc_3D[1]) % (B_SIZE / 4) == 0
-		|| ((int)game->res_rc_3D[0]) % (B_SIZE / 4) == (B_SIZE / 4) - 1
-		|| ((int)game->res_rc_3D[1]) % (B_SIZE / 4) == (B_SIZE / 4) - 1)
-		((unsigned int *)game->img.addr)[row * WIN_W + col] = 0x00FFFFFF;
+		c = fmod(game->res_rc_3D[0], B_SIZE) / B_SIZE;
+		c += (c < 0) * B_SIZE;
+		c = round((1 - c) * game->img_floor.w);
+		r = fmod(game->res_rc_3D[1], B_SIZE) / B_SIZE;
+		r += (r < 0) * B_SIZE;
+		r = round((1 - r) * game->img_floor.h);
+		game->res_rc_3D[3] = distance(game->res_rc_3D[0], game->res_rc_3D[1], game->player.pos[0], game->player.pos[1]);
+		shadow = 1.0 - (fmin(game->res_rc_3D[3], 8 * B_SIZE) / (8 * B_SIZE));
+		t = ((unsigned int *)game->img_floor.addr)[(int)r * game->img_wall.w + (int)c];
+		((unsigned int *)game->img.addr)[row * WIN_W + col]
+		= (((int)round(((t >> 16) & 0xff) * shadow) & 0xff) << 16)
+			+ (((int)round(((t >> 8) & 0xff) * shadow) & 0xff) << 8)
+			+ ((int)round(((t) & 0xff) * shadow) & 0xff);
 	}
 	else if (game->res_rc_3D[2] >= 0)
 	{
