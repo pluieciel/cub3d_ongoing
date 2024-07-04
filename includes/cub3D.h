@@ -114,9 +114,16 @@ typedef struct s_data
 	float		res_rc_h_3D[5];
 	float		res_rc_v_3D[5];
 	float		*res_rc_3D;
+	// x y z dis dir
+	int			num_doors_h;
+	int			num_doors_v;
+	float		doors_h[20][5];
+	float		doors_v[20][5];
+	float		nearest_wall_dis;
 	t_img1		img_sky;
 	t_img1		img_wall;
 	t_img1		img_floor;
+	t_img1		img_door;
 }				t_data;
 
 void		init(t_data *game);

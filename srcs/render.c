@@ -312,6 +312,56 @@ void	draw_walls(t_data *game)
 	}
 }
 
+void	do_doors_h(t_data *game, int col, int row)
+{
+	float	r;
+	float	c;
+	unsigned int	t;
+	float	shadow;
+
+	if (game->doors_h[game->num_doors_h][3] < game->nearest_wall_dis)
+	{
+		shadow = 1.0 - (fmin(game->doors_h[game->num_doors_h][3], 8 * B_SIZE) / (8 * B_SIZE));
+		if (game->doors_h[game->num_doors_h][4] == 1)
+			c = round(fmod(game->doors_h[game->num_doors_h][0], B_SIZE) / B_SIZE * game->img_door.w);
+		else
+			c = round((1 - fmod(game->doors_h[game->num_doors_h][0], B_SIZE) / B_SIZE) * game->img_door.w);
+		r = round((1 - fmod(game->doors_h[game->num_doors_h][2] + 32, B_SIZE) / B_SIZE) * game->img_door.h);
+		t = ((unsigned int *)game->img_door.addr)[(int)r * game->img_door.w + (int)c];
+		if (t != 4278190080)
+			((unsigned int *)game->img.addr)[row * WIN_W + col]
+			= (((int)round(((t >> 16) & 0xff) * shadow) & 0xff) << 16)
+				+ (((int)round(((t >> 8) & 0xff) * shadow) & 0xff) << 8)
+				+ ((int)round(((t) & 0xff) * shadow) & 0xff);
+	}
+	game->num_doors_h--;
+}
+
+void	do_doors_v(t_data *game, int col, int row)
+{
+	float	r;
+	float	c;
+	unsigned int	t;
+	float	shadow;
+
+	if (game->doors_v[game->num_doors_v][3] < game->nearest_wall_dis)
+	{
+		shadow = 1.0 - (fmin(game->doors_v[game->num_doors_v][3], 8 * B_SIZE) / (8 * B_SIZE));
+		if (game->doors_v[game->num_doors_v][4] == 1)
+			c = round(fmod(game->doors_v[game->num_doors_v][1], B_SIZE) / B_SIZE * game->img_door.w);
+		else
+			c = round((1 - fmod(game->doors_v[game->num_doors_v][1], B_SIZE) / B_SIZE) * game->img_door.w);
+		r = round((1 - fmod(game->doors_v[game->num_doors_v][2] + 32, B_SIZE) / B_SIZE) * game->img_door.h);
+		t = ((unsigned int *)game->img_door.addr)[(int)r * game->img_door.w + (int)c];
+		if (t != 4278190080)
+			((unsigned int *)game->img.addr)[row * WIN_W + col]
+			= (((int)round(((t >> 16) & 0xff) * shadow) & 0xff) << 16)
+				+ (((int)round(((t >> 8) & 0xff) * shadow) & 0xff) << 8)
+				+ ((int)round(((t) & 0xff) * shadow) & 0xff);
+	}
+	game->num_doors_v--;
+}
+
 void	draw_pixel(t_data *game, int col, int row)
 {
 	float	temp_x;
@@ -321,13 +371,14 @@ void	draw_pixel(t_data *game, int col, int row)
 	float	shadow;
 	unsigned int	t;
 
+	game->nearest_wall_dis = RAYCAST_RANGE * B_SIZE;
 	if (game->res_rc_3D[4] != 0
 	&& game->res_rc_3D[2] >= -32 && game->res_rc_3D[2] <= 32)
 	{
 		shadow = 1.0 - (fmin(game->res_rc_3D[3], 8 * B_SIZE) / (8 * B_SIZE));
 		if (game->res_rc_3D == game->res_rc_h_3D)
 		{
-			if (game->res_rc_3D[4] == -1)
+			if (game->res_rc_3D[4] == 1)
 				c = round(fmod(game->res_rc_3D[0], B_SIZE) / B_SIZE * game->img_wall.w);
 			else
 				c = round((1 - fmod(game->res_rc_3D[0], B_SIZE) / B_SIZE) * game->img_wall.w);
@@ -351,6 +402,7 @@ void	draw_pixel(t_data *game, int col, int row)
 				+ (((int)round(((t >> 8) & 0xff) * shadow) & 0xff) << 8)
 				+ ((int)round(((t) & 0xff) * shadow) & 0xff);
 		}
+		game->nearest_wall_dis = game->res_rc_3D[3];
 	}
 	else if (game->res_rc_3D[2] < -32)
 	{
@@ -386,6 +438,13 @@ void	draw_pixel(t_data *game, int col, int row)
 		r *= game->img_sky.h;
 		c *= game->img_sky.w;
 		((unsigned int *)game->img.addr)[row * WIN_W + col] = ((unsigned int *)game->img_sky.addr)[((int)round(r)) * game->img_sky.w + (int)round(c)];
+	}
+	while (game->num_doors_h >= 0 || game->num_doors_v >= 0)
+	{
+		if (game->num_doors_h < 0 || game->doors_h[game->num_doors_h][3] < game->doors_v[game->num_doors_v][3])
+			do_doors_v(game, col, row);
+		else
+			do_doors_h(game, col, row);
 	}
 }
 
