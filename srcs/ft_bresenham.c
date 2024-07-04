@@ -15,10 +15,8 @@ static void	ft_bresenham_low(t_point *a, t_point *b, t_delta delta,
 		t_img1 *img)
 {
 	int		p;
-	t_point	start;
 
 	p = 2 * delta.dy - delta.dx;
-	start = *a;
 	while (a->x != b->x)
 	{
 		ft_put_pixel(img, a->x, a->y, a->color);
@@ -43,10 +41,8 @@ static void	ft_bresenham_high(t_point *a, t_point *b, t_delta delta,
 		t_img1 *img)
 {
 	int		p;
-	t_point	start;
 
 	p = 2 * delta.dx - delta.dy;
-	start = *a;
 	while (a->y != b->y)
 	{
 		ft_put_pixel(img, a->x, a->y, a->color);

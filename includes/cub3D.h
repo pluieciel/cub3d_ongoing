@@ -15,7 +15,7 @@
 #include <unistd.h>
 
 #define WIN_W 1280
-#define WIN_H WIN_W / 2
+#define WIN_H (WIN_W / 2)
 #define FPS 20
 #define B_SIZE 64
 #define ROT_SPEED 0.1
@@ -27,6 +27,9 @@
 #define DIS_P_S (WIN_W / 2)
 #define RAYCAST_RANGE 20
 #define ELEM_N 6
+#define COLL_DIS 20
+#define SPEED 5
+#define M_PI 3.14159265358979323846
 
 typedef struct s_point
 {
@@ -41,10 +44,19 @@ typedef struct s_delta
 	int			dy;
 }				t_delta;
 
+typedef struct s_point3D
+{
+    float x;
+    float y;
+    float z;
+    float angle;
+} t_point3D;
+
 typedef struct s_player
 {
 	int			pos[2];
 	float		dir[2];
+	t_point3D	dir3D;
 }				t_player;
 
 typedef struct s_key
@@ -91,21 +103,38 @@ typedef struct s_data
 	t_gc		*gc;
 	long long	time;
 	t_img1		img;
+	int			dis_p_s;
 	// 0 1 -> x y
 	// 2 -> dis
 	// 3 -> dir
 	float		res_rc_h[4];
 	float		res_rc_v[4];
+	float		*res_rc;
+	// x y z dis dir
+	float		res_rc_h_3D[5];
+	float		res_rc_v_3D[5];
+	float		*res_rc_3D;
+	t_img1		img_sky;
+	t_img1		img_wall;
+	t_img1		img_floor;
+	int coll_h;
+	int coll_v;
 }				t_data;
 
-void			init(t_data *game);
-void			parse_map(t_data *game, char *filename);
-void			hook(t_data *game);
-int				check_map(t_data *game);
-long long		millitimestamp(void);
-int				render(t_data *game);
-void			parse_element(t_data *game, char *filename);
-float			distance(float x1, float y1, float x2, float y2);
-float			raycast_h(t_data *game, float x, float y);
-float			raycast_v(t_data *game, float x, float y);
-void			ft_bresenham(t_point a, t_point b, t_img1 *img);
+void		init(t_data *game);
+void		parse_map(t_data *game, char *filename);
+void		hook(t_data *game);
+int			check_map(t_data *game);
+long long	millitimestamp(void);
+int			render(t_data *game);
+void		parse_element(t_data *game, char *filename);
+float		distance(float x1, float y1, float x2, float y2);
+float		raycast_h(t_data *game, float x, float y);
+float		raycast_v(t_data *game, float x, float y);
+void		raycast(t_data *game, float x, float y);
+void		ft_bresenham(t_point a, t_point b, t_img1 *img);
+t_point3D	*ro_on_z_to_xz(t_point3D p);
+t_point3D	*ro_on_y(t_point3D p, float angle_z);
+t_point3D	*ro_back_on_z(t_point3D p);
+t_point3D	*cross(t_point3D p1, t_point3D p2);
+void		raycast_3D(t_data *game, float x, float y, float z);
