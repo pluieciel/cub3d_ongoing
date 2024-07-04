@@ -14,7 +14,7 @@
 #include <sys/time.h>
 #include <unistd.h>
 
-#define WIN_W 1280
+#define WIN_W 1000
 #define WIN_H (WIN_W / 2)
 #define FPS 20
 #define B_SIZE 64
