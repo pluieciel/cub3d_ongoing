@@ -18,6 +18,9 @@ void init2(t_data *game)
 	game->img_floor.img_ptr = mlx_xpm_file_to_image(game->mlx_ptr, "textures/floor.xpm", &game->img_floor.w, &game->img_floor.h);
 	game->img_floor.addr = mlx_get_data_addr(game->img_floor.img_ptr,
 			&game->img_floor.bpp, &game->img_floor.line_len, &game->img_floor.endian);
+	game->img_door.img_ptr = mlx_xpm_file_to_image(game->mlx_ptr, "textures/door.xpm", &game->img_door.w, &game->img_door.h);
+	game->img_door.addr = mlx_get_data_addr(game->img_door.img_ptr,
+			&game->img_door.bpp, &game->img_door.line_len, &game->img_door.endian);
 }
 
 int	main(int ac, char *av[])

@@ -64,8 +64,7 @@ void	draw_minimap(t_data *game)
 	unsigned int	t;
 	float	angle;
 
-	((unsigned int *)game->img.addr)[MM_POS_Y * WIN_W + MM_POS_X] = 0x00FFFF00; //player pos
-	//((unsigned int *)game->img.addr)[(MM_POS_Y + (int)round(game->player.dir[1] / 6)) * WIN_W + MM_POS_X + (int)round(game->player.dir[0] / 6)] = 0x00FFFF00;
+	//((unsigned int *)game->img.addr)[MM_POS_Y * WIN_W + MM_POS_X] = 0x00FFFF00; //player pos
 	angle = atan(1.0 * (WIN_W / 2) / game->dis_p_s);
 	i = MM_POS_X - MM_RADIUS;
 	while (i <= MM_POS_X + MM_RADIUS)
@@ -98,7 +97,7 @@ void	draw_minimap(t_data *game)
 		x = game->player.pos[0] / B_SIZE - MM_RANGE;
 		while (x < game->player.pos[0] / B_SIZE + MM_RANGE)
 		{
-			if (x >= 0 && y >= 0 && x < game->map_w && y < game->map_h && game->map[y][x] == 1)
+			if (x >= 0 && y >= 0 && x < game->map_w && y < game->map_h && game->map[y][x] >= 1)
 			{
 				i = y * B_SIZE / MM_FACTOR + MM_POS_Y - game->player.pos[1] / MM_FACTOR + 1;
 				while (i < y * B_SIZE / MM_FACTOR + MM_POS_Y - game->player.pos[1] / MM_FACTOR + B_SIZE / MM_FACTOR - 1)
@@ -110,7 +109,7 @@ void	draw_minimap(t_data *game)
 						{
 							newj = round(-(j - MM_POS_X) * game->player.dir[1] + (i - MM_POS_Y) * game->player.dir[0]) + MM_POS_X;
 							newi = round((j - MM_POS_X) * -game->player.dir[0] - (i - MM_POS_Y) * game->player.dir[1]) + MM_POS_Y;
-							((unsigned int *)game->img.addr)[newi * WIN_W + newj] = 0x00AAAAFF;
+							((unsigned int *)game->img.addr)[newi * WIN_W + newj] = game->map[y][x] == 1?0x00AAAAFF:0x00AAFFAA;
 						}
 						j++;
 					}
@@ -262,47 +261,6 @@ void	move_player(t_data *game)
 		free(p1);
 	}
 }
-/*
-float dis_h;
-		float dis_v;
-		float temp_x = game->player.dir[1] * game->dis_p_s;
-		float temp_y = -game->player.dir[0] * game->dis_p_s;
-		int i;
-
-		i = 0;
-		while (i < WIN_W)
-		{
-			dis_h = game->res_rc_h[2] = raycast_h(game, temp_x, temp_y);
-			dis_v = game->res_rc_v[2] = raycast_v(game, temp_x, temp_y);
-			t_point a;
-			t_point b;
-
-			a.x = MM_POS_X;
-			a.y = MM_POS_Y;
-			a.color = 0xFF0000;
-			b.color = 0xFF0000;
-			b.x = game->res_rc_h[0] / MM_FACTOR + MM_POS_X - game->player.pos[0] / MM_FACTOR;
-			b.y = game->res_rc_h[1] / MM_FACTOR + MM_POS_Y - game->player.pos[1] / MM_FACTOR;
-			if (dis_h > 0 && dis_h < RAYCAST_RANGE * B_SIZE)
-				ft_bresenham(a, b, &game->img);
-			b.x = game->res_rc_v[0] / MM_FACTOR + MM_POS_X - game->player.pos[0] / MM_FACTOR;
-			b.y = game->res_rc_v[1] / MM_FACTOR + MM_POS_Y - game->player.pos[1] / MM_FACTOR;
-			a.color = 0x00FF00;
-			b.color = 0x00FF00;
-			if (dis_v > 0 && dis_v < RAYCAST_RANGE * B_SIZE)
-				ft_bresenham(a, b, &game->img);
-			int y = (game->res_rc_h[1] / MM_FACTOR + MM_POS_Y - game->player.pos[1] / MM_FACTOR);
-			int x = (game->res_rc_h[0] / MM_FACTOR + MM_POS_X - game->player.pos[0] / MM_FACTOR);
-			if (dis_h > 0 && dis_h < RAYCAST_RANGE * B_SIZE && 0<=y && y<WIN_H && 0<=x && x<WIN_W)
-				((unsigned int *)game->img.addr)[y * WIN_W + x] = 0xFFFFFF;
-			y = (game->res_rc_v[1] / MM_FACTOR + MM_POS_Y - game->player.pos[1] / MM_FACTOR);
-			x = (game->res_rc_v[0] / MM_FACTOR + MM_POS_X - game->player.pos[0] / MM_FACTOR);
-			if (dis_v > 0 && dis_v < RAYCAST_RANGE * B_SIZE && 0<=y && y<WIN_H && 0<=x && x<WIN_W)
-				((unsigned int *)game->img.addr)[y * WIN_W + x] = 0xFFFFFF;
-			temp_x -= game->player.dir[1];
-			temp_y += game->player.dir[0];
-			i++;
-			}*/
 
 void	draw_line(t_data *game, int col)
 {
@@ -359,6 +317,56 @@ void	draw_walls(t_data *game)
 	}
 }
 
+void	do_doors_h(t_data *game, int col, int row)
+{
+	float	r;
+	float	c;
+	unsigned int	t;
+	float	shadow;
+
+	if (game->doors_h[game->num_doors_h][3] < game->nearest_wall_dis)
+	{
+		shadow = 1.0 - (fmin(game->doors_h[game->num_doors_h][3], 8 * B_SIZE) / (8 * B_SIZE));
+		if (game->doors_h[game->num_doors_h][4] == 1)
+			c = round(fmod(game->doors_h[game->num_doors_h][0], B_SIZE) / B_SIZE * game->img_door.w);
+		else
+			c = round((1 - fmod(game->doors_h[game->num_doors_h][0], B_SIZE) / B_SIZE) * game->img_door.w);
+		r = round((1 - fmod(game->doors_h[game->num_doors_h][2] + 32, B_SIZE) / B_SIZE) * game->img_door.h);
+		t = ((unsigned int *)game->img_door.addr)[(int)r * game->img_door.w + (int)c];
+		if (t != 4278190080)
+			((unsigned int *)game->img.addr)[row * WIN_W + col]
+			= (((int)round(((t >> 16) & 0xff) * shadow) & 0xff) << 16)
+				+ (((int)round(((t >> 8) & 0xff) * shadow) & 0xff) << 8)
+				+ ((int)round(((t) & 0xff) * shadow) & 0xff);
+	}
+	game->num_doors_h--;
+}
+
+void	do_doors_v(t_data *game, int col, int row)
+{
+	float	r;
+	float	c;
+	unsigned int	t;
+	float	shadow;
+
+	if (game->doors_v[game->num_doors_v][3] < game->nearest_wall_dis)
+	{
+		shadow = 1.0 - (fmin(game->doors_v[game->num_doors_v][3], 8 * B_SIZE) / (8 * B_SIZE));
+		if (game->doors_v[game->num_doors_v][4] == 1)
+			c = round(fmod(game->doors_v[game->num_doors_v][1], B_SIZE) / B_SIZE * game->img_door.w);
+		else
+			c = round((1 - fmod(game->doors_v[game->num_doors_v][1], B_SIZE) / B_SIZE) * game->img_door.w);
+		r = round((1 - fmod(game->doors_v[game->num_doors_v][2] + 32, B_SIZE) / B_SIZE) * game->img_door.h);
+		t = ((unsigned int *)game->img_door.addr)[(int)r * game->img_door.w + (int)c];
+		if (t != 4278190080)
+			((unsigned int *)game->img.addr)[row * WIN_W + col]
+			= (((int)round(((t >> 16) & 0xff) * shadow) & 0xff) << 16)
+				+ (((int)round(((t >> 8) & 0xff) * shadow) & 0xff) << 8)
+				+ ((int)round(((t) & 0xff) * shadow) & 0xff);
+	}
+	game->num_doors_v--;
+}
+
 void	draw_pixel(t_data *game, int col, int row)
 {
 	float	temp_x;
@@ -368,13 +376,14 @@ void	draw_pixel(t_data *game, int col, int row)
 	float	shadow;
 	unsigned int	t;
 
+	game->nearest_wall_dis = RAYCAST_RANGE * B_SIZE;
 	if (game->res_rc_3D[4] != 0
 	&& game->res_rc_3D[2] >= -32 && game->res_rc_3D[2] <= 32)
 	{
 		shadow = 1.0 - (fmin(game->res_rc_3D[3], 8 * B_SIZE) / (8 * B_SIZE));
 		if (game->res_rc_3D == game->res_rc_h_3D)
 		{
-			if (game->res_rc_3D[4] == -1)
+			if (game->res_rc_3D[4] == 1)
 				c = round(fmod(game->res_rc_3D[0], B_SIZE) / B_SIZE * game->img_wall.w);
 			else
 				c = round((1 - fmod(game->res_rc_3D[0], B_SIZE) / B_SIZE) * game->img_wall.w);
@@ -398,6 +407,7 @@ void	draw_pixel(t_data *game, int col, int row)
 				+ (((int)round(((t >> 8) & 0xff) * shadow) & 0xff) << 8)
 				+ ((int)round(((t) & 0xff) * shadow) & 0xff);
 		}
+		game->nearest_wall_dis = game->res_rc_3D[3];
 	}
 	else if (game->res_rc_3D[2] < -32)
 	{
@@ -433,6 +443,13 @@ void	draw_pixel(t_data *game, int col, int row)
 		r *= game->img_sky.h;
 		c *= game->img_sky.w;
 		((unsigned int *)game->img.addr)[row * WIN_W + col] = ((unsigned int *)game->img_sky.addr)[((int)round(r)) * game->img_sky.w + (int)round(c)];
+	}
+	while (game->num_doors_h >= 0 || game->num_doors_v >= 0)
+	{
+		if (game->num_doors_h < 0 || game->doors_h[game->num_doors_h][3] < game->doors_v[game->num_doors_v][3])
+			do_doors_v(game, col, row);
+		else
+			do_doors_h(game, col, row);
 	}
 }
 
