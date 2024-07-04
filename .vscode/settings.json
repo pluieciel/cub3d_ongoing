@@ -4,6 +4,7 @@
 		"libft_gc.h": "c",
 		"x.h": "c",
 		"mlx_int.h": "c",
-		"time.h": "c"
+		"time.h": "c",
+		"cub3d.h": "c"
 	}
 }

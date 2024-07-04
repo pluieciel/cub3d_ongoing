@@ -72,6 +72,8 @@ void	parse_map(t_data *game, char *filename)
 		{
 			if (line[j] == '1')
 				game->map[i][j] = 1;
+			else if (line[j] == '2')
+				game->map[i][j] = 2;
 			else if (line[j] == '0')
 				game->map[i][j] = 0;
 			else if (line[j] == 'N' || line[j] == 'S' || line[j] == 'W'

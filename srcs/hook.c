@@ -67,11 +67,34 @@ int	handle_keyrelease(int keysym, t_data *game)
 	return (0);
 }
 
+int mouse_move(int x, int y, t_data *game)
+{
+	ft_printf("%d:%d\n", x, y);
+	//mlx_mouse_move(game->mlx_ptr, game->win_ptr, WIN_W/2, WIN_H/2);
+
+	float		oldDirX = game->player.dir[0];
+	float		oldDirY = game->player.dir[1];
+	float		oldDirX_3D = game->player.dir3D.x;
+	float		oldDirY_3D = game->player.dir3D.y;
+	game->player.dir[0] = oldDirX * cos(-ROT_SPEED) - oldDirY * sin(-ROT_SPEED);
+	game->player.dir[1] = oldDirX * sin(-ROT_SPEED) + oldDirY * cos(-ROT_SPEED);
+	game->player.dir3D.x = oldDirX_3D * cos(-ROT_SPEED) - oldDirY_3D * sin(-ROT_SPEED);
+	game->player.dir3D.y = oldDirX_3D * sin(-ROT_SPEED) + oldDirY_3D * cos(-ROT_SPEED);
+	if (game->player.dir[0] > 0)
+		game->player.dir3D.angle = atan(game->player.dir[1] / game->player.dir[0]);
+	else if (game->player.dir[0] < 0)
+		game->player.dir3D.angle = atan(game->player.dir[1] / game->player.dir[0]) + M_PI;
+	else
+		game->player.dir3D.angle = ((game->player.dir[1] > 0) * 2 - 1) * M_PI / 2;
+	return (0);
+}
+
 void	hook(t_data *game)
 {
 	mlx_loop_hook(game->mlx_ptr, &render, game);
 	mlx_hook(game->win_ptr, KeyPress, KeyPressMask, &handle_keypress, game);
 	mlx_hook(game->win_ptr, KeyRelease, KeyReleaseMask, &handle_keyrelease,
 		game);
-	mlx_hook(game->win_ptr, 17, 0, &close_window, game);
+	mlx_hook(game->win_ptr, DestroyNotify, ButtonPressMask, &close_window, game);
+	mlx_hook(game->win_ptr, MotionNotify, PointerMotionMask, &mouse_move, game);
 }
