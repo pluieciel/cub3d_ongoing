@@ -14,16 +14,16 @@
 #include <sys/time.h>
 #include <unistd.h>
 
-#define WIN_W 1280
+#define WIN_W 1000
 #define WIN_H (WIN_W / 2)
 #define FPS 20
 #define B_SIZE 64
 #define ROT_SPEED 0.1
-#define MM_FACTOR 2
+#define MM_FACTOR 4
 #define MM_RADIUS 100
 #define MM_POS_X (MM_RADIUS + 20)
 #define MM_POS_Y (WIN_H - MM_RADIUS - 20)
-#define MM_RANGE 4
+#define MM_RANGE 8
 #define DIS_P_S (WIN_W / 2)
 #define RAYCAST_RANGE 20
 #define ELEM_N 6

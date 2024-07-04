@@ -64,8 +64,7 @@ void	draw_minimap(t_data *game)
 	unsigned int	t;
 	float	angle;
 
-	((unsigned int *)game->img.addr)[MM_POS_Y * WIN_W + MM_POS_X] = 0x00FFFF00; //player pos
-	//((unsigned int *)game->img.addr)[(MM_POS_Y + (int)round(game->player.dir[1] / 6)) * WIN_W + MM_POS_X + (int)round(game->player.dir[0] / 6)] = 0x00FFFF00;
+	//((unsigned int *)game->img.addr)[MM_POS_Y * WIN_W + MM_POS_X] = 0x00FFFF00; //player pos
 	angle = atan(1.0 * (WIN_W / 2) / game->dis_p_s);
 	i = MM_POS_X - MM_RADIUS;
 	while (i <= MM_POS_X + MM_RADIUS)
@@ -98,7 +97,7 @@ void	draw_minimap(t_data *game)
 		x = game->player.pos[0] / B_SIZE - MM_RANGE;
 		while (x < game->player.pos[0] / B_SIZE + MM_RANGE)
 		{
-			if (x >= 0 && y >= 0 && x < game->map_w && y < game->map_h && game->map[y][x] == 1)
+			if (x >= 0 && y >= 0 && x < game->map_w && y < game->map_h && game->map[y][x] >= 1)
 			{
 				i = y * B_SIZE / MM_FACTOR + MM_POS_Y - game->player.pos[1] / MM_FACTOR + 1;
 				while (i < y * B_SIZE / MM_FACTOR + MM_POS_Y - game->player.pos[1] / MM_FACTOR + B_SIZE / MM_FACTOR - 1)
@@ -110,7 +109,7 @@ void	draw_minimap(t_data *game)
 						{
 							newj = round(-(j - MM_POS_X) * game->player.dir[1] + (i - MM_POS_Y) * game->player.dir[0]) + MM_POS_X;
 							newi = round((j - MM_POS_X) * -game->player.dir[0] - (i - MM_POS_Y) * game->player.dir[1]) + MM_POS_Y;
-							((unsigned int *)game->img.addr)[newi * WIN_W + newj] = 0x00AAAAFF;
+							((unsigned int *)game->img.addr)[newi * WIN_W + newj] = game->map[y][x] == 1?0x00AAAAFF:0x00AAFFAA;
 						}
 						j++;
 					}
@@ -215,47 +214,6 @@ void	move_player(t_data *game)
 		free(p1);
 	}
 }
-/*
-float dis_h;
-		float dis_v;
-		float temp_x = game->player.dir[1] * game->dis_p_s;
-		float temp_y = -game->player.dir[0] * game->dis_p_s;
-		int i;
-
-		i = 0;
-		while (i < WIN_W)
-		{
-			dis_h = game->res_rc_h[2] = raycast_h(game, temp_x, temp_y);
-			dis_v = game->res_rc_v[2] = raycast_v(game, temp_x, temp_y);
-			t_point a;
-			t_point b;
-
-			a.x = MM_POS_X;
-			a.y = MM_POS_Y;
-			a.color = 0xFF0000;
-			b.color = 0xFF0000;
-			b.x = game->res_rc_h[0] / MM_FACTOR + MM_POS_X - game->player.pos[0] / MM_FACTOR;
-			b.y = game->res_rc_h[1] / MM_FACTOR + MM_POS_Y - game->player.pos[1] / MM_FACTOR;
-			if (dis_h > 0 && dis_h < RAYCAST_RANGE * B_SIZE)
-				ft_bresenham(a, b, &game->img);
-			b.x = game->res_rc_v[0] / MM_FACTOR + MM_POS_X - game->player.pos[0] / MM_FACTOR;
-			b.y = game->res_rc_v[1] / MM_FACTOR + MM_POS_Y - game->player.pos[1] / MM_FACTOR;
-			a.color = 0x00FF00;
-			b.color = 0x00FF00;
-			if (dis_v > 0 && dis_v < RAYCAST_RANGE * B_SIZE)
-				ft_bresenham(a, b, &game->img);
-			int y = (game->res_rc_h[1] / MM_FACTOR + MM_POS_Y - game->player.pos[1] / MM_FACTOR);
-			int x = (game->res_rc_h[0] / MM_FACTOR + MM_POS_X - game->player.pos[0] / MM_FACTOR);
-			if (dis_h > 0 && dis_h < RAYCAST_RANGE * B_SIZE && 0<=y && y<WIN_H && 0<=x && x<WIN_W)
-				((unsigned int *)game->img.addr)[y * WIN_W + x] = 0xFFFFFF;
-			y = (game->res_rc_v[1] / MM_FACTOR + MM_POS_Y - game->player.pos[1] / MM_FACTOR);
-			x = (game->res_rc_v[0] / MM_FACTOR + MM_POS_X - game->player.pos[0] / MM_FACTOR);
-			if (dis_v > 0 && dis_v < RAYCAST_RANGE * B_SIZE && 0<=y && y<WIN_H && 0<=x && x<WIN_W)
-				((unsigned int *)game->img.addr)[y * WIN_W + x] = 0xFFFFFF;
-			temp_x -= game->player.dir[1];
-			temp_y += game->player.dir[0];
-			i++;
-			}*/
 
 void	draw_line(t_data *game, int col)
 {
