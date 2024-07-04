@@ -7,8 +7,8 @@ float	raycast_h(t_data *game, float x, float y)
 	int		range;
 
 	range = 0;
-	dir_x = game->player.dir[0] * game->dis_p_s + x;
-	dir_y = game->player.dir[1] * game->dis_p_s + y;
+	dir_x = x;
+	dir_y = y;
 	if (dir_y < 0)
 	{
 		game->res_rc_h[1] = game->player.pos[1] - game->player.pos[1] % B_SIZE;
@@ -33,8 +33,7 @@ float	raycast_h(t_data *game, float x, float y)
 		if (dir_y != 0
 		&& game->res_rc_h[1] / B_SIZE > 0 && game->res_rc_h[1] / B_SIZE < game->map_h
 		&& game->map[(int)game->res_rc_h[1] / B_SIZE - (dir_y < 0)][(int)game->res_rc_h[0] / B_SIZE] == 1)
-			return distance(game->res_rc_h[0], game->res_rc_h[1], game->player.pos[0], game->player.pos[1])
-			* game->dis_p_s / sqrt(dir_x * dir_x + dir_y * dir_y);
+			return distance(game->res_rc_h[0], game->res_rc_h[1], game->player.pos[0], game->player.pos[1]);
 		range++;
 		game->res_rc_h[0] += dir_x / fabs(dir_y) * B_SIZE;
 		game->res_rc_h[1] += ((dir_y > 0) * 2 - 1) * B_SIZE;
@@ -49,8 +48,8 @@ float	raycast_v(t_data *game, float x, float y)
 	int		range;
 
 	range = 0;
-	dir_x = game->player.dir[0] * game->dis_p_s + x;
-	dir_y = game->player.dir[1] * game->dis_p_s + y;
+	dir_x = x;
+	dir_y = y;
 	if (dir_x < 0)
 	{
 		game->res_rc_v[0] = game->player.pos[0] - game->player.pos[0] % B_SIZE;
@@ -75,8 +74,7 @@ float	raycast_v(t_data *game, float x, float y)
 		if (dir_x != 0
 		&& game->res_rc_v[0] / B_SIZE > 0 && game->res_rc_v[0] / B_SIZE < game->map_w
 		&& game->map[(int)game->res_rc_v[1] / B_SIZE][(int)game->res_rc_v[0] / B_SIZE - (dir_x < 0)] == 1)
-			return distance(game->res_rc_v[0], game->res_rc_v[1], game->player.pos[0], game->player.pos[1])
-			* game->dis_p_s / sqrt(dir_x * dir_x + dir_y * dir_y);
+			return distance(game->res_rc_v[0], game->res_rc_v[1], game->player.pos[0], game->player.pos[1]);
 		range++;
 		game->res_rc_v[1] += dir_y / fabs(dir_x) * B_SIZE;
 		game->res_rc_v[0] += ((dir_x > 0) * 2 - 1) * B_SIZE;
