@@ -167,9 +167,9 @@ void	move_player(t_data *game)
 		collision(game, (sqrt(2)/2) * (game->player.dir[0] + game->player.dir[1]), (sqrt(2)/2) * (-game->player.dir[0] + game->player.dir[1]), COLL_DIS);
 
 		if (!game->coll_v)
-    		game->player.pos[0] += round(oldDirX * 5);
+    		game->player.pos[0] += round(oldDirX * SPEED);
     	if (!game->coll_h)
-    	    game->player.pos[1] += round(oldDirY * 5);
+    	    game->player.pos[1] += round(oldDirY * SPEED);
 	}
 	else if (game->key.s)
 	{
@@ -180,9 +180,9 @@ void	move_player(t_data *game)
 		collision(game, -(sqrt(2)/2) * (game->player.dir[0] + game->player.dir[1]), -(sqrt(2)/2) * (-game->player.dir[0] + game->player.dir[1]), COLL_DIS);
 
 		if (!game->coll_v)
-    		game->player.pos[0] -= round(oldDirX * 5);
+    		game->player.pos[0] -= round(oldDirX * SPEED);
     	if (!game->coll_h)
-    	    game->player.pos[1] -= round(oldDirY * 5);
+    	    game->player.pos[1] -= round(oldDirY * SPEED);
 	}
 	if (game->key.a)
 	{
@@ -193,9 +193,9 @@ void	move_player(t_data *game)
 		collision(game, -(sqrt(2)/2) * (game->player.dir[0] - game->player.dir[1]), -(sqrt(2)/2) * (game->player.dir[0] + game->player.dir[1]), COLL_DIS);
 		
 		if (!game->coll_v)
-    		game->player.pos[0] += round(oldDirY * 5);
+    		game->player.pos[0] += round(oldDirY * SPEED);
     	if (!game->coll_h)
-    	    game->player.pos[1] -= round(oldDirX * 5);
+    	    game->player.pos[1] -= round(oldDirX * SPEED);
 	}
 	else if (game->key.d)
 	{
@@ -206,9 +206,9 @@ void	move_player(t_data *game)
 		collision(game, (sqrt(2)/2) * (game->player.dir[0] - game->player.dir[1]), (sqrt(2)/2) * (game->player.dir[0] + game->player.dir[1]), COLL_DIS);
 
 		if (!game->coll_v)
-    		game->player.pos[0] -= round(oldDirY * 5);
+    		game->player.pos[0] -= round(oldDirY * SPEED);
     	if (!game->coll_h)
-    	    game->player.pos[1] += round(oldDirX * 5);
+    	    game->player.pos[1] += round(oldDirX * SPEED);
 	}
 	if (game->key.left)
 	{
