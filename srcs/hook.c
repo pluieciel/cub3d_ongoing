@@ -8,12 +8,21 @@ int	handle_no_event(void *data)
 	return (0);
 }
 
+void	destroy_imgs(t_data *game)
+{
+	mlx_destroy_image(game->mlx_ptr, game->img_sky.img_ptr);
+	mlx_destroy_image(game->mlx_ptr, game->img_wall.img_ptr);
+	mlx_destroy_image(game->mlx_ptr, game->img_floor.img_ptr);
+	mlx_destroy_image(game->mlx_ptr, game->img_door.img_ptr);
+}
+
 int close_window(t_data *game)
 {
 	mlx_destroy_window(game->mlx_ptr, game->win_ptr);
 	game->win_ptr = NULL;
 	if (game->img.img_ptr != NULL)
 		mlx_destroy_image(game->mlx_ptr, game->img.img_ptr);
+	destroy_imgs(game);
 	mlx_destroy_display(game->mlx_ptr);
 	gc_free(game->gc, "", 1);
 	exit(EXIT_SUCCESS);
@@ -43,6 +52,8 @@ int	handle_keypress(int keysym, t_data *game)
 		game->dis_p_s += 300;
 	else if (keysym == 65453 && game->dis_p_s > 400)
 		game->dis_p_s -= 300;
+	else if (keysym == 101 && game->op_door == 0)
+		game->op_door = 1;
 	return (0);
 }
 
@@ -69,9 +80,10 @@ int	handle_keyrelease(int keysym, t_data *game)
 
 int mouse_move(int x, int y, t_data *game)
 {
-	ft_printf("%d:%d\n", x, y);
+	//ft_printf("%d:%d\n", x, y);
 	//mlx_mouse_move(game->mlx_ptr, game->win_ptr, WIN_W/2, WIN_H/2);
-
+	(void)x;
+	(void)y;
 	float		oldDirX = game->player.dir[0];
 	float		oldDirY = game->player.dir[1];
 	float		oldDirX_3D = game->player.dir3D.x;

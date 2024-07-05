@@ -109,7 +109,22 @@ void	draw_minimap(t_data *game)
 						{
 							newj = round(-(j - MM_POS_X) * game->player.dir[1] + (i - MM_POS_Y) * game->player.dir[0]) + MM_POS_X;
 							newi = round((j - MM_POS_X) * -game->player.dir[0] - (i - MM_POS_Y) * game->player.dir[1]) + MM_POS_Y;
-							((unsigned int *)game->img.addr)[newi * WIN_W + newj] = game->map[y][x] == 1?0x00AAAAFF:0x00AAFFAA;
+							t = ((unsigned int *)game->img.addr)[newi * WIN_W + newj];
+							if (game->map[y][x] == 1)
+								((unsigned int *)game->img.addr)[newi * WIN_W + newj]
+								= ((((((t >> 16) & 0xff) + 0xaa) / 2) & 0xff) << 16)
+									+ ((((((t >> 8) & 0xff) + 0xaa) / 2) & 0xff) << 8)
+									+ (((((t) & 0xff) + 0xff) / 2) & 0xff);
+							else if (game->map[y][x] == 3)
+								((unsigned int *)game->img.addr)[newi * WIN_W + newj]
+								= ((((((t >> 16) & 0xff) + 0xaa) / 2) & 0xff) << 16)
+									+ ((((((t >> 8) & 0xff) + 0xff) / 2) & 0xff) << 8)
+									+ (((((t) & 0xff) + 0xaa) / 2) & 0xff);
+							else if (game->map[y][x] >= 2)
+								((unsigned int *)game->img.addr)[newi * WIN_W + newj]
+								= ((((((t >> 16) & 0xff) + 0xff) / 2) & 0xff) << 16)
+									+ ((((((t >> 8) & 0xff) + 0xaa) / 2) & 0xff) << 8)
+									+ (((((t) & 0xff) + 0xaa) / 2) & 0xff);
 						}
 						j++;
 					}
@@ -122,9 +137,9 @@ void	draw_minimap(t_data *game)
 	}
 }
 //not good, cannot handle corners
-void	collision(t_data *game, float dir_x, float dir_y, int coll_dis)
+void	collision(t_data *game, float dir_x, float dir_y, int coll_dis, int type)
 {
-	raycast(game, dir_x, dir_y);
+	raycast(game, dir_x, dir_y, type);
 	t_point a;
 	t_point b;
 
@@ -160,11 +175,11 @@ void	move_player(t_data *game)
 	//int			coll;
 	if (game->key.w)
 	{
-		collision(game, game->player.dir[0], game->player.dir[1], COLL_DIS);
-		collision(game, game->player.dir[1], -game->player.dir[0], COLL_DIS);
-		collision(game, -game->player.dir[1], game->player.dir[0], COLL_DIS);
-		collision(game, (sqrt(2)/2) * (game->player.dir[0] - game->player.dir[1]), (sqrt(2)/2) * (game->player.dir[0] + game->player.dir[1]), COLL_DIS);
-		collision(game, (sqrt(2)/2) * (game->player.dir[0] + game->player.dir[1]), (sqrt(2)/2) * (-game->player.dir[0] + game->player.dir[1]), COLL_DIS);
+		collision(game, game->player.dir[0], game->player.dir[1], COLL_DIS, 0);
+		collision(game, game->player.dir[1], -game->player.dir[0], COLL_DIS, 0);
+		collision(game, -game->player.dir[1], game->player.dir[0], COLL_DIS, 0);
+		collision(game, (sqrt(2)/2) * (game->player.dir[0] - game->player.dir[1]), (sqrt(2)/2) * (game->player.dir[0] + game->player.dir[1]), COLL_DIS, 0);
+		collision(game, (sqrt(2)/2) * (game->player.dir[0] + game->player.dir[1]), (sqrt(2)/2) * (-game->player.dir[0] + game->player.dir[1]), COLL_DIS, 0);
 
 		if (!game->coll_v)
     		game->player.pos[0] += round(oldDirX * SPEED);
@@ -173,11 +188,11 @@ void	move_player(t_data *game)
 	}
 	else if (game->key.s)
 	{
-		collision(game, -game->player.dir[0], -game->player.dir[1], COLL_DIS);
-		collision(game, game->player.dir[1], -game->player.dir[0], COLL_DIS);
-		collision(game, -game->player.dir[1], game->player.dir[0], COLL_DIS);
-		collision(game, -(sqrt(2)/2) * (game->player.dir[0] - game->player.dir[1]), -(sqrt(2)/2) * (game->player.dir[0] + game->player.dir[1]), COLL_DIS);
-		collision(game, -(sqrt(2)/2) * (game->player.dir[0] + game->player.dir[1]), -(sqrt(2)/2) * (-game->player.dir[0] + game->player.dir[1]), COLL_DIS);
+		collision(game, -game->player.dir[0], -game->player.dir[1], COLL_DIS, 0);
+		collision(game, game->player.dir[1], -game->player.dir[0], COLL_DIS, 0);
+		collision(game, -game->player.dir[1], game->player.dir[0], COLL_DIS, 0);
+		collision(game, -(sqrt(2)/2) * (game->player.dir[0] - game->player.dir[1]), -(sqrt(2)/2) * (game->player.dir[0] + game->player.dir[1]), COLL_DIS, 0);
+		collision(game, -(sqrt(2)/2) * (game->player.dir[0] + game->player.dir[1]), -(sqrt(2)/2) * (-game->player.dir[0] + game->player.dir[1]), COLL_DIS, 0);
 
 		if (!game->coll_v)
     		game->player.pos[0] -= round(oldDirX * SPEED);
@@ -186,11 +201,11 @@ void	move_player(t_data *game)
 	}
 	if (game->key.a)
 	{
-		collision(game, game->player.dir[1], -game->player.dir[0], COLL_DIS);
-		collision(game, -game->player.dir[0], -game->player.dir[1], COLL_DIS);
-		collision(game, game->player.dir[0], game->player.dir[1], COLL_DIS);
-		collision(game, (sqrt(2)/2) * (game->player.dir[0] + game->player.dir[1]), (sqrt(2)/2) * (-game->player.dir[0] + game->player.dir[1]), COLL_DIS);
-		collision(game, -(sqrt(2)/2) * (game->player.dir[0] - game->player.dir[1]), -(sqrt(2)/2) * (game->player.dir[0] + game->player.dir[1]), COLL_DIS);
+		collision(game, game->player.dir[1], -game->player.dir[0], COLL_DIS, 0);
+		collision(game, -game->player.dir[0], -game->player.dir[1], COLL_DIS, 0);
+		collision(game, game->player.dir[0], game->player.dir[1], COLL_DIS, 0);
+		collision(game, (sqrt(2)/2) * (game->player.dir[0] + game->player.dir[1]), (sqrt(2)/2) * (-game->player.dir[0] + game->player.dir[1]), COLL_DIS, 0);
+		collision(game, -(sqrt(2)/2) * (game->player.dir[0] - game->player.dir[1]), -(sqrt(2)/2) * (game->player.dir[0] + game->player.dir[1]), COLL_DIS, 0);
 		
 		if (!game->coll_v)
     		game->player.pos[0] += round(oldDirY * SPEED);
@@ -199,11 +214,11 @@ void	move_player(t_data *game)
 	}
 	else if (game->key.d)
 	{
-		collision(game, -game->player.dir[1], game->player.dir[0], COLL_DIS);
-		collision(game, -game->player.dir[0], -game->player.dir[1], COLL_DIS);
-		collision(game, game->player.dir[0], game->player.dir[1], COLL_DIS);
-		collision(game, -(sqrt(2)/2) * (game->player.dir[0] + game->player.dir[1]), -(sqrt(2)/2) * (-game->player.dir[0] + game->player.dir[1]), COLL_DIS);
-		collision(game, (sqrt(2)/2) * (game->player.dir[0] - game->player.dir[1]), (sqrt(2)/2) * (game->player.dir[0] + game->player.dir[1]), COLL_DIS);
+		collision(game, -game->player.dir[1], game->player.dir[0], COLL_DIS, 0);
+		collision(game, -game->player.dir[0], -game->player.dir[1], COLL_DIS, 0);
+		collision(game, game->player.dir[0], game->player.dir[1], COLL_DIS, 0);
+		collision(game, -(sqrt(2)/2) * (game->player.dir[0] + game->player.dir[1]), -(sqrt(2)/2) * (-game->player.dir[0] + game->player.dir[1]), COLL_DIS, 0);
+		collision(game, (sqrt(2)/2) * (game->player.dir[0] - game->player.dir[1]), (sqrt(2)/2) * (game->player.dir[0] + game->player.dir[1]), COLL_DIS, 0);
 
 		if (!game->coll_v)
     		game->player.pos[0] -= round(oldDirY * SPEED);
@@ -309,7 +324,7 @@ void	draw_walls(t_data *game)
 	col = 0;
 	while (col < WIN_W)
 	{
-		raycast(game, temp_x + game->player.dir[0] * game->dis_p_s, temp_y + game->player.dir[1] * game->dis_p_s);
+		raycast(game, temp_x + game->player.dir[0] * game->dis_p_s, temp_y + game->player.dir[1] * game->dis_p_s, 0);
 		draw_line(game, col);
 		temp_x -= game->player.dir[1];
 		temp_y += game->player.dir[0];
@@ -323,6 +338,7 @@ void	do_doors_h(t_data *game, int col, int row)
 	float	c;
 	unsigned int	t;
 	float	shadow;
+	float	offset;
 
 	if (game->doors_h[game->num_doors_h][3] < game->nearest_wall_dis)
 	{
@@ -332,12 +348,16 @@ void	do_doors_h(t_data *game, int col, int row)
 		else
 			c = round((1 - fmod(game->doors_h[game->num_doors_h][0], B_SIZE) / B_SIZE) * game->img_door.w);
 		r = round((1 - fmod(game->doors_h[game->num_doors_h][2] + 32, B_SIZE) / B_SIZE) * game->img_door.h);
-		t = ((unsigned int *)game->img_door.addr)[(int)r * game->img_door.w + (int)c];
-		if (t != 4278190080)
-			((unsigned int *)game->img.addr)[row * WIN_W + col]
-			= (((int)round(((t >> 16) & 0xff) * shadow) & 0xff) << 16)
-				+ (((int)round(((t >> 8) & 0xff) * shadow) & 0xff) << 8)
-				+ ((int)round(((t) & 0xff) * shadow) & 0xff);
+		offset = (game->map[(int)game->doors_h[game->num_doors_h][6]][(int)game->doors_h[game->num_doors_h][5]] - 2) * game->img_door.h;
+		if ((int)r + (int)offset < game->img_door.h)
+		{
+			t = ((unsigned int *)game->img_door.addr)[((int)r + (int)offset) * game->img_door.w + (int)c];
+			if (t != 4278190080)
+				((unsigned int *)game->img.addr)[row * WIN_W + col]
+				= (((int)round(((t >> 16) & 0xff) * shadow) & 0xff) << 16)
+					+ (((int)round(((t >> 8) & 0xff) * shadow) & 0xff) << 8)
+					+ ((int)round(((t) & 0xff) * shadow) & 0xff);
+		}
 	}
 	game->num_doors_h--;
 }
@@ -348,6 +368,7 @@ void	do_doors_v(t_data *game, int col, int row)
 	float	c;
 	unsigned int	t;
 	float	shadow;
+	float	offset;
 
 	if (game->doors_v[game->num_doors_v][3] < game->nearest_wall_dis)
 	{
@@ -357,12 +378,16 @@ void	do_doors_v(t_data *game, int col, int row)
 		else
 			c = round((1 - fmod(game->doors_v[game->num_doors_v][1], B_SIZE) / B_SIZE) * game->img_door.w);
 		r = round((1 - fmod(game->doors_v[game->num_doors_v][2] + 32, B_SIZE) / B_SIZE) * game->img_door.h);
-		t = ((unsigned int *)game->img_door.addr)[(int)r * game->img_door.w + (int)c];
-		if (t != 4278190080)
-			((unsigned int *)game->img.addr)[row * WIN_W + col]
-			= (((int)round(((t >> 16) & 0xff) * shadow) & 0xff) << 16)
-				+ (((int)round(((t >> 8) & 0xff) * shadow) & 0xff) << 8)
-				+ ((int)round(((t) & 0xff) * shadow) & 0xff);
+		offset = (game->map[(int)game->doors_v[game->num_doors_v][6]][(int)game->doors_v[game->num_doors_v][5]] - 2) * game->img_door.h;
+		if ((int)r + (int)offset < game->img_door.h)
+		{
+			t = ((unsigned int *)game->img_door.addr)[((int)r + (int)offset) * game->img_door.w + (int)c];
+			if (t != 4278190080)
+				((unsigned int *)game->img.addr)[row * WIN_W + col]
+				= (((int)round(((t >> 16) & 0xff) * shadow) & 0xff) << 16)
+					+ (((int)round(((t >> 8) & 0xff) * shadow) & 0xff) << 8)
+					+ ((int)round(((t) & 0xff) * shadow) & 0xff);
+		}
 	}
 	game->num_doors_v--;
 }
@@ -416,14 +441,14 @@ void	draw_pixel(t_data *game, int col, int row)
 		game->res_rc_3D[0] = temp_x * -32 / game->res_rc_3D[2] + game->player.pos[0];
 		game->res_rc_3D[1] = temp_y * -32 / game->res_rc_3D[2] + game->player.pos[1];
 		c = fmod(game->res_rc_3D[0], B_SIZE) / B_SIZE;
-		c += (c < 0) * B_SIZE;
+		c += (c < 0);
 		c = round((1 - c) * game->img_floor.w);
 		r = fmod(game->res_rc_3D[1], B_SIZE) / B_SIZE;
-		r += (r < 0) * B_SIZE;
+		r += (r < 0);
 		r = round((1 - r) * game->img_floor.h);
 		game->res_rc_3D[3] = distance(game->res_rc_3D[0], game->res_rc_3D[1], game->player.pos[0], game->player.pos[1]);
 		shadow = 1.0 - (fmin(game->res_rc_3D[3], 8 * B_SIZE) / (8 * B_SIZE));
-		t = ((unsigned int *)game->img_floor.addr)[(int)r * game->img_wall.w + (int)c];
+		t = ((unsigned int *)game->img_floor.addr)[(int)r * game->img_floor.w + (int)c];
 		((unsigned int *)game->img.addr)[row * WIN_W + col]
 		= (((int)round(((t >> 16) & 0xff) * shadow) & 0xff) << 16)
 			+ (((int)round(((t >> 8) & 0xff) * shadow) & 0xff) << 8)
@@ -446,7 +471,11 @@ void	draw_pixel(t_data *game, int col, int row)
 	}
 	while (game->num_doors_h >= 0 || game->num_doors_v >= 0)
 	{
-		if (game->num_doors_h < 0 || game->doors_h[game->num_doors_h][3] < game->doors_v[game->num_doors_v][3])
+		if (game->num_doors_h < 0)
+			do_doors_v(game, col, row);
+		else if (game->num_doors_v < 0)
+			do_doors_h(game, col, row);
+		else if (game->doors_h[game->num_doors_h][3] < game->doors_v[game->num_doors_v][3])
 			do_doors_v(game, col, row);
 		else
 			do_doors_h(game, col, row);
@@ -492,6 +521,77 @@ void	draw_walls_3D(t_data *game)
 	free(p2);
 }
 
+/*int	find_door(t_data *game, int x, int y)
+{
+	t_door	*temp;
+
+	temp = game->doors;
+	while (temp)
+	{
+		if (temp->x == x && temp->y == y)
+			return (1);
+	}
+	return (0);
+}*/
+
+void	move_doors(t_data *game)
+{
+	t_door	*new;
+	t_door	*temp;
+	t_door	*prev;
+
+	// add new door into list
+	if (game->op_door == 1)
+	{
+		collision(game, game->player.dir[0], game->player.dir[1], OPEN_DIS, 1);
+		if ((game->coll_h || game->coll_v)
+		&& (game->map[(int)game->res_rc[5]][(int)game->res_rc[4]] == 2
+		|| game->map[(int)game->res_rc[5]][(int)game->res_rc[4]] == 3))
+		{
+			new = gc_malloc(sizeof(t_door), &game->gc);
+			new->next = game->doors;
+			new->x = (int)game->res_rc[4];
+			new->y = (int)game->res_rc[5];
+			new->open_close = (game->map[new->y][new->x] == 3);
+			game->doors = new;
+		}
+	}
+	game->op_door = 0;
+	// move the doors in list one by one
+	temp = game->doors;
+	while (temp)
+	{
+		game->map[temp->y][temp->x] += ((temp->open_close) * (-2) + 1) * 0.1;
+		if (game->map[temp->y][temp->x] <= 2)
+			game->map[temp->y][temp->x] = 2;
+		else if (game->map[temp->y][temp->x] >= 3)
+			game->map[temp->y][temp->x] = 3;
+		temp = temp->next;
+	}
+	// remove finished doors from the list
+	temp = game->doors;
+	prev = NULL;
+	while (temp && (game->map[temp->y][temp->x] <= 2
+					|| game->map[temp->y][temp->x] >= 3))
+	{
+		game->doors = temp->next;
+		temp = game->doors;
+	}
+	while (temp)
+	{
+		while (temp && (game->map[temp->y][temp->x] != 2
+						&& game->map[temp->y][temp->x] != 3))
+		{
+			prev = temp;
+			temp = temp->next;
+		}
+		if (temp == NULL)
+			return ;
+		prev->next = temp->next;
+		temp = prev->next;
+	}
+}
+
 int	render(t_data *game)
 {
 	long long	now;
@@ -506,6 +606,7 @@ int	render(t_data *game)
 		clear_img(&game->img);
 		//(((unsigned int *)game->img.addr)[y * WIN_W + x]) = color;
 		//draw_walls(game);
+		move_doors(game);
 		move_player(game);
 		//printf("dir: %f %f %f\n", game->player.dir3D.x, game->player.dir3D.y, game->player.dir3D.z);
 		draw_walls_3D(game);

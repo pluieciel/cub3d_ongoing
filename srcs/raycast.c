@@ -1,6 +1,6 @@
 #include "cub3D.h"
 
-float	raycast_h(t_data *game, float x, float y)
+float	raycast_h(t_data *game, float x, float y, int type)
 {
 	float	dir_x;
 	float	dir_y;
@@ -30,10 +30,13 @@ float	raycast_h(t_data *game, float x, float y)
 	}
 	while (range < RAYCAST_RANGE && game->res_rc_h[0] / B_SIZE > 0 && game->res_rc_h[0] / B_SIZE < game->map_w)
 	{
+		game->res_rc_h[5] = (int)game->res_rc_h[1] / B_SIZE - (dir_y < 0);
+		game->res_rc_h[4] = (int)game->res_rc_h[0] / B_SIZE;
 		if (dir_y != 0
-		&& game->res_rc_h[1] / B_SIZE > 0 && game->res_rc_h[1] / B_SIZE < game->map_h
-		&& (game->map[(int)game->res_rc_h[1] / B_SIZE - (dir_y < 0)][(int)game->res_rc_h[0] / B_SIZE] == 1
-		|| game->map[(int)game->res_rc_h[1] / B_SIZE - (dir_y < 0)][(int)game->res_rc_h[0] / B_SIZE] == 2))
+		&& game->res_rc_h[5] > 0 && game->res_rc_h[5] < game->map_h
+		&& (game->map[(int)game->res_rc_h[5]][(int)game->res_rc_h[4]] == 1
+		|| game->map[(int)game->res_rc_h[5]][(int)game->res_rc_h[4]] == 2
+		|| (type && game->map[(int)game->res_rc_h[5]][(int)game->res_rc_h[4]] == 3)))
 			return distance(game->res_rc_h[0], game->res_rc_h[1], game->player.pos[0], game->player.pos[1]);
 		range++;
 		game->res_rc_h[0] += dir_x / fabs(dir_y) * B_SIZE;
@@ -42,7 +45,7 @@ float	raycast_h(t_data *game, float x, float y)
 	return (float)(RAYCAST_RANGE + 1) * B_SIZE;
 }
 
-float	raycast_v(t_data *game, float x, float y)
+float	raycast_v(t_data *game, float x, float y, int type)
 {
 	float	dir_x;
 	float	dir_y;
@@ -72,10 +75,13 @@ float	raycast_v(t_data *game, float x, float y)
 	}
 	while (range < RAYCAST_RANGE && game->res_rc_v[1] / B_SIZE > 0 && game->res_rc_v[1] / B_SIZE < game->map_h)
 	{
+		game->res_rc_v[5] = (int)game->res_rc_v[1] / B_SIZE;
+		game->res_rc_v[4] = (int)game->res_rc_v[0] / B_SIZE - (dir_x < 0);
 		if (dir_x != 0
-		&& game->res_rc_v[0] / B_SIZE > 0 && game->res_rc_v[0] / B_SIZE < game->map_w
-		&& (game->map[(int)game->res_rc_v[1] / B_SIZE][(int)game->res_rc_v[0] / B_SIZE - (dir_x < 0)] == 1
-		|| game->map[(int)game->res_rc_v[1] / B_SIZE][(int)game->res_rc_v[0] / B_SIZE - (dir_x < 0)] == 2))
+		&& game->res_rc_v[4] > 0 && game->res_rc_v[4] < game->map_w
+		&& (game->map[(int)game->res_rc_v[5]][(int)game->res_rc_v[4]] == 1
+		|| game->map[(int)game->res_rc_v[5]][(int)game->res_rc_v[4]] == 2
+		|| (type && game->map[(int)game->res_rc_v[5]][(int)game->res_rc_v[4]] == 3)))
 			return distance(game->res_rc_v[0], game->res_rc_v[1], game->player.pos[0], game->player.pos[1]);
 		range++;
 		game->res_rc_v[1] += dir_y / fabs(dir_x) * B_SIZE;
@@ -84,10 +90,10 @@ float	raycast_v(t_data *game, float x, float y)
 	return (float)(RAYCAST_RANGE + 1) * B_SIZE;
 }
 
-void	raycast(t_data *game, float x, float y)
+void	raycast(t_data *game, float x, float y, int type)
 {
-	game->res_rc_h[2] = raycast_h(game, x, y);
-	game->res_rc_v[2] = raycast_v(game, x, y);
+	game->res_rc_h[2] = raycast_h(game, x, y, type);
+	game->res_rc_v[2] = raycast_v(game, x, y, type);
 	if (game->res_rc_h[2] < game->res_rc_v[2])
 		game->res_rc = game->res_rc_h;
 	else
@@ -131,13 +137,15 @@ float	raycast_h_3D(t_data *game, float x, float y, float z)
 	&& game->res_rc_h_3D[0] / B_SIZE > 0 && game->res_rc_h_3D[0] / B_SIZE < game->map_w
 	&& game->res_rc_h_3D[2] <= B_SIZE / 2 && game->res_rc_h_3D[2] >= -B_SIZE / 2)
 	{
+		game->res_rc_h_3D[5] = (int)game->res_rc_h_3D[0] / B_SIZE;
+		game->res_rc_h_3D[6] = (int)game->res_rc_h_3D[1] / B_SIZE - (dir_y < 0);
 		if (dir_y != 0
-		&& game->res_rc_h_3D[1] / B_SIZE > 0 && game->res_rc_h_3D[1] / B_SIZE < game->map_h)
+		&& game->res_rc_h_3D[6] >= 0 && game->res_rc_h_3D[6] < game->map_h)
 		{
-			type = game->map[(int)game->res_rc_h_3D[1] / B_SIZE - (dir_y < 0)][(int)game->res_rc_h_3D[0] / B_SIZE];
+			type = game->map[(int)game->res_rc_h_3D[6]][(int)game->res_rc_h_3D[5]];
 			if (type == 1)
 				return distance(game->res_rc_h_3D[0], game->res_rc_h_3D[1], game->player.pos[0], game->player.pos[1]);
-			else if (type == 2)
+			else if (type >= 2)
 			{
 				game->num_doors_h++;
 				game->doors_h[game->num_doors_h][0] = game->res_rc_h_3D[0];
@@ -145,6 +153,8 @@ float	raycast_h_3D(t_data *game, float x, float y, float z)
 				game->doors_h[game->num_doors_h][2] = game->res_rc_h_3D[2];
 				game->doors_h[game->num_doors_h][3] = distance(game->res_rc_h_3D[0], game->res_rc_h_3D[1], game->player.pos[0], game->player.pos[1]);
 				game->doors_h[game->num_doors_h][4] = game->res_rc_h_3D[4];
+				game->doors_h[game->num_doors_h][5] = game->res_rc_h_3D[5];
+				game->doors_h[game->num_doors_h][6] = game->res_rc_h_3D[6];
 			}
 		}
 		range++;
@@ -192,13 +202,15 @@ float	raycast_v_3D(t_data *game, float x, float y, float z)
 	&& game->res_rc_v_3D[1] / B_SIZE > 0 && game->res_rc_v_3D[1] / B_SIZE < game->map_h
 	&& game->res_rc_v_3D[2] <= B_SIZE / 2 && game->res_rc_v_3D[2] >= -B_SIZE / 2)
 	{
+		game->res_rc_v_3D[5] = (int)game->res_rc_v_3D[0] / B_SIZE - (dir_x < 0);
+		game->res_rc_v_3D[6] = (int)game->res_rc_v_3D[1] / B_SIZE;
 		if (dir_x != 0
-		&& game->res_rc_v_3D[0] / B_SIZE > 0 && game->res_rc_v_3D[0] / B_SIZE < game->map_w)
+		&& game->res_rc_v_3D[5] >= 0 && game->res_rc_v_3D[5] < game->map_w)
 		{
-			type = game->map[(int)game->res_rc_v_3D[1] / B_SIZE][(int)game->res_rc_v_3D[0] / B_SIZE - (dir_x < 0)];
+			type = game->map[(int)game->res_rc_v_3D[6]][(int)game->res_rc_v_3D[5]];
 			if (type == 1)
 				return distance(game->res_rc_v_3D[0], game->res_rc_v_3D[1], game->player.pos[0], game->player.pos[1]);
-			else if (type == 2)
+			else if (type >= 2)
 			{
 				game->num_doors_v++;
 				game->doors_v[game->num_doors_v][0] = game->res_rc_v_3D[0];
@@ -206,6 +218,8 @@ float	raycast_v_3D(t_data *game, float x, float y, float z)
 				game->doors_v[game->num_doors_v][2] = game->res_rc_v_3D[2];
 				game->doors_v[game->num_doors_v][3] = distance(game->res_rc_v_3D[0], game->res_rc_v_3D[1], game->player.pos[0], game->player.pos[1]);
 				game->doors_v[game->num_doors_v][4] = game->res_rc_v_3D[4];
+				game->doors_v[game->num_doors_v][5] = game->res_rc_v_3D[5];
+				game->doors_v[game->num_doors_v][6] = game->res_rc_v_3D[6];
 			}
 		}
 		range++;
