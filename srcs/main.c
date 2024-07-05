@@ -12,10 +12,10 @@ void init2(t_data *game)
 	game->img_sky.img_ptr = mlx_xpm_file_to_image(game->mlx_ptr, "textures/sky.xpm", &game->img_sky.w, &game->img_sky.h);
 	game->img_sky.addr = mlx_get_data_addr(game->img_sky.img_ptr,
 			&game->img_sky.bpp, &game->img_sky.line_len, &game->img_sky.endian);
-	game->img_wall.img_ptr = mlx_xpm_file_to_image(game->mlx_ptr, "textures/wall.xpm", &game->img_wall.w, &game->img_wall.h);
+	game->img_wall.img_ptr = mlx_xpm_file_to_image(game->mlx_ptr, "textures/qmsdx.xpm", &game->img_wall.w, &game->img_wall.h);
 	game->img_wall.addr = mlx_get_data_addr(game->img_wall.img_ptr,
 			&game->img_wall.bpp, &game->img_wall.line_len, &game->img_wall.endian);
-	game->img_floor.img_ptr = mlx_xpm_file_to_image(game->mlx_ptr, "textures/floor.xpm", &game->img_floor.w, &game->img_floor.h);
+	game->img_floor.img_ptr = mlx_xpm_file_to_image(game->mlx_ptr, "textures/9dc75ffc7832b9fd9f885dfede147f42.xpm", &game->img_floor.w, &game->img_floor.h);
 	game->img_floor.addr = mlx_get_data_addr(game->img_floor.img_ptr,
 			&game->img_floor.bpp, &game->img_floor.line_len, &game->img_floor.endian);
 	game->img_door.img_ptr = mlx_xpm_file_to_image(game->mlx_ptr, "textures/door.xpm", &game->img_door.w, &game->img_door.h);

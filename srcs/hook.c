@@ -67,30 +67,70 @@ int	handle_keyrelease(int keysym, t_data *game)
 	return (0);
 }
 
+#include <stdio.h>
+
 int mouse_move(int x, int y, t_data *game)
 {
-	ft_printf("%d:%d\n", x, y);
-	//mlx_mouse_move(game->mlx_ptr, game->win_ptr, WIN_W/2, WIN_H/2);
+	float rot_angle_x;
+	if (x >=0 && x < WIN_W)
+   		rot_angle_x = (x - (WIN_W / 2)) * 0.0005;
+	float rot_angle_z;
+	if (y >=0 && y < WIN_H)
+    	rot_angle_z = ((WIN_H / 2) - y) * 0.0005;
 
-	float		oldDirX = game->player.dir[0];
-	float		oldDirY = game->player.dir[1];
-	float		oldDirX_3D = game->player.dir3D.x;
-	float		oldDirY_3D = game->player.dir3D.y;
-	game->player.dir[0] = oldDirX * cos(-ROT_SPEED) - oldDirY * sin(-ROT_SPEED);
-	game->player.dir[1] = oldDirX * sin(-ROT_SPEED) + oldDirY * cos(-ROT_SPEED);
-	game->player.dir3D.x = oldDirX_3D * cos(-ROT_SPEED) - oldDirY_3D * sin(-ROT_SPEED);
-	game->player.dir3D.y = oldDirX_3D * sin(-ROT_SPEED) + oldDirY_3D * cos(-ROT_SPEED);
+    float oldDirX = game->player.dir[0];
+    float oldDirY = game->player.dir[1];
+	float oldDirX_3D = game->player.dir3D.x;
+	float oldDirY_3D = game->player.dir3D.y;
+    game->player.dir[0] = oldDirX * cos(rot_angle_x) - oldDirY * sin(rot_angle_x);
+    game->player.dir[1] = oldDirX * sin(rot_angle_x) + oldDirY * cos(rot_angle_x);
+	game->player.dir3D.x = oldDirX_3D * cos(rot_angle_x) - oldDirY_3D * sin(rot_angle_x);
+    game->player.dir3D.y = oldDirX_3D * sin(rot_angle_x) + oldDirY_3D * cos(rot_angle_x);
+
+	t_point3D	*p1;
+	t_point3D	*p2;
+	if (rot_angle_z != 0 && game->player.dir3D.z <= 0.95 && game->player.dir3D.z >= -0.95)
+	{
+		p1 = ro_on_z_to_xz(game->player.dir3D);
+		p2 = ro_on_y(*p1, rot_angle_z);
+		if (rot_angle_z != 0)
+			printf("%f %f\n", p2->z, rot_angle_z);
+		if (p2->z <= -0.95 || (rot_angle_z < 0 && p2->z > game->player.dir3D.z))
+		{
+			free(p2);
+			p2 = ro_on_y(*p1, -rot_angle_z);
+		}
+		else if (p2->z >= 0.95 || (rot_angle_z > 0 && p2->z < game->player.dir3D.z))
+		{
+			free(p2);
+			p2 = ro_on_y(*p1, -rot_angle_z);
+		}
+		free(p1);
+		p1 = ro_back_on_z(*p2);
+		free(p2);
+		game->player.dir3D.x = p1->x;
+		game->player.dir3D.y = p1->y;
+		game->player.dir3D.z = p1->z;
+		if (rot_angle_z != 0) printf("%f\n", game->player.dir3D.z);
+		free(p1);
+	}
+	else if (rot_angle_z != 0 && game->player.dir3D.z > 0.95)
+		game->player.dir3D.z = 0.95;
+	else if (rot_angle_z != 0)
+		game->player.dir3D.z = -0.95;
 	if (game->player.dir[0] > 0)
 		game->player.dir3D.angle = atan(game->player.dir[1] / game->player.dir[0]);
 	else if (game->player.dir[0] < 0)
 		game->player.dir3D.angle = atan(game->player.dir[1] / game->player.dir[0]) + M_PI;
 	else
 		game->player.dir3D.angle = ((game->player.dir[1] > 0) * 2 - 1) * M_PI / 2;
+    mlx_mouse_move(game->mlx_ptr, game->win_ptr, WIN_W / 2, WIN_H / 2);
 	return (0);
 }
 
 void	hook(t_data *game)
 {
+	mlx_mouse_hide(game->mlx_ptr, game->win_ptr);
 	mlx_loop_hook(game->mlx_ptr, &render, game);
 	mlx_hook(game->win_ptr, KeyPress, KeyPressMask, &handle_keypress, game);
 	mlx_hook(game->win_ptr, KeyRelease, KeyReleaseMask, &handle_keyrelease,

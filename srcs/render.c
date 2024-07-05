@@ -423,7 +423,7 @@ void	draw_pixel(t_data *game, int col, int row)
 		r = round((1 - r) * game->img_floor.h);
 		game->res_rc_3D[3] = distance(game->res_rc_3D[0], game->res_rc_3D[1], game->player.pos[0], game->player.pos[1]);
 		shadow = 1.0 - (fmin(game->res_rc_3D[3], 8 * B_SIZE) / (8 * B_SIZE));
-		t = ((unsigned int *)game->img_floor.addr)[(int)r * game->img_wall.w + (int)c];
+		t = ((unsigned int *)game->img_floor.addr)[(int)r * game->img_floor.w + (int)c];
 		((unsigned int *)game->img.addr)[row * WIN_W + col]
 		= (((int)round(((t >> 16) & 0xff) * shadow) & 0xff) << 16)
 			+ (((int)round(((t >> 8) & 0xff) * shadow) & 0xff) << 8)
