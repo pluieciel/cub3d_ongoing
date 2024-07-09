@@ -13,10 +13,11 @@
 #include <string.h>
 #include <sys/time.h>
 #include <unistd.h>
+#include <pthread.h>
 
-#define WIN_W 1000
+#define WIN_W 1600
 #define WIN_H (WIN_W / 2)
-#define FPS 20
+#define FPS 60
 #define B_SIZE 64
 #define ROT_SPEED 0.1
 #define MM_FACTOR 4
@@ -31,6 +32,7 @@
 #define OPEN_DIS 80
 #define SPEED 5
 #define M_PI 3.14159265358979323846
+#define NUM_THREADS 10
 
 typedef struct s_point
 {
@@ -120,6 +122,24 @@ typedef struct s_data
 	float		res_rc_h[6];
 	float		res_rc_v[6];
 	float		*res_rc;
+	t_img1		img_sky;
+	t_img1		img_wall;
+	t_img1		img_floor;
+	t_img1		img_door;
+	int			op_door;
+	t_door		*doors;
+	int 		coll_h;
+	int 		coll_v;
+}				t_data;
+
+typedef struct s_raycast
+{
+	pthread_t	tid;
+	t_data		*game;
+	t_point3D	*p1, *p2;
+	int			col_start;
+    int			col_end;
+	float		temp[3];
 	// x y z dis dir idx_x idx_y
 	float		res_rc_h_3D[7];
 	float		res_rc_v_3D[7];
@@ -130,15 +150,7 @@ typedef struct s_data
 	float		doors_h[20][7];
 	float		doors_v[20][7];
 	float		nearest_wall_dis;
-	t_img1		img_sky;
-	t_img1		img_wall;
-	t_img1		img_floor;
-	t_img1		img_door;
-	int			op_door;
-	t_door		*doors;
-	int 		coll_h;
-	int 		coll_v;
-}				t_data;
+}				t_raycast;
 
 void		init(t_data *game);
 void		parse_map(t_data *game, char *filename);
@@ -156,4 +168,4 @@ t_point3D	*ro_on_z_to_xz(t_point3D p);
 t_point3D	*ro_on_y(t_point3D p, float angle_z);
 t_point3D	*ro_back_on_z(t_point3D p);
 t_point3D	*cross(t_point3D p1, t_point3D p2);
-void		raycast_3D(t_data *game, float x, float y, float z);
+void		raycast_3D(t_raycast *ray);
