@@ -15,8 +15,9 @@
 #include <unistd.h>
 #include <pthread.h>
 
-#define WIN_W 1600
-#define WIN_H (WIN_W / 2)
+#define ASPECT_RATIO (16.0 / 9.0)
+#define WIN_W 1920
+#define WIN_H (WIN_W / ASPECT_RATIO)
 #define FPS 60
 #define B_SIZE 64
 #define ROT_SPEED 0.1
@@ -33,6 +34,7 @@
 #define SPEED 5
 #define M_PI 3.14159265358979323846
 #define NUM_THREADS 10
+#define TRANSPARENT_COLOR 0xFF000000
 
 typedef struct s_point
 {
