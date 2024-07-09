@@ -27,6 +27,8 @@ void	init(t_data *game)
 	game->map_w = 0;
 	game->dis_p_s = DIS_P_S;
 	game->time = millitimestamp();
+	game->op_door = 0;
+	game->doors = NULL;
 	game->mlx_ptr = mlx_init();
 	game->gc = (t_gc *)gc_insert(game->gc, game->mlx_ptr);
 }

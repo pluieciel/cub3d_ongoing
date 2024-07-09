@@ -38,6 +38,5 @@ int	main(int ac, char *av[])
 	init2(&game);
 	hook(&game);
 	mlx_loop(game.mlx_ptr);
-	gc_free(game.gc, "", 1);
 	return (0);	
 }
