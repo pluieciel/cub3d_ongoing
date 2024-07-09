@@ -1,7 +1,6 @@
 #include "cub3D.h"
 
-// TODO: update file extension
-static char	*get_texture_path(t_data *game, char *line)
+static void	load_texture(t_data *game, t_image *img, char *line)
 {
 	char	*path;
 	int		fd;
@@ -13,11 +12,13 @@ static char	*get_texture_path(t_data *game, char *line)
 	if (fd < 0)
 		exit(gc_free(game->gc, "Error: invalid file\n", 2));
 	close(fd);
-	gc_free_ptr(&game->gc, path);
+	img->ptr = mlx_xpm_file_to_image(game->mlx_ptr, path, &img->w, &img->h);
+	img->addr = mlx_get_data_addr(img->ptr,
+			&img->bpp, &img->line_len, &img->endian);
 	game->elem_n++;
-	return (path);
 }
-
+// V1: only color
+/*
 static int	get_color(t_data *game, char *line)
 {
 	char	**line_split;
@@ -44,7 +45,7 @@ static int	get_color(t_data *game, char *line)
 	gc_free_ptr(&game->gc, line_trim);
 	gc_free_ptr(&game->gc, line_split);
 	return (color);
-}
+}*/
 
 static void	set_elements(t_data *game, char *line)
 {
@@ -52,17 +53,25 @@ static void	set_elements(t_data *game, char *line)
 
 	line_split = ft_split_gc(line, ' ', &game->gc);
 	if (ft_strcmp(line_split[0], "NO") == 0 && line_split[1])
-		game->path_no = get_texture_path(game, line_split[1]);
+		load_texture(game, &game->img_wall_no, line_split[1]);
 	else if (ft_strcmp(line_split[0], "SO") == 0 && line_split[1])
-		game->path_so = get_texture_path(game, line_split[1]);
+		load_texture(game, &game->img_wall_so, line_split[1]);
 	else if (ft_strcmp(line_split[0], "EA") == 0 && line_split[1])
-		game->path_ea = get_texture_path(game, line_split[1]);
+		load_texture(game, &game->img_wall_ea, line_split[1]);
 	else if (ft_strcmp(line_split[0], "WE") == 0 && line_split[1])
-		game->path_we = get_texture_path(game, line_split[1]);
-	else if (ft_strcmp(line_split[0], "F") == 0 && line_split[1])
+		load_texture(game, &game->img_wall_we, line_split[1]);
+	else if (ft_strcmp(line_split[0], "D") == 0 && line_split[1])
+		load_texture(game, &game->img_door, line_split[1]);
+	// V1: only color
+	/*else if (ft_strcmp(line_split[0], "F") == 0 && line_split[1])
 		game->floor_color = get_color(game, line_split[1]);
 	else if (ft_strcmp(line_split[0], "C") == 0 && line_split[1])
-		game->ceiling_color = get_color(game, line_split[1]);
+		game->ceiling_color = get_color(game, line_split[1]);*/
+	// V2: textures
+	else if (ft_strcmp(line_split[0], "F") == 0 && line_split[1])
+		load_texture(game, &game->img_floor, line_split[1]);
+	else if (ft_strcmp(line_split[0], "C") == 0 && line_split[1])
+		load_texture(game, &game->img_sky, line_split[1]);
 	gc_free_ptr(&game->gc, line_split);
 }
 

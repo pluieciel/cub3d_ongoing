@@ -1,13 +1,15 @@
-NO ./textures/no.xpm
+NO ./textures/wall.xpm
 
-SO ./textures/so.xpm
-WE ./textures/we.xpm
+SO ./textures/wall.xpm
+WE ./textures/wall.xpm
 
 
-EA ./textures/ea.xpm
+D ./textures/door.xpm
 
-F 220,100,20
-C 225,30,0
+EA ./textures/wall.xpm
+
+F ./textures/floor.xpm
+C ./textures/sky.xpm
 
 
 

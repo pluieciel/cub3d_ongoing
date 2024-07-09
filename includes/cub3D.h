@@ -27,7 +27,7 @@
 #define MM_RANGE 8
 #define DIS_P_S (WIN_W / 2)
 #define RAYCAST_RANGE 20
-#define ELEM_N 6
+#define ELEM_N 7
 #define COLL_DIS 20
 #define OPEN_DIS 80
 #define SPEED 5
@@ -74,16 +74,16 @@ typedef struct s_key
 	int			down;
 }				t_key;
 
-typedef struct s_img1
+typedef struct s_image
 {
-	void		*img_ptr;
+	void		*ptr;
 	char		*addr;
 	int			h;
 	int			w;
 	int			bpp;
 	int			endian;
 	int			line_len;
-}				t_img1;
+}				t_image;
 
 typedef struct s_door
 {
@@ -102,10 +102,6 @@ typedef struct s_data
 	int			map_w;
 	int			map_h;
 	int			map_index;
-	char		*path_no;
-	char		*path_so;
-	char		*path_ea;
-	char		*path_we;
 	int			floor_color;
 	int			ceiling_color;
 	int			elem_n;
@@ -113,7 +109,7 @@ typedef struct s_data
 	t_key		key;
 	t_gc		*gc;
 	long long	time;
-	t_img1		img;
+	t_image		img;
 	int			dis_p_s;
 	// 0 1 -> x y
 	// 2 -> dis
@@ -122,10 +118,13 @@ typedef struct s_data
 	float		res_rc_h[6];
 	float		res_rc_v[6];
 	float		*res_rc;
-	t_img1		img_sky;
-	t_img1		img_wall;
-	t_img1		img_floor;
-	t_img1		img_door;
+	t_image		img_sky;
+	t_image		img_wall_no;
+	t_image		img_wall_so;
+	t_image		img_wall_ea;
+	t_image		img_wall_we;
+	t_image		img_floor;
+	t_image		img_door;
 	int			op_door;
 	t_door		*doors;
 	int 		coll_h;
@@ -163,7 +162,7 @@ float		distance(float x1, float y1, float x2, float y2);
 float		raycast_h(t_data *game, float x, float y, int type);
 float		raycast_v(t_data *game, float x, float y, int type);
 void		raycast(t_data *game, float x, float y, int type);
-void		ft_bresenham(t_point a, t_point b, t_img1 *img);
+void		ft_bresenham(t_point a, t_point b, t_image *img);
 t_point3D	*ro_on_z_to_xz(t_point3D p);
 t_point3D	*ro_on_y(t_point3D p, float angle_z);
 t_point3D	*ro_back_on_z(t_point3D p);

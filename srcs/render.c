@@ -1,6 +1,6 @@
 #include "cub3D.h"
 
-void	clear_img(t_img1 *img)
+void	clear_img(t_image *img)
 {
 	int	i;
 
@@ -427,11 +427,11 @@ void	draw_pixel(t_raycast *ray, int col, int row)
 		if (ray->res_rc_3D == ray->res_rc_h_3D)
 		{
 			if (ray->res_rc_3D[4] == 1)
-				c = round(fmod(ray->res_rc_3D[0], B_SIZE) / B_SIZE * ray->game->img_wall.w);
+				c = round(fmod(ray->res_rc_3D[0], B_SIZE) / B_SIZE * ray->game->img_wall_no.w);
 			else
-				c = round((1 - fmod(ray->res_rc_3D[0], B_SIZE) / B_SIZE) * ray->game->img_wall.w);
-			r = round((1 - fmod(ray->res_rc_3D[2] + 32, B_SIZE) / B_SIZE) * ray->game->img_wall.h);
-			t = ((unsigned int *)ray->game->img_wall.addr)[(int)r * ray->game->img_wall.w + (int)c];
+				c = round((1 - fmod(ray->res_rc_3D[0], B_SIZE) / B_SIZE) * ray->game->img_wall_no.w);
+			r = round((1 - fmod(ray->res_rc_3D[2] + 32, B_SIZE) / B_SIZE) * ray->game->img_wall_no.h);
+			t = ((unsigned int *)ray->game->img_wall_no.addr)[(int)r * ray->game->img_wall_no.w + (int)c];
 			((unsigned int *)ray->game->img.addr)[row * WIN_W + col]
 			= (((int)round(((t >> 16) & 0xff) * shadow) & 0xff) << 16)
 				+ (((int)round(((t >> 8) & 0xff) * shadow) & 0xff) << 8)
@@ -440,11 +440,11 @@ void	draw_pixel(t_raycast *ray, int col, int row)
 		else
 		{
 			if (ray->res_rc_3D[4] == 1)
-				c = round(fmod(ray->res_rc_3D[1], B_SIZE) / B_SIZE * ray->game->img_wall.w);
+				c = round(fmod(ray->res_rc_3D[1], B_SIZE) / B_SIZE * ray->game->img_wall_no.w);
 			else
-				c = round((1 - fmod(ray->res_rc_3D[1], B_SIZE) / B_SIZE) * ray->game->img_wall.w);
-			r = round((1 - fmod(ray->res_rc_3D[2] + 32, B_SIZE) / B_SIZE) * ray->game->img_wall.h);
-			t = ((unsigned int *)ray->game->img_wall.addr)[(int)r * ray->game->img_wall.w + (int)c];
+				c = round((1 - fmod(ray->res_rc_3D[1], B_SIZE) / B_SIZE) * ray->game->img_wall_no.w);
+			r = round((1 - fmod(ray->res_rc_3D[2] + 32, B_SIZE) / B_SIZE) * ray->game->img_wall_no.h);
+			t = ((unsigned int *)ray->game->img_wall_no.addr)[(int)r * ray->game->img_wall_no.w + (int)c];
 			((unsigned int *)ray->game->img.addr)[row * WIN_W + col]
 			= (((int)round(((t >> 16) & 0xff) * shadow) & 0xff) << 16)
 				+ (((int)round(((t >> 8) & 0xff) * shadow) & 0xff) << 8)
@@ -648,7 +648,7 @@ int	render(t_data *game)
 		draw_walls_3D(game);
 		draw_minimap(game);
 		mlx_put_image_to_window(game->mlx_ptr, game->win_ptr,
-				game->img.img_ptr, 0, 0);
+				game->img.ptr, 0, 0);
 	}
 	return (0);
 }
