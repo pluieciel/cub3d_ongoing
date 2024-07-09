@@ -1,17 +1,5 @@
 #include "cub3D.h"
 
-void	clear_img(t_image *img)
-{
-	int	i;
-
-	i = 0;
-	while (i < img->w * img->h)
-	{
-		((unsigned int *)img->addr)[i] = 0;
-		i++;
-	}
-}
-
 float	distance(float x1, float y1, float x2, float y2)
 {
 	return (sqrt((x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2)));
@@ -651,7 +639,7 @@ int	render(t_data *game)
 	{
 		game->time = now;
 		mlx_clear_window(game->mlx_ptr, game->win_ptr);
-		clear_img(&game->img);
+		ft_bzero(game->img.addr, game->img.w * game->img.h * (game->img.bpp / 8));
 		//(((unsigned int *)game->img.addr)[y * WIN_W + x]) = color;
 		//draw_walls(game);
 		move_doors(game);
