@@ -6,7 +6,7 @@
 /*   By: jlefonde <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/23 16:27:17 by jlefonde          #+#    #+#             */
-/*   Updated: 2024/05/01 17:42:42 by jlefonde         ###   ########.fr       */
+/*   Updated: 2024/07/09 13:22:04 by jlefonde         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ int	ft_isvalid_extension(char *file, char *ext)
 	char	*file_ext;
 
 	file_ext = ft_strrchr(file, '.');
-	if (file_ext == NULL)
+	if (file_ext == NULL || ft_strrchri(file, '.') == 0)
 		return (-1);
 	return (ft_strncmp(file_ext, ext, ft_strlen(ext)));
 }
