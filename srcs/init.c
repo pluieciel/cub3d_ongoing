@@ -31,7 +31,6 @@ void	init(t_data *game)
 	game->doors = NULL;
 	game->mlx_ptr = mlx_init();
 	game->gc = (t_gc *)gc_insert(game->gc, game->mlx_ptr);
-	game->win_ptr = mlx_new_window(game->mlx_ptr, WIN_W, WIN_H, "cub3D");
 	game->img.w = WIN_W;
 	game->img.h = WIN_H;
 	game->img.ptr = mlx_new_image(game->mlx_ptr,

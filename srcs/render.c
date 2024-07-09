@@ -427,28 +427,40 @@ void	draw_pixel(t_raycast *ray, int col, int row)
 		if (ray->res_rc_3D == ray->res_rc_h_3D)
 		{
 			if (ray->res_rc_3D[4] == 1)
+			{
 				c = round(fmod(ray->res_rc_3D[0], B_SIZE) / B_SIZE * ray->game->img_wall_no.w);
+				r = round((1 - fmod(ray->res_rc_3D[2] + 32, B_SIZE) / B_SIZE) * ray->game->img_wall_no.h);
+				t = ((unsigned int *)ray->game->img_wall_no.addr)[(int)r * ray->game->img_wall_no.w + (int)c];
+			}
 			else
-				c = round((1 - fmod(ray->res_rc_3D[0], B_SIZE) / B_SIZE) * ray->game->img_wall_no.w);
-			r = round((1 - fmod(ray->res_rc_3D[2] + 32, B_SIZE) / B_SIZE) * ray->game->img_wall_no.h);
-			t = ((unsigned int *)ray->game->img_wall_no.addr)[(int)r * ray->game->img_wall_no.w + (int)c];
+			{
+				c = round((1 - fmod(ray->res_rc_3D[0], B_SIZE) / B_SIZE) * ray->game->img_wall_so.w);
+				r = round((1 - fmod(ray->res_rc_3D[2] + 32, B_SIZE) / B_SIZE) * ray->game->img_wall_so.h);
+				t = ((unsigned int *)ray->game->img_wall_so.addr)[(int)r * ray->game->img_wall_so.w + (int)c];
+			}
 			((unsigned int *)ray->game->img.addr)[row * WIN_W + col]
-			= (((int)round(((t >> 16) & 0xff) * shadow) & 0xff) << 16)
-				+ (((int)round(((t >> 8) & 0xff) * shadow) & 0xff) << 8)
-				+ ((int)round(((t) & 0xff) * shadow) & 0xff);
+				= (((int)round(((t >> 16) & 0xff) * shadow) & 0xff) << 16)
+					+ (((int)round(((t >> 8) & 0xff) * shadow) & 0xff) << 8)
+					+ ((int)round(((t) & 0xff) * shadow) & 0xff);
 		}
 		else
 		{
 			if (ray->res_rc_3D[4] == 1)
-				c = round(fmod(ray->res_rc_3D[1], B_SIZE) / B_SIZE * ray->game->img_wall_no.w);
+			{
+				c = round(fmod(ray->res_rc_3D[1], B_SIZE) / B_SIZE * ray->game->img_wall_ea.w);
+				r = round((1 - fmod(ray->res_rc_3D[2] + 32, B_SIZE) / B_SIZE) * ray->game->img_wall_ea.h);
+				t = ((unsigned int *)ray->game->img_wall_ea.addr)[(int)r * ray->game->img_wall_ea.w + (int)c];
+			}
 			else
-				c = round((1 - fmod(ray->res_rc_3D[1], B_SIZE) / B_SIZE) * ray->game->img_wall_no.w);
-			r = round((1 - fmod(ray->res_rc_3D[2] + 32, B_SIZE) / B_SIZE) * ray->game->img_wall_no.h);
-			t = ((unsigned int *)ray->game->img_wall_no.addr)[(int)r * ray->game->img_wall_no.w + (int)c];
+			{
+				c = round((1 - fmod(ray->res_rc_3D[1], B_SIZE) / B_SIZE) * ray->game->img_wall_we.w);
+				r = round((1 - fmod(ray->res_rc_3D[2] + 32, B_SIZE) / B_SIZE) * ray->game->img_wall_we.h);
+				t = ((unsigned int *)ray->game->img_wall_we.addr)[(int)r * ray->game->img_wall_we.w + (int)c];
+			}
 			((unsigned int *)ray->game->img.addr)[row * WIN_W + col]
-			= (((int)round(((t >> 16) & 0xff) * shadow) & 0xff) << 16)
-				+ (((int)round(((t >> 8) & 0xff) * shadow) & 0xff) << 8)
-				+ ((int)round(((t) & 0xff) * shadow) & 0xff);
+				= (((int)round(((t >> 16) & 0xff) * shadow) & 0xff) << 16)
+					+ (((int)round(((t >> 8) & 0xff) * shadow) & 0xff) << 8)
+					+ ((int)round(((t) & 0xff) * shadow) & 0xff);
 		}
 		ray->nearest_wall_dis = ray->res_rc_3D[3];
 	}

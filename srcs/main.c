@@ -12,6 +12,7 @@ int	main(int ac, char *av[])
 	parse_map(&game, av[1]);
 	if (check_map(&game))
 		exit(gc_free(game.gc, "Error: invalid map\n", 2));
+	game.win_ptr = mlx_new_window(game.mlx_ptr, WIN_W, WIN_H, "cub3D");
 	hook(&game);
 	mlx_loop(game.mlx_ptr);
 	return (0);	

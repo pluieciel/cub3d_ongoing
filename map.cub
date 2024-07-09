@@ -1,12 +1,12 @@
-NO ./textures/wall.xpm
+NO ./textures/wall_no.xpm
 
-SO ./textures/wall.xpm
-WE ./textures/wall.xpm
+SO ./textures/wall_so.xpm
+WE ./textures/wall_we.xpm
 
 
 D ./textures/door.xpm
 
-EA ./textures/wall.xpm
+EA ./textures/wall_ea.xpm
 
 F ./textures/floor.xpm
 C ./textures/sky.xpm
