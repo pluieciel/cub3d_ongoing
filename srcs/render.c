@@ -348,10 +348,19 @@ void	do_doors_h(t_data *game, int col, int row)
 		else
 			c = round((1 - fmod(game->doors_h[game->num_doors_h][0], B_SIZE) / B_SIZE) * game->img_door.w);
 		r = round((1 - fmod(game->doors_h[game->num_doors_h][2] + 32, B_SIZE) / B_SIZE) * game->img_door.h);
-		offset = (game->map[(int)game->doors_h[game->num_doors_h][6]][(int)game->doors_h[game->num_doors_h][5]] - 2) * game->img_door.h;
-		if ((int)r + (int)offset < game->img_door.h)
+		offset = (game->map[(int)game->doors_h[game->num_doors_h][6]][(int)game->doors_h[game->num_doors_h][5]] - 2) * game->img_door.w;
+		if ((int)c < game->img_door.w / 2 && (int)c + (int)offset < game->img_door.w / 2)
 		{
-			t = ((unsigned int *)game->img_door.addr)[((int)r + (int)offset) * game->img_door.w + (int)c];
+			t = ((unsigned int *)game->img_door.addr)[(int)r * game->img_door.w + (int)c + (int)offset];
+			if (t != 4278190080)
+				((unsigned int *)game->img.addr)[row * WIN_W + col]
+				= (((int)round(((t >> 16) & 0xff) * shadow) & 0xff) << 16)
+					+ (((int)round(((t >> 8) & 0xff) * shadow) & 0xff) << 8)
+					+ ((int)round(((t) & 0xff) * shadow) & 0xff);
+		}
+		else if ((int)c > game->img_door.w / 2 && (int)c - (int)offset > game->img_door.w / 2)
+		{
+			t = ((unsigned int *)game->img_door.addr)[(int)r * game->img_door.w + (int)c - (int)offset];
 			if (t != 4278190080)
 				((unsigned int *)game->img.addr)[row * WIN_W + col]
 				= (((int)round(((t >> 16) & 0xff) * shadow) & 0xff) << 16)
@@ -378,10 +387,19 @@ void	do_doors_v(t_data *game, int col, int row)
 		else
 			c = round((1 - fmod(game->doors_v[game->num_doors_v][1], B_SIZE) / B_SIZE) * game->img_door.w);
 		r = round((1 - fmod(game->doors_v[game->num_doors_v][2] + 32, B_SIZE) / B_SIZE) * game->img_door.h);
-		offset = (game->map[(int)game->doors_v[game->num_doors_v][6]][(int)game->doors_v[game->num_doors_v][5]] - 2) * game->img_door.h;
-		if ((int)r + (int)offset < game->img_door.h)
+		offset = (game->map[(int)game->doors_v[game->num_doors_v][6]][(int)game->doors_v[game->num_doors_v][5]] - 2) * game->img_door.w;
+		if ((int)c < game->img_door.w / 2 && (int)c + (int)offset < game->img_door.w / 2)
 		{
-			t = ((unsigned int *)game->img_door.addr)[((int)r + (int)offset) * game->img_door.w + (int)c];
+			t = ((unsigned int *)game->img_door.addr)[(int)r * game->img_door.w + (int)c + (int)offset];
+			if (t != 4278190080)
+				((unsigned int *)game->img.addr)[row * WIN_W + col]
+				= (((int)round(((t >> 16) & 0xff) * shadow) & 0xff) << 16)
+					+ (((int)round(((t >> 8) & 0xff) * shadow) & 0xff) << 8)
+					+ ((int)round(((t) & 0xff) * shadow) & 0xff);
+		}
+		else if ((int)c > game->img_door.w / 2 && (int)c - (int)offset > game->img_door.w / 2)
+		{
+			t = ((unsigned int *)game->img_door.addr)[(int)r * game->img_door.w + (int)c - (int)offset];
 			if (t != 4278190080)
 				((unsigned int *)game->img.addr)[row * WIN_W + col]
 				= (((int)round(((t >> 16) & 0xff) * shadow) & 0xff) << 16)
