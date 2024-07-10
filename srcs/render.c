@@ -108,9 +108,17 @@ void	collision(t_data *game, float dir_x, float dir_y, int coll_dis, int type)
 	if (game->res_rc_v[2] > 0 && game->res_rc_v[2] < RAYCAST_RANGE * B_SIZE)
 		ft_bresenham(a, b, &game->img);
 	if (game->res_rc_h[2] < coll_dis)
+	{
 		game->coll_h = 1;
+		if (type == 1)
+			game->coll_door_h = 1;
+	}
 	else if (game->res_rc_v[2] < coll_dis)
+	{
 		game->coll_v = 1;
+		if (type == 1)
+			game->coll_door_v = 1;
+	}
 }
 
 void	move_player(t_data *game)
@@ -543,8 +551,10 @@ void	move_doors(t_data *game)
 	// add new door into list
 	if (game->op_door == 1)
 	{
+		game->coll_door_h = 0;
+		game->coll_door_v = 0;
 		collision(game, game->player.dir[0], game->player.dir[1], OPEN_DIS, 1);
-		if ((game->coll_h || game->coll_v)
+		if ((game->coll_door_h || game->coll_door_v)
 		&& (game->map[(int)game->res_rc[5]][(int)game->res_rc[4]] == 2
 		|| game->map[(int)game->res_rc[5]][(int)game->res_rc[4]] == 3))
 		{

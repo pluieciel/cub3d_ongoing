@@ -85,10 +85,10 @@ int	handle_keyrelease(int keysym, t_data *game)
 
 int mouse_move(int x, int y, t_data *game)
 {
-	float rot_angle_x;
+	float rot_angle_x = 0;
 	if (x >=0 && x < WIN_W)
    		rot_angle_x = (x - (WIN_W / 2)) * 0.0005;
-	float rot_angle_z;
+	float rot_angle_z = 0;
 	if (y >=0 && y < WIN_H)
     	rot_angle_z = ((WIN_H / 2) - y) * 0.0005;
 
@@ -107,8 +107,8 @@ int mouse_move(int x, int y, t_data *game)
 	{
 		p1 = ro_on_z_to_xz(game->player.dir3D);
 		p2 = ro_on_y(*p1, rot_angle_z);
-		if (rot_angle_z != 0)
-			printf("%f %f\n", p2->z, rot_angle_z);
+		/*if (rot_angle_z != 0)
+			printf("%f %f\n", p2->z, rot_angle_z);*/
 		if (p2->z <= -0.95 || (rot_angle_z < 0 && p2->z > game->player.dir3D.z))
 		{
 			free(p2);
@@ -125,7 +125,7 @@ int mouse_move(int x, int y, t_data *game)
 		game->player.dir3D.x = p1->x;
 		game->player.dir3D.y = p1->y;
 		game->player.dir3D.z = p1->z;
-		if (rot_angle_z != 0) printf("%f\n", game->player.dir3D.z);
+		/*if (rot_angle_z != 0) printf("%f\n", game->player.dir3D.z);*/
 		free(p1);
 	}
 	else if (rot_angle_z != 0 && game->player.dir3D.z > 0.95)
