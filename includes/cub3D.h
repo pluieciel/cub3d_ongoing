@@ -15,8 +15,8 @@
 #include <unistd.h>
 #include <pthread.h>
 
-#define ASPECT_RATIO (16.0 / 9.0)
-#define WIN_W 1920
+#define ASPECT_RATIO (16.0 / 8.0)
+#define WIN_W 1280
 #define WIN_H (WIN_W / ASPECT_RATIO)
 #define FPS 60
 #define B_SIZE 64
@@ -31,7 +31,7 @@
 #define ELEM_N 7
 #define COLL_DIS 20
 #define OPEN_DIS 80
-#define SPEED 5
+#define SPEED 4
 #define M_PI 3.14159265358979323846
 #define NUM_THREADS 10
 #define TRANSPARENT_COLOR 0xFF000000
@@ -131,6 +131,7 @@ typedef struct s_data
 	t_door		*doors;
 	int 		coll_h;
 	int 		coll_v;
+	int idk;
 }				t_data;
 
 typedef struct s_raycast

@@ -33,7 +33,7 @@ float	raycast_h(t_data *game, float x, float y, int type)
 		game->res_rc_h[5] = (int)game->res_rc_h[1] / B_SIZE - (dir_y < 0);
 		game->res_rc_h[4] = (int)game->res_rc_h[0] / B_SIZE;
 		if (dir_y != 0
-		&& game->res_rc_h[5] > 0 && game->res_rc_h[5] < game->map_h
+		&& game->res_rc_h[5] >= 0 && game->res_rc_h[5] < game->map_h
 		&& (game->map[(int)game->res_rc_h[5]][(int)game->res_rc_h[4]] == 1
 		|| game->map[(int)game->res_rc_h[5]][(int)game->res_rc_h[4]] == 2
 		|| (type && game->map[(int)game->res_rc_h[5]][(int)game->res_rc_h[4]] == 3)))
@@ -78,7 +78,7 @@ float	raycast_v(t_data *game, float x, float y, int type)
 		game->res_rc_v[5] = (int)game->res_rc_v[1] / B_SIZE;
 		game->res_rc_v[4] = (int)game->res_rc_v[0] / B_SIZE - (dir_x < 0);
 		if (dir_x != 0
-		&& game->res_rc_v[4] > 0 && game->res_rc_v[4] < game->map_w
+		&& game->res_rc_v[4] >= 0 && game->res_rc_v[4] < game->map_w
 		&& (game->map[(int)game->res_rc_v[5]][(int)game->res_rc_v[4]] == 1
 		|| game->map[(int)game->res_rc_v[5]][(int)game->res_rc_v[4]] == 2
 		|| (type && game->map[(int)game->res_rc_v[5]][(int)game->res_rc_v[4]] == 3)))
