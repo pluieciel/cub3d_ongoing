@@ -5,6 +5,8 @@ static void	load_texture(t_data *game, t_image *img, char *line)
 	char	*path;
 	int		fd;
 
+	if (img->ptr != NULL)
+		exit(gc_free(game->gc, "Error: duplicated element\n", 2));
 	path = ft_strtrim_gc(line, "\n", &game->gc);
 	if (ft_isvalid_extension(path, ".xpm") != 0)
 		exit(gc_free(game->gc, "Error: invalid file extension\n", 2));
@@ -105,7 +107,7 @@ void parse_element(t_data *game, char *filename)
 			}
 			game->map_index = i;
 		}
-		if (game->map_index != -1)
+		if (game->map_index != -1 && line != NULL)
 		{
 			game->map_h++;
 			if ((int)(ft_strlen(line) - 1) > game->map_w)

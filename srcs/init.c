@@ -37,4 +37,32 @@ void	init(t_data *game)
 			game->img.w, game->img.h);
 	game->img.addr = mlx_get_data_addr(game->img.ptr,
 			&game->img.bpp, &game->img.line_len, &game->img.endian);
+	game->img_wall_no.w = 0;
+	game->img_wall_no.h = 0;
+	game->img_wall_no.ptr = NULL;
+	game->img_wall_no.addr = NULL;
+	game->img_wall_so.w = 0;
+	game->img_wall_so.h = 0;
+	game->img_wall_so.ptr = NULL;
+	game->img_wall_so.addr = NULL;
+	game->img_wall_ea.w = 0;
+	game->img_wall_ea.h = 0;
+	game->img_wall_ea.ptr = NULL;
+	game->img_wall_ea.addr = NULL;
+	game->img_wall_we.w = 0;
+	game->img_wall_we.h = 0;
+	game->img_wall_we.ptr = NULL;
+	game->img_wall_we.addr = NULL;
+	game->img_sky.w = 0;
+	game->img_sky.h = 0;
+	game->img_sky.ptr = NULL;
+	game->img_sky.addr = NULL;
+	game->img_floor.w = 0;
+	game->img_floor.h = 0;
+	game->img_floor.ptr = NULL;
+	game->img_floor.addr = NULL;
+	game->img_door.w = 0;
+	game->img_door.h = 0;
+	game->img_door.ptr = NULL;
+	game->img_door.addr = NULL;
 }
