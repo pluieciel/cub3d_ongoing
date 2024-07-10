@@ -502,12 +502,12 @@ void	draw_walls_3D(t_data *game)
 {
 	t_point3D	*p1, *p2;
 	t_raycast ray[NUM_THREADS];
-	p1 = ro_on_z_to_xz(game->player.dir3D);
+	p1 = ro_on_z_to_xz(game->player.dir3D_cpy);
 	p2 = ro_on_y(*p1, -M_PI / 2);
 	free(p1);
 	p1 = ro_back_on_z(*p2); // toward down on screen
 	free(p2);
-	p2 = cross(game->player.dir3D, *p1); // toward right on screen
+	p2 = cross(game->player.dir3D_cpy, *p1); // toward right on screen
 	int	i;
 	for (i = 0; i < NUM_THREADS; i++)
 	{
@@ -618,6 +618,10 @@ int	render(t_data *game)
 		//draw_walls(game);
 		move_doors(game);
 		move_player(game);
+		game->player.dir3D_cpy.x = game->player.dir3D.x;
+		game->player.dir3D_cpy.y = game->player.dir3D.y;
+		game->player.dir3D_cpy.z = game->player.dir3D.z;
+		game->player.dir3D_cpy.angle = game->player.dir3D.angle;
 		//printf("dir: %f %f %f\n", game->player.dir3D.x, game->player.dir3D.y, game->player.dir3D.z);
 		draw_walls_3D(game);
 		draw_minimap(game);

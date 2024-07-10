@@ -5,6 +5,7 @@
 		"x.h": "c",
 		"mlx_int.h": "c",
 		"time.h": "c",
-		"cub3d.h": "c"
+		"cub3d.h": "c",
+		"stdio.h": "c"
 	}
 }

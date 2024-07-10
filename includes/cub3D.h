@@ -18,7 +18,7 @@
 #define ASPECT_RATIO (16.0 / 8.0)
 #define WIN_W 1280
 #define WIN_H (WIN_W / ASPECT_RATIO)
-#define FPS 40
+#define FPS 60
 #define B_SIZE 64
 #define ROT_SPEED 0.1
 #define MM_FACTOR 4
@@ -33,7 +33,7 @@
 #define OPEN_DIS 80
 #define SPEED 4
 #define M_PI 3.14159265358979323846
-#define NUM_THREADS 4
+#define NUM_THREADS 8
 #define TRANSPARENT_COLOR 0xFF000000
 
 typedef struct s_point
@@ -62,6 +62,7 @@ typedef struct s_player
 	int			pos[2];
 	float		dir[2];
 	t_point3D	dir3D;
+	t_point3D	dir3D_cpy;
 }				t_player;
 
 typedef struct s_key
@@ -132,6 +133,7 @@ typedef struct s_data
 	int 		coll_h;
 	int 		coll_v;
 	int idk;
+	int idk2;
 	int 		coll_door_h;
 	int 		coll_door_v;
 }				t_data;

@@ -65,4 +65,6 @@ void	init(t_data *game)
 	game->img_door.h = 0;
 	game->img_door.ptr = NULL;
 	game->img_door.addr = NULL;
+	game->idk2 = 0;
+	game->idk = 0;
 }
