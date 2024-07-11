@@ -703,7 +703,6 @@ int render(t_data *game)
         draw_walls_3D(game);
         draw_minimap_no_rotation(game);
         move_player(game);
-
 		for (int i = 0; i < WIN_W; i++)
 		{
 		    for (int j = 0; j < WIN_H; j++)
