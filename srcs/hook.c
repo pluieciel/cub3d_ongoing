@@ -81,42 +81,38 @@ int	handle_keyrelease(int keysym, t_data *game)
 	return (0);
 }
 
-#include <stdio.h>
-#include <unistd.h>
-
-
 int mouse_move(int x, int y, t_data *game)
 {
-	if (game->idk)
-	{
-		game->idk = 0;
-		return (0); 
-	}
-	game->idk2 = 1;
-	if (x - (WIN_W / 2) > 0)
-		game->key.right = 1;
-	else if (x - (WIN_W / 2) < 0)
-		game->key.left = 1;
-	else
-	{
-		game->key.right = 0;
-		game->key.left = 0;
-	}
-	if (y - (WIN_H / 2) > 0)
-		game->key.down = 1;
-	else if (y - (WIN_H / 2) < 0)
-		game->key.up = 1;
-	else
-	{
-		game->key.down = 0;
-		game->key.up = 0;
-	}
+    int dX = x - (WIN_W / 2);
+    int dY = y - (WIN_H / 2);
+
+    if (dX > MOUSE_THRESHOLD)
+        game->key.right = 1;
+    else if (dX < -MOUSE_THRESHOLD)
+        game->key.left = 1;
+    else
+    {
+        game->key.right = 0;
+        game->key.left = 0;
+    }
+
+    if (dY > MOUSE_THRESHOLD)
+        game->key.down = 1;
+    else if (dY < -MOUSE_THRESHOLD)
+        game->key.up = 1;
+    else
+    {
+        game->key.down = 0;
+        game->key.up = 0;
+    }
+
     mlx_mouse_move(game->mlx_ptr, game->win_ptr, WIN_W / 2, WIN_H / 2);
 	return (0);
 }
 
 void	hook(t_data *game)
 {
+    mlx_mouse_move(game->mlx_ptr, game->win_ptr, WIN_W / 2, WIN_H / 2);
 	mlx_mouse_hide(game->mlx_ptr, game->win_ptr);
 	mlx_loop_hook(game->mlx_ptr, &render, game);
 	mlx_hook(game->win_ptr, KeyPress, KeyPressMask, &handle_keypress, game);

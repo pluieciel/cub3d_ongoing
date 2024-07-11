@@ -142,9 +142,9 @@ void	move_player(t_data *game)
 		collision(game, (sqrt(2)/2) * (game->player.dir[0] + game->player.dir[1]), (sqrt(2)/2) * (-game->player.dir[0] + game->player.dir[1]), COLL_DIS, 0);
 
 		if (!game->coll_v)
-    		game->player.pos[0] += round(oldDirX * SPEED);
+    		game->player.pos[0] += round(oldDirX * MOVE_SPEED);
     	if (!game->coll_h)
-    	    game->player.pos[1] += round(oldDirY * SPEED);
+    	    game->player.pos[1] += round(oldDirY * MOVE_SPEED);
 	}
 	else if (game->key.s)
 	{
@@ -155,9 +155,9 @@ void	move_player(t_data *game)
 		collision(game, -(sqrt(2)/2) * (game->player.dir[0] + game->player.dir[1]), -(sqrt(2)/2) * (-game->player.dir[0] + game->player.dir[1]), COLL_DIS, 0);
 
 		if (!game->coll_v)
-    		game->player.pos[0] -= round(oldDirX * SPEED);
+    		game->player.pos[0] -= round(oldDirX * MOVE_SPEED);
     	if (!game->coll_h)
-    	    game->player.pos[1] -= round(oldDirY * SPEED);
+    	    game->player.pos[1] -= round(oldDirY * MOVE_SPEED);
 	}
 	if (game->key.a)
 	{
@@ -168,9 +168,9 @@ void	move_player(t_data *game)
 		collision(game, -(sqrt(2)/2) * (game->player.dir[0] - game->player.dir[1]), -(sqrt(2)/2) * (game->player.dir[0] + game->player.dir[1]), COLL_DIS, 0);
 		
 		if (!game->coll_v)
-    		game->player.pos[0] += round(oldDirY * SPEED);
+    		game->player.pos[0] += round(oldDirY * MOVE_SPEED);
     	if (!game->coll_h)
-    	    game->player.pos[1] -= round(oldDirX * SPEED);
+    	    game->player.pos[1] -= round(oldDirX * MOVE_SPEED);
 	}
 	else if (game->key.d)
 	{
@@ -181,9 +181,9 @@ void	move_player(t_data *game)
 		collision(game, (sqrt(2)/2) * (game->player.dir[0] - game->player.dir[1]), (sqrt(2)/2) * (game->player.dir[0] + game->player.dir[1]), COLL_DIS, 0);
 
 		if (!game->coll_v)
-    		game->player.pos[0] -= round(oldDirY * SPEED);
+    		game->player.pos[0] -= round(oldDirY * MOVE_SPEED);
     	if (!game->coll_h)
-    	    game->player.pos[1] += round(oldDirX * SPEED);
+    	    game->player.pos[1] += round(oldDirX * MOVE_SPEED);
 	}
 	if (game->key.left)
 	{

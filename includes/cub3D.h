@@ -31,10 +31,11 @@
 #define ELEM_N 7
 #define COLL_DIS 20
 #define OPEN_DIS 80
-#define SPEED 4
+#define MOVE_SPEED 4
 #define M_PI 3.14159265358979323846
 #define NUM_THREADS 8
 #define TRANSPARENT_COLOR 0xFF000000
+#define MOUSE_THRESHOLD 4
 
 typedef struct s_point
 {
@@ -132,8 +133,6 @@ typedef struct s_data
 	t_door		*doors;
 	int 		coll_h;
 	int 		coll_v;
-	int idk;
-	int idk2;
 	int 		coll_door_h;
 	int 		coll_door_v;
 }				t_data;
