@@ -75,6 +75,11 @@ int	handle_keyrelease(int key, t_data *game)
 
 int mouse_move(int x, int y, t_data *game)
 {
+	if (game->mouse_centered)
+	{
+		game->mouse_centered = 0;
+		return (0);
+	}
     int dX;
     int dY;
 	
@@ -98,14 +103,16 @@ int mouse_move(int x, int y, t_data *game)
         game->key.down = 0;
         game->key.up = 0;
     }
+	game->mouse_centered = 1;
     mlx_mouse_move(game->mlx_ptr, game->win_ptr, WIN_W / 2, WIN_H / 2);
 	return (0);
 }
 
 void	hook(t_data *game)
 {
+	game->mouse_centered = 1;
     mlx_mouse_move(game->mlx_ptr, game->win_ptr, WIN_W / 2, WIN_H / 2);
-	mlx_mouse_hide(game->mlx_ptr, game->win_ptr);
+	//mlx_mouse_hide(game->mlx_ptr, game->win_ptr);
 	mlx_loop_hook(game->mlx_ptr, &render, game);
 	mlx_hook(game->win_ptr, KeyPress, KeyPressMask, &handle_keypress, game);
 	mlx_hook(game->win_ptr, KeyRelease, KeyReleaseMask, &handle_keyrelease,

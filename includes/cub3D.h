@@ -135,6 +135,7 @@ typedef struct s_data
 	int 		coll_v;
 	int 		coll_door_h;
 	int 		coll_door_v;
+	int mouse_centered;
 }				t_data;
 
 typedef struct s_raycast
