@@ -210,12 +210,11 @@ void	move_player(t_data *game)
 	float		oldDirY = game->player.dir[1];
 	float		oldDirX_3D = game->player.dir3D.x;
 	float		oldDirY_3D = game->player.dir3D.y;
-	//float		oldDirZ_3D = game->player.dir3D.z;
+
 	game->coll_h = 0;
 	game->coll_v = 0;
 	t_point3D	*p1;
 	t_point3D	*p2;
-	
 	if (game->key.w)
 	{
 		collision(game, game->player.dir[0], game->player.dir[1], COLL_DIS, 0);
@@ -552,6 +551,12 @@ void	draw_pixel(t_raycast *ray, int col, int row)
 			do_doors_v(ray, col, row);
 		else
 			do_doors_h(ray, col, row);
+	}
+	if (col < ray->game->img_crowbar_idle.w && row < ray->game->img_crowbar_idle.h)
+	{
+		t = ((unsigned int *)ray->game->img_crowbar_idle.addr)[row * ray->game->img_crowbar_idle.w + col];
+		if (t != TRANSPARENT_COLOR)
+		    ((unsigned int *)ray->game->img.addr)[row * WIN_W + col] = t;
 	}
 }
 
