@@ -16,7 +16,6 @@ void	draw_minimap(t_data *game)
 	unsigned int	t;
 	float	angle;
 
-	//((unsigned int *)game->img.addr)[MM_POS_Y * WIN_W + MM_POS_X] = 0x00FFFF00; //player pos
 	angle = atan(1.0 * (WIN_W / 2) / game->dis_p_s);
 	i = MM_POS_X - MM_RADIUS;
 	while (i <= MM_POS_X + MM_RADIUS)
@@ -88,6 +87,90 @@ void	draw_minimap(t_data *game)
 		y++;
 	}
 }
+
+void	draw_minimap_no_rotation(t_data *game)
+{
+	int	x;
+	int	y;
+	int i;
+	int j;
+	//int newi;
+	//int newj;
+	unsigned int	t;
+	float	angle;
+
+	//((unsigned int *)game->img.addr)[MM_POS_Y * WIN_W + MM_POS_X] = 0x00FFFF00; //player pos
+	angle = atan(1.0 * (WIN_W / 2) / game->dis_p_s);
+	i = MM_POS_X - MM_RADIUS;
+	while (i <= MM_POS_X + MM_RADIUS)
+	{
+		j = MM_POS_Y - MM_RADIUS;
+		while (j <= MM_POS_Y + MM_RADIUS)
+		{
+			if (distance(i, j, MM_POS_X, MM_POS_Y) < MM_RADIUS)
+			{
+				t = ((unsigned int *)game->img.addr)[j * WIN_W + i];
+				if (MM_POS_Y > j && atan(1.0 * abs(i - MM_POS_X) / (MM_POS_Y - j)) < angle)
+					((unsigned int *)game->img.addr)[j * WIN_W + i]
+        				= ((((((t >> 16) & 0xff) + 0x00) / 2) & 0xff) << 16)
+        				+ ((((((t >> 8) & 0xff) + 0x00) / 2) & 0xff) << 8)
+        				+ (((((t) & 0xff) + 0x00) / 2) & 0xff);
+				else
+					((unsigned int *)game->img.addr)[j * WIN_W + i]
+        				= ((((((t >> 16) & 0xff) + 0x22) / 2) & 0xff) << 16)
+        				+ ((((((t >> 8) & 0xff) + 0x22) / 2) & 0xff) << 8)
+        				+ (((((t) & 0xff) + 0x22) / 2) & 0xff);
+			}
+			j++;
+		}
+		i++;
+	}
+	
+	y = game->player.pos[1] / B_SIZE - MM_RANGE;
+	while (y <= game->player.pos[1] / B_SIZE + MM_RANGE)
+	{
+		x = game->player.pos[0] / B_SIZE - MM_RANGE;
+		while (x < game->player.pos[0] / B_SIZE + MM_RANGE)
+		{
+			if (x >= 0 && y >= 0 && x < game->map_w && y < game->map_h && game->map[y][x] >= 1)
+			{
+				i = y * B_SIZE / MM_FACTOR + MM_POS_Y - game->player.pos[1] / MM_FACTOR + 1;
+				while (i < y * B_SIZE / MM_FACTOR + MM_POS_Y - game->player.pos[1] / MM_FACTOR + B_SIZE / MM_FACTOR - 1)
+				{
+					j = x * B_SIZE / MM_FACTOR + MM_POS_X - game->player.pos[0] / MM_FACTOR + 1;
+					while (j < x * B_SIZE / MM_FACTOR + MM_POS_X - game->player.pos[0] / MM_FACTOR + B_SIZE / MM_FACTOR - 1)
+					{
+						if (distance(i, j, MM_POS_Y, MM_POS_X) < MM_RADIUS)
+						{
+							//newj = round(-(j - MM_POS_X) * game->player.dir[1] + (i - MM_POS_Y) * game->player.dir[0]) + MM_POS_X;
+							//newi = round((j - MM_POS_X) * -game->player.dir[0] - (i - MM_POS_Y) * game->player.dir[1]) + MM_POS_Y;
+							t = ((unsigned int *)game->img.addr)[i * WIN_W + j];
+							if (game->map[y][x] == 1)
+								((unsigned int *)game->img.addr)[i * WIN_W + j]
+								= ((((((t >> 16) & 0xff) * 2 + 0x88) / 3) & 0xff) << 16)
+									+ ((((((t >> 8) & 0xff) * 2 + 0x88) / 3) & 0xff) << 8)
+									+ (((((t) & 0xff) * 2 + 0x88) / 3) & 0xff);
+							else if (game->map[y][x] == 3)
+								((unsigned int *)game->img.addr)[i * WIN_W + j]
+								= ((((((t >> 16) & 0xff) * 2 + 0x00) / 3) & 0xff) << 16)
+									+ ((((((t >> 8) & 0xff) * 2 + 0x80) / 3) & 0xff) << 8)
+									+ (((((t) & 0xff) * 2 + 0x80) / 3) & 0xff);
+							else if (game->map[y][x] >= 2)
+								((unsigned int *)game->img.addr)[i * WIN_W + j]
+								= ((((((t >> 16) & 0xff) * 2 + 0x80) / 3) & 0xff) << 16)
+									+ ((((((t >> 8) & 0xff) * 2 + 0x00) / 3) & 0xff) << 8)
+									+ (((((t) & 0xff) * 2 + 0x00) / 3) & 0xff);
+						}
+						j++;
+					}
+					i++;
+				}
+			}
+			x++;
+		}
+		y++;
+	}
+}
 //not good, cannot handle corners
 void	collision(t_data *game, float dir_x, float dir_y, int coll_dis, int type)
 {
@@ -107,18 +190,18 @@ void	collision(t_data *game, float dir_x, float dir_y, int coll_dis, int type)
 	b.y = game->res_rc_v[1] / MM_FACTOR + MM_POS_Y - game->player.pos[1] / MM_FACTOR;
 	if (game->res_rc_v[2] > 0 && game->res_rc_v[2] < RAYCAST_RANGE * B_SIZE)
 		ft_bresenham(a, b, &game->img);
-	if (game->res_rc_h[2] < coll_dis)
-	{
-		game->coll_h = 1;
-		if (type == 1)
-			game->coll_door_h = 1;
-	}
-	else if (game->res_rc_v[2] < coll_dis)
-	{
-		game->coll_v = 1;
-		if (type == 1)
-			game->coll_door_v = 1;
-	}
+    if (game->res_rc_h[2] < coll_dis && game->res_rc_h[2] < game->res_rc_v[2])
+    {
+        game->coll_h = 1;
+        if (type == 1)
+            game->coll_door_h = 1;
+    }
+    if (game->res_rc_v[2] < coll_dis && game->res_rc_v[2] < game->res_rc_h[2])
+    {
+        game->coll_v = 1;
+        if (type == 1)
+            game->coll_door_v = 1;
+    }
 }
 
 void	move_player(t_data *game)
@@ -132,7 +215,7 @@ void	move_player(t_data *game)
 	game->coll_v = 0;
 	t_point3D	*p1;
 	t_point3D	*p2;
-	//int			coll;
+	
 	if (game->key.w)
 	{
 		collision(game, game->player.dir[0], game->player.dir[1], COLL_DIS, 0);
@@ -502,12 +585,12 @@ void	draw_walls_3D(t_data *game)
 {
 	t_point3D	*p1, *p2;
 	t_raycast ray[NUM_THREADS];
-	p1 = ro_on_z_to_xz(game->player.dir3D_cpy);
+	p1 = ro_on_z_to_xz(game->player.dir3D);
 	p2 = ro_on_y(*p1, -M_PI / 2);
 	free(p1);
 	p1 = ro_back_on_z(*p2); // toward down on screen
 	free(p2);
-	p2 = cross(game->player.dir3D_cpy, *p1); // toward right on screen
+	p2 = cross(game->player.dir3D, *p1); // toward right on screen
 	int	i;
 	for (i = 0; i < NUM_THREADS; i++)
 	{
@@ -614,17 +697,10 @@ int	render(t_data *game)
 		game->time = now;
 		mlx_clear_window(game->mlx_ptr, game->win_ptr);
 		ft_bzero(game->img.addr, game->img.w * game->img.h * (game->img.bpp / 8));
-		//(((unsigned int *)game->img.addr)[y * WIN_W + x]) = color;
-		//draw_walls(game);
 		move_doors(game);
-		move_player(game);
-		game->player.dir3D_cpy.x = game->player.dir3D.x;
-		game->player.dir3D_cpy.y = game->player.dir3D.y;
-		game->player.dir3D_cpy.z = game->player.dir3D.z;
-		game->player.dir3D_cpy.angle = game->player.dir3D.angle;
-		//printf("dir: %f %f %f\n", game->player.dir3D.x, game->player.dir3D.y, game->player.dir3D.z);
 		draw_walls_3D(game);
-		draw_minimap(game);
+		draw_minimap_no_rotation(game);
+		move_player(game);
 		mlx_put_image_to_window(game->mlx_ptr, game->win_ptr,
 				game->img.ptr, 0, 0);
 	}

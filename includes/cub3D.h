@@ -63,7 +63,6 @@ typedef struct s_player
 	int			pos[2];
 	float		dir[2];
 	t_point3D	dir3D;
-	t_point3D	dir3D_cpy;
 }				t_player;
 
 typedef struct s_key
@@ -129,6 +128,7 @@ typedef struct s_data
 	t_image		img_wall_we;
 	t_image		img_floor;
 	t_image		img_door;
+	t_image		img_crowbar_idle;
 	int			op_door;
 	t_door		*doors;
 	int 		coll_h;

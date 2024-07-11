@@ -1,13 +1,5 @@
 #include "cub3D.h"
 
-int	handle_no_event(void *data)
-{
-	if (data)
-	{
-	}
-	return (0);
-}
-
 void	destroy_imgs(t_data *game)
 {
 	mlx_destroy_image(game->mlx_ptr, game->img_sky.ptr);
@@ -31,61 +23,63 @@ int close_window(t_data *game)
 	exit(EXIT_SUCCESS);
 }
 
-int	handle_keypress(int keysym, t_data *game)
+int	handle_keypress(int key, t_data *game)
 {
-	if (keysym == XK_Escape)
+	if (key == XK_Escape)
 		close_window(game);
-	else if (keysym == 119)
+	else if (key == XK_w)
 		game->key.w = 1;
-	else if (keysym == 97)
+	else if (key == XK_a)
 		game->key.a = 1;
-	else if (keysym == 115)
+	else if (key == XK_s)
 		game->key.s = 1;
-	else if (keysym == 100)
+	else if (key == XK_d)
 		game->key.d = 1;
-	else if (keysym == 65361)
+	else if (key == XK_Left)
 		game->key.left = 1;
-	else if (keysym == 65363)
+	else if (key == XK_Right)
 		game->key.right = 1;
-	else if (keysym == 65362)
+	else if (key == XK_Up)
 		game->key.up = 1;
-	else if (keysym == 65364)
+	else if (key == XK_Down)
 		game->key.down = 1;
-	else if (keysym == 65451 && game->dis_p_s < 1500)
+	else if (key == XK_KP_Add && game->dis_p_s < 1500)
 		game->dis_p_s += 300;
-	else if (keysym == 65453 && game->dis_p_s > 400)
+	else if (key == XK_KP_Subtract && game->dis_p_s > 400)
 		game->dis_p_s -= 300;
-	else if (keysym == 101 && game->op_door == 0)
+	else if (key == XK_e && game->op_door == 0)
 		game->op_door = 1;
 	return (0);
 }
 
-int	handle_keyrelease(int keysym, t_data *game)
+int	handle_keyrelease(int key, t_data *game)
 {
-	if (keysym == 119)
+	if (key == XK_w)
 		game->key.w = 0;
-	else if (keysym == 97)
+	else if (key == XK_a)
 		game->key.a = 0;
-	else if (keysym == 115)
+	else if (key == XK_s)
 		game->key.s = 0;
-	else if (keysym == 100)
+	else if (key == XK_d)
 		game->key.d = 0;
-	else if (keysym == 65361)
+	else if (key == XK_Left)
 		game->key.left = 0;
-	else if (keysym == 65363)
+	else if (key == XK_Right)
 		game->key.right = 0;
-	else if (keysym == 65362)
+	else if (key == XK_Up)
 		game->key.up = 0;
-	else if (keysym == 65364)
+	else if (key == XK_Down)
 		game->key.down = 0;
 	return (0);
 }
 
 int mouse_move(int x, int y, t_data *game)
 {
-    int dX = x - (WIN_W / 2);
-    int dY = y - (WIN_H / 2);
-
+    int dX;
+    int dY;
+	
+	dX = x - (WIN_W / 2);
+	dY = y - (WIN_H / 2);
     if (dX > MOUSE_THRESHOLD)
         game->key.right = 1;
     else if (dX < -MOUSE_THRESHOLD)
@@ -95,7 +89,6 @@ int mouse_move(int x, int y, t_data *game)
         game->key.right = 0;
         game->key.left = 0;
     }
-
     if (dY > MOUSE_THRESHOLD)
         game->key.down = 1;
     else if (dY < -MOUSE_THRESHOLD)
@@ -105,7 +98,6 @@ int mouse_move(int x, int y, t_data *game)
         game->key.down = 0;
         game->key.up = 0;
     }
-
     mlx_mouse_move(game->mlx_ptr, game->win_ptr, WIN_W / 2, WIN_H / 2);
 	return (0);
 }
