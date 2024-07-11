@@ -1,96 +1,118 @@
 #include "cub3D.h"
 
-int	handle_no_event(void *data)
+void	destroy_imgs(t_data *game)
 {
-	if (data)
-	{
-	}
-	return (0);
+	mlx_destroy_image(game->mlx_ptr, game->img_sky.ptr);
+	mlx_destroy_image(game->mlx_ptr, game->img_wall_no.ptr);
+	mlx_destroy_image(game->mlx_ptr, game->img_wall_so.ptr);
+	mlx_destroy_image(game->mlx_ptr, game->img_wall_ea.ptr);
+	mlx_destroy_image(game->mlx_ptr, game->img_wall_we.ptr);
+	mlx_destroy_image(game->mlx_ptr, game->img_floor.ptr);
+	mlx_destroy_image(game->mlx_ptr, game->img_door.ptr);
 }
 
 int close_window(t_data *game)
 {
 	mlx_destroy_window(game->mlx_ptr, game->win_ptr);
 	game->win_ptr = NULL;
-	if (game->img.img_ptr != NULL)
-		mlx_destroy_image(game->mlx_ptr, game->img.img_ptr);
+	if (game->img.ptr != NULL)
+		mlx_destroy_image(game->mlx_ptr, game->img.ptr);
+	destroy_imgs(game);
 	mlx_destroy_display(game->mlx_ptr);
 	gc_free(game->gc, "", 1);
 	exit(EXIT_SUCCESS);
 }
 
-int	handle_keypress(int keysym, t_data *game)
+int	handle_keypress(int key, t_data *game)
 {
-	if (keysym == XK_Escape)
+	if (key == XK_Escape)
 		close_window(game);
-	else if (keysym == 119)
+	else if (key == XK_w)
 		game->key.w = 1;
-	else if (keysym == 97)
+	else if (key == XK_a)
 		game->key.a = 1;
-	else if (keysym == 115)
+	else if (key == XK_s)
 		game->key.s = 1;
-	else if (keysym == 100)
+	else if (key == XK_d)
 		game->key.d = 1;
-	else if (keysym == 65361)
+	else if (key == XK_Left)
 		game->key.left = 1;
-	else if (keysym == 65363)
+	else if (key == XK_Right)
 		game->key.right = 1;
-	else if (keysym == 65362)
+	else if (key == XK_Up)
 		game->key.up = 1;
-	else if (keysym == 65364)
+	else if (key == XK_Down)
 		game->key.down = 1;
-	else if (keysym == 65451 && game->dis_p_s < 1500)
+	else if (key == XK_KP_Add && game->dis_p_s < 1500)
 		game->dis_p_s += 300;
-	else if (keysym == 65453 && game->dis_p_s > 400)
+	else if (key == XK_KP_Subtract && game->dis_p_s > 400)
 		game->dis_p_s -= 300;
+	else if (key == XK_e && game->op_door == 0)
+		game->op_door = 1;
 	return (0);
 }
 
-int	handle_keyrelease(int keysym, t_data *game)
+int	handle_keyrelease(int key, t_data *game)
 {
-	if (keysym == 119)
+	if (key == XK_w)
 		game->key.w = 0;
-	else if (keysym == 97)
+	else if (key == XK_a)
 		game->key.a = 0;
-	else if (keysym == 115)
+	else if (key == XK_s)
 		game->key.s = 0;
-	else if (keysym == 100)
+	else if (key == XK_d)
 		game->key.d = 0;
-	else if (keysym == 65361)
+	else if (key == XK_Left)
 		game->key.left = 0;
-	else if (keysym == 65363)
+	else if (key == XK_Right)
 		game->key.right = 0;
-	else if (keysym == 65362)
+	else if (key == XK_Up)
 		game->key.up = 0;
-	else if (keysym == 65364)
+	else if (key == XK_Down)
 		game->key.down = 0;
 	return (0);
 }
 
 int mouse_move(int x, int y, t_data *game)
 {
-	ft_printf("%d:%d\n", x, y);
-	//mlx_mouse_move(game->mlx_ptr, game->win_ptr, WIN_W/2, WIN_H/2);
-
-	float		oldDirX = game->player.dir[0];
-	float		oldDirY = game->player.dir[1];
-	float		oldDirX_3D = game->player.dir3D.x;
-	float		oldDirY_3D = game->player.dir3D.y;
-	game->player.dir[0] = oldDirX * cos(-ROT_SPEED) - oldDirY * sin(-ROT_SPEED);
-	game->player.dir[1] = oldDirX * sin(-ROT_SPEED) + oldDirY * cos(-ROT_SPEED);
-	game->player.dir3D.x = oldDirX_3D * cos(-ROT_SPEED) - oldDirY_3D * sin(-ROT_SPEED);
-	game->player.dir3D.y = oldDirX_3D * sin(-ROT_SPEED) + oldDirY_3D * cos(-ROT_SPEED);
-	if (game->player.dir[0] > 0)
-		game->player.dir3D.angle = atan(game->player.dir[1] / game->player.dir[0]);
-	else if (game->player.dir[0] < 0)
-		game->player.dir3D.angle = atan(game->player.dir[1] / game->player.dir[0]) + M_PI;
-	else
-		game->player.dir3D.angle = ((game->player.dir[1] > 0) * 2 - 1) * M_PI / 2;
+	if (game->mouse_centered)
+	{
+		game->mouse_centered = 0;
+		return (0);
+	}
+    int dX;
+    int dY;
+	
+	dX = x - (WIN_W / 2);
+	dY = y - (WIN_H / 2);
+    if (dX > MOUSE_THRESHOLD)
+        game->key.right = 1;
+    else if (dX < -MOUSE_THRESHOLD)
+        game->key.left = 1;
+    else
+    {
+        game->key.right = 0;
+        game->key.left = 0;
+    }
+    if (dY > MOUSE_THRESHOLD)
+        game->key.down = 1;
+    else if (dY < -MOUSE_THRESHOLD)
+        game->key.up = 1;
+    else
+    {
+        game->key.down = 0;
+        game->key.up = 0;
+    }
+	game->mouse_centered = 1;
+    mlx_mouse_move(game->mlx_ptr, game->win_ptr, WIN_W / 2, WIN_H / 2);
 	return (0);
 }
 
 void	hook(t_data *game)
 {
+	game->mouse_centered = 1;
+    mlx_mouse_move(game->mlx_ptr, game->win_ptr, WIN_W / 2, WIN_H / 2);
+	mlx_mouse_hide(game->mlx_ptr, game->win_ptr);
 	mlx_loop_hook(game->mlx_ptr, &render, game);
 	mlx_hook(game->win_ptr, KeyPress, KeyPressMask, &handle_keypress, game);
 	mlx_hook(game->win_ptr, KeyRelease, KeyReleaseMask, &handle_keyrelease,

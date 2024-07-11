@@ -1,6 +1,6 @@
 #include "../includes/cub3D.h"
 
-static void	ft_put_pixel(t_img1 *img, int x, int y, int color)
+static void	ft_put_pixel(t_image *img, int x, int y, int color)
 {
 	char	*dst;
 
@@ -12,7 +12,7 @@ static void	ft_put_pixel(t_img1 *img, int x, int y, int color)
 }
 
 static void	ft_bresenham_low(t_point *a, t_point *b, t_delta delta,
-		t_img1 *img)
+		t_image *img)
 {
 	int		p;
 
@@ -38,7 +38,7 @@ static void	ft_bresenham_low(t_point *a, t_point *b, t_delta delta,
 }
 
 static void	ft_bresenham_high(t_point *a, t_point *b, t_delta delta,
-		t_img1 *img)
+		t_image *img)
 {
 	int		p;
 
@@ -63,7 +63,7 @@ static void	ft_bresenham_high(t_point *a, t_point *b, t_delta delta,
 	}
 }
 
-void	ft_bresenham(t_point a, t_point b, t_img1 *img)
+void	ft_bresenham(t_point a, t_point b, t_image *img)
 {
 	t_delta	delta;
 

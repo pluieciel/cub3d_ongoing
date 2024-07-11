@@ -50,12 +50,12 @@ void	parse_map(t_data *game, char *filename)
 	}
 	line = get_next_line(fd);
 	game->gc = gc_insert(game->gc, line);
-	game->map = gc_malloc(sizeof(int *) * game->map_h, &game->gc);
+	game->map = gc_malloc(sizeof(float *) * game->map_h, &game->gc);
 	game->visited = gc_malloc(sizeof(int *) * game->map_h, &game->gc);
 	i = -1;
 	while (++i < game->map_h)
 	{
-		game->map[i] = gc_malloc(sizeof(int) * game->map_w, &game->gc);
+		game->map[i] = gc_malloc(sizeof(float) * game->map_w, &game->gc);
 		game->visited[i] = gc_malloc(sizeof(int) * game->map_w, &game->gc);
 		j = -1;
 		while (++j < game->map_w)

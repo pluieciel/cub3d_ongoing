@@ -10,7 +10,7 @@ render.c  time.c raycast.c ft_bresenham.c rotation.c
 OBJECTS = $(addprefix $(OBJECTS_DIR)/, $(SOURCES:.c=.o))
 
 CFLAGS = -Wall -Wextra -Werror -I$(HEADERS_DIR) -g
-LDFLAGS = -L./libft_gc -L./minilibx -lft_gc -lmlx_Linux -lXext -lX11 -lm
+LDFLAGS = -L./libft_gc -L./minilibx -lft_gc -lmlx_Linux -lXext -lX11 -lm -lpthread
 AR = ar -rcs
 
 $(OBJECTS_DIR)/%.o: $(SOURCES_DIR)/%.c
