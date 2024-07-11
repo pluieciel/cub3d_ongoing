@@ -684,18 +684,19 @@ void	move_doors(t_data *game)
 	}
 }
 
-void do_crowbar_animation(t_data *game, long long cur_time)
+void do_crowbar_attack(t_data *game, long long cur_time)
 {
 	unsigned int t;
 	t_image *img;
 
-	if (game->left_click)
+	collision(game, game->player.dir[0], game->player.dir[1], COLL_DIS, 0);
+    if (game->left_click && ((!game->coll_h && !game->coll_v) || game->crowbar_attack_started) && !game->crowbar_attack_hit_started)
 	{
 		for (int i = 0; i < WIN_W; i++)
     	{
     	    for (int j = 0; j < WIN_H; j++)
     	    {
-    	        img = (t_image *)game->crowbar_animation->content;
+    	        img = (t_image *)game->crowbar_attack->content;
     	        if (i < img->w && j < img->h)
     	        {
     	            t = ((unsigned int *)img->addr)[j * img->w + i];
@@ -704,17 +705,51 @@ void do_crowbar_animation(t_data *game, long long cur_time)
     	        }
     	    }
     	}
-    	if (cur_time - game->crowbar_animation_time > FPS)
+    	if (cur_time - game->crowbar_attack_time > FPS)
     	{
-    	    game->crowbar_animation = game->crowbar_animation->next;
-    	    game->crowbar_animation_time = cur_time;
+    	    game->crowbar_attack = game->crowbar_attack->next;
+    	    game->crowbar_attack_time = cur_time;
     	}
-		if (game->crowbar_animation == game->crowbar_animation_head)
+		if (game->crowbar_attack == game->crowbar_attack_head)
+		{
+			game->crowbar_attack_started = 0;
 			game->left_click = 0;
+		}
+		else
+			game->crowbar_attack_started = 1;
+	}
+    else if (game->left_click && (game->coll_h || game->coll_v || game->crowbar_attack_hit_started) && !game->crowbar_attack_started)
+	{
+		game->crowbar_attack_started = 0;
+		for (int i = 0; i < WIN_W; i++)
+    	{
+    	    for (int j = 0; j < WIN_H; j++)
+    	    {
+    	        img = (t_image *)game->crowbar_attack_hit->content;
+    	        if (i < img->w && j < img->h)
+    	        {
+    	            t = ((unsigned int *)img->addr)[j * img->w + i];
+    	            if (t != TRANSPARENT_COLOR)
+    	                ((unsigned int *)game->img.addr)[j * WIN_W + i] = t;
+    	        }
+    	    }
+    	}
+    	if (cur_time - game->crowbar_attack_hit_time > FPS)
+    	{
+    	    game->crowbar_attack_hit = game->crowbar_attack_hit->next;
+    	    game->crowbar_attack_hit_time = cur_time;
+    	}
+		if (game->crowbar_attack_hit == game->crowbar_attack_hit_head)
+		{
+			game->crowbar_attack_hit_started = 0;
+			game->left_click = 0;
+		}
+		else
+			game->crowbar_attack_hit_started = 1;
 	}
 	else
 	{
-		img = (t_image *)game->crowbar_animation_head->content;
+		img = (t_image *)game->crowbar_attack_head->content;
 		for (int i = 0; i < WIN_W; i++)
     	{
     	    for (int j = 0; j < WIN_H; j++)
@@ -727,6 +762,9 @@ void do_crowbar_animation(t_data *game, long long cur_time)
     	        }
     	    }
     	}
+		game->left_click = 0;
+		game->crowbar_attack_started = 0;
+		game->crowbar_attack_hit_started = 0;
 	}
 }
 
@@ -746,7 +784,7 @@ int render(t_data *game)
         draw_walls_3D(game);
         draw_minimap_no_rotation(game);
         move_player(game);
-		do_crowbar_animation(game, now);
+		do_crowbar_attack(game, now);
         mlx_put_image_to_window(game->mlx_ptr, game->win_ptr, game->img.ptr, 0, 0);
     }
     return (0);

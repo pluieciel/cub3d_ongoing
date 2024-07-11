@@ -102,8 +102,10 @@ typedef struct s_data
 	void		*win_ptr;
 	float		**map;
 	char		**visited;
-	t_list		*crowbar_animation;
-	t_list 		*crowbar_animation_head;
+	t_list		*crowbar_attack;
+	t_list 		*crowbar_attack_head;
+	t_list		*crowbar_attack_hit;
+	t_list 		*crowbar_attack_hit_head;
 	int			map_w;
 	int			map_h;
 	int			map_index;
@@ -138,7 +140,10 @@ typedef struct s_data
 	int 		coll_door_h;
 	int 		coll_door_v;
 	int mouse_centered;
-	long long crowbar_animation_time;
+	long long crowbar_attack_time;
+	long long crowbar_attack_hit_time;
+	int crowbar_attack_started;
+	int crowbar_attack_hit_started;
 }				t_data;
 
 typedef struct s_raycast
