@@ -137,6 +137,7 @@ typedef struct s_data
 	int 		coll_door_h;
 	int 		coll_door_v;
 	int mouse_centered;
+	int frame_counter;
 }				t_data;
 
 typedef struct s_raycast
@@ -157,6 +158,7 @@ typedef struct s_raycast
 	float		doors_h[20][7];
 	float		doors_v[20][7];
 	float		nearest_wall_dis;
+	
 }				t_raycast;
 
 void		init(t_data *game);
