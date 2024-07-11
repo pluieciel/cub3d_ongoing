@@ -65,4 +65,5 @@ void	init(t_data *game)
 	game->img_door.h = 0;
 	game->img_door.ptr = NULL;
 	game->img_door.addr = NULL;
+	game->crowbar_animation = NULL;
 }

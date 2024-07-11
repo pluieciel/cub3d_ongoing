@@ -102,6 +102,7 @@ typedef struct s_data
 	void		*win_ptr;
 	float		**map;
 	char		**visited;
+	t_list		*crowbar_animation;
 	int			map_w;
 	int			map_h;
 	int			map_index;
