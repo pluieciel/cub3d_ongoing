@@ -17,6 +17,8 @@ void init_crowbar_animation(t_data *game)
 	    i++;
 	}
 	ft_lstlast(game->crowbar_animation)->next = game->crowbar_animation;
+	game->crowbar_animation_head = game->crowbar_animation;
+	
 }
 
 int	main(int ac, char *av[])

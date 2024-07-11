@@ -73,7 +73,7 @@ int	handle_keyrelease(int key, t_data *game)
 	return (0);
 }
 
-int mouse_move(int x, int y, t_data *game)
+int handle_mousemove(int x, int y, t_data *game)
 {
 	if (game->mouse_centered)
 	{
@@ -108,6 +108,15 @@ int mouse_move(int x, int y, t_data *game)
 	return (0);
 }
 
+int handle_mouseclick(int button, int x, int y, t_data *game)
+{
+	(void)x;
+	(void)y;
+    if (button == Button1)
+        game->left_click = 1;
+    return (0);
+}
+
 void	hook(t_data *game)
 {
 	game->mouse_centered = 1;
@@ -118,5 +127,6 @@ void	hook(t_data *game)
 	mlx_hook(game->win_ptr, KeyRelease, KeyReleaseMask, &handle_keyrelease,
 		game);
 	mlx_hook(game->win_ptr, DestroyNotify, ButtonPressMask, &close_window, game);
-	mlx_hook(game->win_ptr, MotionNotify, PointerMotionMask, &mouse_move, game);
+	mlx_hook(game->win_ptr, MotionNotify, PointerMotionMask, &handle_mousemove, game);
+	mlx_mouse_hook(game->win_ptr, &handle_mouseclick, game);
 }

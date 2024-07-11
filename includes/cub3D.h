@@ -103,6 +103,7 @@ typedef struct s_data
 	float		**map;
 	char		**visited;
 	t_list		*crowbar_animation;
+	t_list 		*crowbar_animation_head;
 	int			map_w;
 	int			map_h;
 	int			map_index;
@@ -115,6 +116,7 @@ typedef struct s_data
 	long long	time;
 	t_image		img;
 	int			dis_p_s;
+	int left_click;
 	// 0 1 -> x y
 	// 2 -> dis
 	// 3 -> dir
@@ -129,7 +131,6 @@ typedef struct s_data
 	t_image		img_wall_we;
 	t_image		img_floor;
 	t_image		img_door;
-	t_image		img_crowbar_idle;
 	int			op_door;
 	t_door		*doors;
 	int 		coll_h;
@@ -137,7 +138,7 @@ typedef struct s_data
 	int 		coll_door_h;
 	int 		coll_door_v;
 	int mouse_centered;
-	int frame_counter;
+	long long crowbar_animation_time;
 }				t_data;
 
 typedef struct s_raycast

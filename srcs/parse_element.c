@@ -74,9 +74,6 @@ static void	set_elements(t_data *game, char *line)
 		load_texture(game, &game->img_floor, line_split[1]);
 	else if (ft_strcmp(line_split[0], "C") == 0 && line_split[1])
 		load_texture(game, &game->img_sky, line_split[1]);
-	game->img_crowbar_idle.ptr = mlx_xpm_file_to_image(game->mlx_ptr, "textures/crowbar/idle1.xpm", &game->img_crowbar_idle.w, &game->img_crowbar_idle.h);
-	game->img_crowbar_idle.addr = mlx_get_data_addr(game->img_crowbar_idle.ptr,
-			&game->img_crowbar_idle.bpp, &game->img_crowbar_idle.line_len, &game->img_crowbar_idle.endian);
 	gc_free_ptr(&game->gc, line_split);
 }
 

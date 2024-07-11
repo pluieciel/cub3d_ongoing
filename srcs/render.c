@@ -684,13 +684,56 @@ void	move_doors(t_data *game)
 	}
 }
 
-#include <stdio.h>
+void do_crowbar_animation(t_data *game, long long cur_time)
+{
+	unsigned int t;
+	t_image *img;
+
+	if (game->left_click)
+	{
+		for (int i = 0; i < WIN_W; i++)
+    	{
+    	    for (int j = 0; j < WIN_H; j++)
+    	    {
+    	        img = (t_image *)game->crowbar_animation->content;
+    	        if (i < img->w && j < img->h)
+    	        {
+    	            t = ((unsigned int *)img->addr)[j * img->w + i];
+    	            if (t != TRANSPARENT_COLOR)
+    	                ((unsigned int *)game->img.addr)[j * WIN_W + i] = t;
+    	        }
+    	    }
+    	}
+    	if (cur_time - game->crowbar_animation_time > FPS)
+    	{
+    	    game->crowbar_animation = game->crowbar_animation->next;
+    	    game->crowbar_animation_time = cur_time;
+    	}
+		if (game->crowbar_animation == game->crowbar_animation_head)
+			game->left_click = 0;
+	}
+	else
+	{
+		img = (t_image *)game->crowbar_animation_head->content;
+		for (int i = 0; i < WIN_W; i++)
+    	{
+    	    for (int j = 0; j < WIN_H; j++)
+    	    {
+    	        if (i < img->w && j < img->h)
+    	        {
+    	            t = ((unsigned int *)img->addr)[j * img->w + i];
+    	            if (t != TRANSPARENT_COLOR)
+    	                ((unsigned int *)game->img.addr)[j * WIN_W + i] = t;
+    	        }
+    	    }
+    	}
+	}
+}
 
 int render(t_data *game)
 {
     long long now;
     long long diff_millisecs;
-    unsigned int t;
 
     now = millitimestamp();
     diff_millisecs = now - game->time;
@@ -703,20 +746,7 @@ int render(t_data *game)
         draw_walls_3D(game);
         draw_minimap_no_rotation(game);
         move_player(game);
-		for (int i = 0; i < WIN_W; i++)
-		{
-		    for (int j = 0; j < WIN_H; j++)
-		    {
-		        t_image *img = (t_image *)game->crowbar_animation->content;
-		        if (i < img->w && j < img->h)
-		        {
-		            t = ((unsigned int *)img->addr)[j * img->w + i];
-		            if (t != TRANSPARENT_COLOR)
-		                ((unsigned int *)game->img.addr)[j * WIN_W + i] = t;
-		        }
-		    }
-		}
-		game->crowbar_animation = game->crowbar_animation->next;
+		do_crowbar_animation(game, now);
         mlx_put_image_to_window(game->mlx_ptr, game->win_ptr, game->img.ptr, 0, 0);
     }
     return (0);
