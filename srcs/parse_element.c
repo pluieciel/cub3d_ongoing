@@ -15,8 +15,7 @@ static void	load_texture(t_data *game, t_image *img, char *line)
 		exit(gc_free(game->gc, "Error: invalid file\n", 2));
 	close(fd);
 	img->ptr = mlx_xpm_file_to_image(game->mlx_ptr, path, &img->w, &img->h);
-	img->addr = mlx_get_data_addr(img->ptr,
-			&img->bpp, &img->line_len, &img->endian);
+	img->addr = mlx_get_data_addr(img->ptr, &img->bpp, &img->line_len, &img->endian);
 	game->elem_n++;
 }
 // V1: only color
