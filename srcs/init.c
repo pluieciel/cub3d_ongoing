@@ -68,13 +68,11 @@ void	init(t_data *game)
 	game->img_door.addr = NULL;
 	game->crowbar_attack = NULL;
 	game->crowbar_attack_head = NULL;
-	game->crowbar_attack_time = 0;
 	game->crowbar_attack_hit = NULL;
 	game->crowbar_attack_hit_head = NULL;
-	game->crowbar_attack_hit_time = 0;
 	game->crowbar_draw = NULL;
 	game->crowbar_draw_head = NULL;
-	game->crowbar_draw_time = 0;
-	game->crowbar_state = IDLE;
+	game->crowbar_time = 0;
+	game->crowbar_state = DRAW;
 	game->left_click = 0;
 }

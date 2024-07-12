@@ -42,10 +42,10 @@ void attack_state(t_data *game, long long cur_time)
             }
         }
     }
-    if (cur_time - game->crowbar_attack_time > FPS)
+    if (cur_time - game->crowbar_time > FPS)
     {
         game->crowbar_attack = game->crowbar_attack->next;
-        game->crowbar_attack_time = cur_time;
+        game->crowbar_time = cur_time;
     }
     if (game->crowbar_attack == game->crowbar_attack_head)
     {
@@ -69,14 +69,15 @@ void hit_state(t_data *game, long long cur_time)
             }
         }
     }
-    if (cur_time - game->crowbar_attack_hit_time > FPS)
+    if (cur_time - game->crowbar_time > FPS)
     {
         game->crowbar_attack_hit = game->crowbar_attack_hit->next;
-        game->crowbar_attack_hit_time = cur_time;
+        game->crowbar_time = cur_time;
     }
     if (game->crowbar_attack_hit == game->crowbar_attack_hit_head)
     {
         game->left_click = 0;
+        game->key.one = 0;
         game->crowbar_state = IDLE;
     }
 }
@@ -96,10 +97,10 @@ void draw_state(t_data *game, long long cur_time)
             }
         }
     }
-    if (cur_time - game->crowbar_draw_time > FPS)
+    if (cur_time - game->crowbar_time > FPS)
     {
         game->crowbar_draw = game->crowbar_draw->next;
-        game->crowbar_draw_time = cur_time;
+        game->crowbar_time = cur_time;
     }
     if (game->crowbar_draw == game->crowbar_draw_head)
     {

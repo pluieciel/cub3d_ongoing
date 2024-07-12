@@ -151,9 +151,7 @@ typedef struct s_data
 	int 		coll_door_h;
 	int 		coll_door_v;
 	int mouse_centered;
-	long long crowbar_attack_time;
-	long long crowbar_attack_hit_time;
-	long long crowbar_draw_time;
+	long long crowbar_time;
 	t_crowbar_state crowbar_state;
 }				t_data;
 
