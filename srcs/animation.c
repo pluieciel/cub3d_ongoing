@@ -1,16 +1,17 @@
 #include "../includes/cub3D.h"
 
-void handle_animation_state(t_data *game, struct s_animation *animation)
+void handle_animation_state(t_data *game, struct s_animation *animation, t_animation_type type)
 {
     render_image(game, (t_image *)(*animation).frames->content);
-    if (game->time - game->crowbar.time > FPS)
+    if (game->time - game->animation_time > FPS)
     {
         animation->frames = (*animation).frames->next;
-        game->crowbar.time = game->time;
+        game->animation_time = game->time;
     }
     if (animation->frames == animation->head)
     {
-        game->crowbar.state = IDLE;
+        if (type == CROWBAR)
+            game->crowbar.state = IDLE;
         game->key.one = 0;
         game->left_click = 0;
     }
@@ -33,9 +34,9 @@ void update_crowbar_state(t_data *game)
     if (game->crowbar.state == IDLE)
         handle_idle_state(game);
     else if (game->crowbar.state == DRAW)
-        handle_animation_state(game, &game->crowbar.draw);
+        handle_animation_state(game, &game->crowbar.draw, CROWBAR);
     else if (game->crowbar.state == ATTACK)
-        handle_animation_state(game, &game->crowbar.attack);
+        handle_animation_state(game, &game->crowbar.attack, CROWBAR);
     else if (game->crowbar.state == ATTACK_HIT)
-        handle_animation_state(game, &game->crowbar.attack_hit);
+        handle_animation_state(game, &game->crowbar.attack_hit, CROWBAR);
 }

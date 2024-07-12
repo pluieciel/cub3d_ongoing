@@ -37,6 +37,18 @@
 #define TRANSPARENT_COLOR 0xFF000000
 #define MOUSE_THRESHOLD 4
 
+typedef enum e_animation_type
+{
+	CROWBAR,
+	HANDGUN
+}	t_animation_type;
+
+typedef struct s_animation
+{
+	t_list	*frames;
+	t_list 	*head;
+}	t_animation;
+
 typedef struct s_crowbar
 {
 	enum e_state
@@ -46,26 +58,10 @@ typedef struct s_crowbar
 		ATTACK,
 		ATTACK_HIT
 	}	state;
-	struct s_animation
-	{
-		t_list	*frames;
-		t_list 	*head;
-	}	attack, attack_hit, draw;
-	__uint64_t time;
+	t_animation draw;
+	t_animation attack;
+	t_animation	attack_hit;
 }	t_crowbar;
-
-typedef struct s_point
-{
-	int			x;
-	int			y;
-	int			color;
-}				t_point;
-
-typedef struct s_delta
-{
-	int			dx;
-	int			dy;
-}				t_delta;
 
 typedef struct s_point3D
 {
@@ -155,6 +151,7 @@ typedef struct s_data
 	int 		coll_door_v;
 	int mouse_centered;
 	t_crowbar crowbar;
+	__uint64_t animation_time;
 }				t_data;
 
 typedef struct s_raycast
@@ -189,7 +186,6 @@ float		distance(float x1, float y1, float x2, float y2);
 float		raycast_h(t_data *game, float x, float y, int type);
 float		raycast_v(t_data *game, float x, float y, int type);
 void		raycast(t_data *game, float x, float y, int type);
-void		ft_bresenham(t_point a, t_point b, t_image *img);
 t_point3D	*ro_on_z_to_xz(t_point3D p);
 t_point3D	*ro_on_y(t_point3D p, float angle_z);
 t_point3D	*ro_back_on_z(t_point3D p);

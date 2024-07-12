@@ -72,7 +72,7 @@ void	init(t_data *game)
 	game->crowbar.attack_hit.head = NULL;
 	game->crowbar.draw.frames = NULL;
 	game->crowbar.draw.head = NULL;
-	game->crowbar.time = 0;
 	game->crowbar.state = DRAW;
+	game->animation_time = 0;
 	game->left_click = 0;
 }
