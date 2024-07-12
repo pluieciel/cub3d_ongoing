@@ -216,3 +216,4 @@ void update_handgun_state(t_data *game);
 void	collision(t_data *game, float dir_x, float dir_y, int coll_dis);
 void render_image(t_data *game, t_image *img);
 void init_crowbar(t_data *game);
+void init_handgun(t_data *game);

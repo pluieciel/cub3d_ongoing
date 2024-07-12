@@ -13,6 +13,7 @@ int	main(int ac, char *av[])
 	if (check_map(&game))
 		exit(gc_free(game.gc, "Error: invalid map\n", 2));
 	init_crowbar(&game);
+	init_handgun(&game);
 	game.win_ptr = mlx_new_window(game.mlx_ptr, WIN_W, WIN_H, "cub3D");
 	hook(&game);
 	mlx_loop(game.mlx_ptr);

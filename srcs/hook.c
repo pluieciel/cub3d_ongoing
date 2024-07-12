@@ -78,7 +78,7 @@ int	handle_keyrelease(int key, t_data *game)
 	else if (key == XK_1)
 		game->key.one = 0;
 	else if (key == XK_2)
-		game->key.two = 2;
+		game->key.two = 0;
 	return (0);
 }
 

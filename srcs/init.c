@@ -22,6 +22,7 @@ void	init(t_data *game)
 	game->key.up = 0;
 	game->key.down = 0;
 	game->key.one = 0;
+	game->key.two = 0;
 	game->elem_n = 0;
 	game->map_index = -1;
 	game->map_h = 0;
@@ -123,7 +124,7 @@ void init_handgun(t_data *game)
 	game->handgun.holster.head = NULL;
 	game->handgun.state = HANDGUN_HOLSTER;
 	game->handgun.equiped = 0;
-	init_animation(game, &game->crowbar.draw, "handgun/draw", 15);
-	init_animation(game, &game->crowbar.attack, "handgun/shoot", 14);
-	init_animation(game, &game->crowbar.holster, "handgun/holster", 15);
+	init_animation(game, &game->handgun.draw, "handgun/draw", 15);
+	init_animation(game, &game->handgun.shoot, "handgun/shoot", 14);
+	init_animation(game, &game->handgun.holster, "handgun/holster", 15);
 }
