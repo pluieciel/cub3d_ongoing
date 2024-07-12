@@ -66,6 +66,32 @@ void	init(t_data *game)
 	game->img_door.h = 0;
 	game->img_door.ptr = NULL;
 	game->img_door.addr = NULL;
+	game->animation_time = 0;
+	game->left_click = 0;
+}
+
+void init_animation(t_data *game, struct s_animation *animation, char *state, int frames)
+{
+	int i;
+	t_image *img;
+	char path[48];
+
+	i = 1;
+	while (i <= frames)
+	{
+	    img = gc_malloc(sizeof(t_image), &game->gc);
+	    snprintf(path, sizeof(path), "textures/%s%d.xpm", state, i);
+	    img->ptr = mlx_xpm_file_to_image(game->mlx_ptr, path, &img->w, &img->h);
+	    img->addr = mlx_get_data_addr(img->ptr, &img->bpp, &img->line_len, &img->endian);
+	    ft_lstadd_back(&animation->frames, ft_lstnew_gc(img, &game->gc));
+	    i++;
+	}
+	ft_lstlast(animation->frames)->next = animation->frames;
+	animation->head = animation->frames;
+}
+
+void init_crowbar(t_data *game)
+{
 	game->crowbar.attack.frames = NULL;
 	game->crowbar.attack.head = NULL;
 	game->crowbar.attack_hit.frames = NULL;
@@ -73,6 +99,7 @@ void	init(t_data *game)
 	game->crowbar.draw.frames = NULL;
 	game->crowbar.draw.head = NULL;
 	game->crowbar.state = DRAW;
-	game->animation_time = 0;
-	game->left_click = 0;
+	init_animation(game, &game->crowbar.draw, "crowbar/draw", 12);
+	init_animation(game, &game->crowbar.attack, "crowbar/attack", 13);
+	init_animation(game, &game->crowbar.attack_hit, "crowbar/attack_hit", 13);
 }
