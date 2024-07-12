@@ -73,6 +73,7 @@ void	init(t_data *game)
 void init_animation(t_data *game, struct s_animation *animation, char *state, int frames)
 {
 	int i;
+	int fd;
 	t_image *img;
 	char path[48];
 
@@ -81,6 +82,10 @@ void init_animation(t_data *game, struct s_animation *animation, char *state, in
 	{
 	    img = gc_malloc(sizeof(t_image), &game->gc);
 	    snprintf(path, sizeof(path), "textures/%s%d.xpm", state, i);
+		fd = open(path, O_RDONLY);
+		if (fd < 0)
+			exit(gc_free(game->gc, "Error: invalid file\n", 2));
+		close(fd);
 	    img->ptr = mlx_xpm_file_to_image(game->mlx_ptr, path, &img->w, &img->h);
 	    img->addr = mlx_get_data_addr(img->ptr, &img->bpp, &img->line_len, &img->endian);
 	    ft_lstadd_back(&animation->frames, ft_lstnew_gc(img, &game->gc));
@@ -98,8 +103,12 @@ void init_crowbar(t_data *game)
 	game->crowbar.attack_hit.head = NULL;
 	game->crowbar.draw.frames = NULL;
 	game->crowbar.draw.head = NULL;
+	game->crowbar.holster.frames = NULL;
+	game->crowbar.holster.head = NULL;
 	game->crowbar.state = DRAW;
+	game->crowbar.equiped = 0;
 	init_animation(game, &game->crowbar.draw, "crowbar/draw", 12);
 	init_animation(game, &game->crowbar.attack, "crowbar/attack", 13);
 	init_animation(game, &game->crowbar.attack_hit, "crowbar/attack_hit", 13);
+	init_animation(game, &game->crowbar.holster, "crowbar/holster", 12);
 }

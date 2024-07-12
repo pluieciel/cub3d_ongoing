@@ -19,12 +19,17 @@ void handle_animation_state(t_data *game, struct s_animation *animation, t_anima
 
 void handle_idle_state(t_data *game)
 {
-    render_image(game, (t_image *)game->crowbar.attack.head->content);
-    collision(game, game->player.dir[0], game->player.dir[1], COLL_DIS);
-    if (game->left_click && !game->coll_h && !game->coll_v)
-        game->crowbar.state = ATTACK;
-    else if (game->left_click && (game->coll_h || game->coll_v))
-        game->crowbar.state = ATTACK_HIT;
+    if (game->crowbar.equiped)
+    {
+        render_image(game, (t_image *)game->crowbar.attack.head->content);
+        collision(game, game->player.dir[0], game->player.dir[1], COLL_DIS);
+        if (game->left_click && !game->coll_h && !game->coll_v)
+            game->crowbar.state = ATTACK;
+        else if (game->left_click && (game->coll_h || game->coll_v))
+            game->crowbar.state = ATTACK_HIT;
+        else if (game->key.one)
+            game->crowbar.state = HOLSTER;
+    }
     else if (game->key.one)
         game->crowbar.state = DRAW;
 }
@@ -34,9 +39,17 @@ void update_crowbar_state(t_data *game)
     if (game->crowbar.state == IDLE)
         handle_idle_state(game);
     else if (game->crowbar.state == DRAW)
+    {
         handle_animation_state(game, &game->crowbar.draw, CROWBAR);
+        game->crowbar.equiped = 1;
+    }
     else if (game->crowbar.state == ATTACK)
         handle_animation_state(game, &game->crowbar.attack, CROWBAR);
     else if (game->crowbar.state == ATTACK_HIT)
         handle_animation_state(game, &game->crowbar.attack_hit, CROWBAR);
+    else if (game->crowbar.state == HOLSTER)
+    {
+        handle_animation_state(game, &game->crowbar.holster, CROWBAR);
+        game->crowbar.equiped = 0;
+    }
 }

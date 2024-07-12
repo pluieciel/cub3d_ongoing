@@ -56,11 +56,14 @@ typedef struct s_crowbar
 		IDLE,
 		DRAW,
 		ATTACK,
-		ATTACK_HIT
+		ATTACK_HIT,
+		HOLSTER
 	}	state;
 	t_animation draw;
 	t_animation attack;
 	t_animation	attack_hit;
+	t_animation	holster;
+	int equiped;
 }	t_crowbar;
 
 typedef struct s_point3D
