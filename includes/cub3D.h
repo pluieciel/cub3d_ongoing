@@ -37,6 +37,14 @@
 #define TRANSPARENT_COLOR 0xFF000000
 #define MOUSE_THRESHOLD 4
 
+typedef enum e_crowbar_state
+{
+	IDLE,
+	DRAW,
+	ATTACK,
+	ATTACK_HIT
+}	t_crowbar_state;
+
 typedef struct s_point
 {
 	int			x;
@@ -146,9 +154,7 @@ typedef struct s_data
 	long long crowbar_attack_time;
 	long long crowbar_attack_hit_time;
 	long long crowbar_draw_time;
-	int crowbar_attack_started;
-	int crowbar_attack_hit_started;
-	int crowbar_draw_started;
+	t_crowbar_state crowbar_state;
 }				t_data;
 
 typedef struct s_raycast
@@ -189,3 +195,5 @@ t_point3D	*ro_on_y(t_point3D p, float angle_z);
 t_point3D	*ro_back_on_z(t_point3D p);
 t_point3D	*cross(t_point3D p1, t_point3D p2);
 void		raycast_3D(t_raycast *ray);
+void update_crowbar_state(t_data *game, long long cur_time);
+void	collision(t_data *game, float dir_x, float dir_y, int coll_dis);
