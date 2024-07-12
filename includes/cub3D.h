@@ -51,13 +51,13 @@ typedef struct s_animation
 
 typedef struct s_crowbar
 {
-	enum e_state
+	enum e_state_crowbar
 	{
-		IDLE,
-		DRAW,
-		ATTACK,
-		ATTACK_HIT,
-		HOLSTER
+		CROWBAR_IDLE,
+		CROWBAR_DRAW,
+		CROWBAR_ATTACK,
+		CROWBAR_ATTACK_HIT,
+		CROWBAR_HOLSTER
 	}	state;
 	t_animation draw;
 	t_animation attack;
@@ -65,6 +65,21 @@ typedef struct s_crowbar
 	t_animation	holster;
 	int equiped;
 }	t_crowbar;
+
+typedef struct s_handgun
+{
+	enum e_state_handgun
+	{
+		HANDGUN_IDLE,
+		HANDGUN_DRAW,
+		HANDGUN_SHOOT,
+		HANDGUN_HOLSTER
+	}	state;
+	t_animation draw;
+	t_animation shoot;
+	t_animation	holster;
+	int equiped;
+}	t_handgun;
 
 typedef struct s_point3D
 {
@@ -92,6 +107,7 @@ typedef struct s_key
 	int			up;
 	int			down;
 	int			one;
+	int			two;
 }				t_key;
 
 typedef struct s_image
@@ -154,6 +170,7 @@ typedef struct s_data
 	int 		coll_door_v;
 	int mouse_centered;
 	t_crowbar crowbar;
+	t_handgun handgun;
 	__uint64_t animation_time;
 }				t_data;
 
@@ -195,6 +212,7 @@ t_point3D	*ro_back_on_z(t_point3D p);
 t_point3D	*cross(t_point3D p1, t_point3D p2);
 void		raycast_3D(t_raycast *ray);
 void update_crowbar_state(t_data *game);
+void update_handgun_state(t_data *game);
 void	collision(t_data *game, float dir_x, float dir_y, int coll_dis);
 void render_image(t_data *game, t_image *img);
 void init_crowbar(t_data *game);

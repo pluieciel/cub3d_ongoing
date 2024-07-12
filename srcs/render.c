@@ -554,6 +554,7 @@ int render(t_data *game)
         draw_walls_3D(game);
         draw_minimap(game);
 		update_crowbar_state(game);
+		update_handgun_state(game);
         mlx_put_image_to_window(game->mlx_ptr, game->win_ptr, game->img.ptr, 0, 0);
     }
     return (0);
