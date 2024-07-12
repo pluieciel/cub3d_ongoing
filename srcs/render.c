@@ -690,7 +690,7 @@ void do_crowbar_attack(t_data *game, long long cur_time)
 	t_image *img;
 
 	collision(game, game->player.dir[0], game->player.dir[1], COLL_DIS, 0);
-    if (game->left_click && ((!game->coll_h && !game->coll_v) || game->crowbar_attack_started) && !game->crowbar_attack_hit_started)
+    if (game->left_click && ((!game->coll_h && !game->coll_v) || game->crowbar_attack_started) && !game->crowbar_attack_hit_started && !game->crowbar_draw_started)
 	{
 		for (int i = 0; i < WIN_W; i++)
     	{
@@ -718,9 +718,10 @@ void do_crowbar_attack(t_data *game, long long cur_time)
 		else
 			game->crowbar_attack_started = 1;
 	}
-    else if (game->left_click && (game->coll_h || game->coll_v || game->crowbar_attack_hit_started) && !game->crowbar_attack_started)
+    else if (game->left_click && (game->coll_h || game->coll_v || game->crowbar_attack_hit_started) && !game->crowbar_attack_started && !game->crowbar_draw_started)
 	{
 		game->crowbar_attack_started = 0;
+		game->crowbar_draw_started = 0;
 		for (int i = 0; i < WIN_W; i++)
     	{
     	    for (int j = 0; j < WIN_H; j++)
@@ -747,6 +748,36 @@ void do_crowbar_attack(t_data *game, long long cur_time)
 		else
 			game->crowbar_attack_hit_started = 1;
 	}
+	else if ((game->key.one && !game->left_click) || game->crowbar_draw_started)
+	{
+		game->crowbar_attack_started = 0;
+		game->crowbar_attack_hit_started = 0;
+		for (int i = 0; i < WIN_W; i++)
+    	{
+    	    for (int j = 0; j < WIN_H; j++)
+    	    {
+    	        img = (t_image *)game->crowbar_draw->content;
+    	        if (i < img->w && j < img->h)
+    	        {
+    	            t = ((unsigned int *)img->addr)[j * img->w + i];
+    	            if (t != TRANSPARENT_COLOR)
+    	                ((unsigned int *)game->img.addr)[j * WIN_W + i] = t;
+    	        }
+    	    }
+    	}
+    	if (cur_time - game->crowbar_draw_time > FPS)
+    	{
+    	    game->crowbar_draw = game->crowbar_draw->next;
+    	    game->crowbar_draw_time = cur_time;
+    	}
+		if (game->crowbar_draw == game->crowbar_draw_head)
+		{
+			game->crowbar_draw_started = 0;
+			game->key.one = 0;
+		}
+		else
+			game->crowbar_draw_started = 1;
+	}
 	else
 	{
 		img = (t_image *)game->crowbar_attack_head->content;
@@ -765,6 +796,7 @@ void do_crowbar_attack(t_data *game, long long cur_time)
 		game->left_click = 0;
 		game->crowbar_attack_started = 0;
 		game->crowbar_attack_hit_started = 0;
+		game->crowbar_draw_started = 0;
 	}
 }
 

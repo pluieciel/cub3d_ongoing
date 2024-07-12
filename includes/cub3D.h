@@ -75,6 +75,7 @@ typedef struct s_key
 	int			right;
 	int			up;
 	int			down;
+	int			one;
 }				t_key;
 
 typedef struct s_image
@@ -106,6 +107,8 @@ typedef struct s_data
 	t_list 		*crowbar_attack_head;
 	t_list		*crowbar_attack_hit;
 	t_list 		*crowbar_attack_hit_head;
+	t_list		*crowbar_draw;
+	t_list 		*crowbar_draw_head;
 	int			map_w;
 	int			map_h;
 	int			map_index;
@@ -142,8 +145,10 @@ typedef struct s_data
 	int mouse_centered;
 	long long crowbar_attack_time;
 	long long crowbar_attack_hit_time;
+	long long crowbar_draw_time;
 	int crowbar_attack_started;
 	int crowbar_attack_hit_started;
+	int crowbar_draw_started;
 }				t_data;
 
 typedef struct s_raycast

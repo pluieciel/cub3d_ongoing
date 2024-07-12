@@ -21,6 +21,7 @@ void	init(t_data *game)
 	game->key.right = 0;
 	game->key.up = 0;
 	game->key.down = 0;
+	game->key.one = 0;
 	game->elem_n = 0;
 	game->map_index = -1;
 	game->map_h = 0;
@@ -73,5 +74,9 @@ void	init(t_data *game)
 	game->crowbar_attack_hit_head = NULL;
 	game->crowbar_attack_hit_time = 0;
 	game->crowbar_attack_hit_started = 1;
+	game->crowbar_draw = NULL;
+	game->crowbar_draw_head = NULL;
+	game->crowbar_draw_time = 0;
+	game->crowbar_draw_started = 1;
 	game->left_click = 0;
 }
