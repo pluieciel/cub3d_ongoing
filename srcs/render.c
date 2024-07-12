@@ -5,6 +5,29 @@ float	distance(float x1, float y1, float x2, float y2)
 	return (sqrt((x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2)));
 }
 
+void render_image(t_data *game, t_image *img)
+{
+    int i;
+    int j;
+    
+    i = 0;
+    while (i < WIN_W)
+    {
+        j = 0;
+        while (j < WIN_H)
+        {
+            if (i < img->w && j < img->h)
+            {
+                unsigned int t = ((unsigned int *)img->addr)[j * img->w + i];
+                if (t != TRANSPARENT_COLOR)
+                    ((unsigned int *)game->img.addr)[j * WIN_W + i] = t;
+            }
+            j++;
+        }
+        i++;
+    }
+}
+
 void	draw_minimap(t_data *game)
 {
 	int	x;
@@ -519,21 +542,18 @@ void	move_doors(t_data *game)
 
 int render(t_data *game)
 {
-    long long now;
-    long long diff_millisecs;
+    __uint64_t current_time;
 
-    now = millitimestamp();
-    diff_millisecs = now - game->time;
-    if (game->win_ptr != NULL && diff_millisecs > 1000 / FPS)
+    current_time = get_timestamp_ms();
+    if (game->win_ptr != NULL && (current_time - game->time) > 1000 / FPS)
     {
-        game->time = now;
-        mlx_clear_window(game->mlx_ptr, game->win_ptr);
+        game->time = current_time;
         ft_bzero(game->img.addr, game->img.w * game->img.h * (game->img.bpp / 8));
         move_doors(game);
         move_player(game);
         draw_walls_3D(game);
         draw_minimap(game);
-		update_crowbar_state(game, now);
+		update_crowbar_state(game);
         mlx_put_image_to_window(game->mlx_ptr, game->win_ptr, game->img.ptr, 0, 0);
     }
     return (0);

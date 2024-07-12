@@ -13,11 +13,11 @@ void init_crowbar_attack(t_data *game)
 	    snprintf(path, sizeof(path), "textures/crowbar/attack%d.xpm", i);
 	    img->ptr = mlx_xpm_file_to_image(game->mlx_ptr, path, &img->w, &img->h);
 	    img->addr = mlx_get_data_addr(img->ptr, &img->bpp, &img->line_len, &img->endian);
-	    ft_lstadd_back(&game->crowbar_attack, ft_lstnew_gc(img, &game->gc));
+	    ft_lstadd_back(&game->crowbar.attack.frames, ft_lstnew_gc(img, &game->gc));
 	    i++;
 	}
-	ft_lstlast(game->crowbar_attack)->next = game->crowbar_attack;
-	game->crowbar_attack_head = game->crowbar_attack;
+	ft_lstlast(game->crowbar.attack.frames)->next = game->crowbar.attack.frames;
+	game->crowbar.attack.head = game->crowbar.attack.frames;
 }
 
 void init_crowbar_attack_hit(t_data *game)
@@ -33,11 +33,11 @@ void init_crowbar_attack_hit(t_data *game)
 	    snprintf(path, sizeof(path), "textures/crowbar/attack_hit%d.xpm", i);
 	    img->ptr = mlx_xpm_file_to_image(game->mlx_ptr, path, &img->w, &img->h);
 	    img->addr = mlx_get_data_addr(img->ptr, &img->bpp, &img->line_len, &img->endian);
-	    ft_lstadd_back(&game->crowbar_attack_hit, ft_lstnew_gc(img, &game->gc));
+	    ft_lstadd_back(&game->crowbar.attack_hit.frames, ft_lstnew_gc(img, &game->gc));
 	    i++;
 	}
-	ft_lstlast(game->crowbar_attack_hit)->next = game->crowbar_attack_hit;
-	game->crowbar_attack_hit_head = game->crowbar_attack_hit;
+	ft_lstlast(game->crowbar.attack_hit.frames)->next = game->crowbar.attack_hit.frames;
+	game->crowbar.attack_hit.head = game->crowbar.attack_hit.frames;
 }
 
 void init_crowbar_draw(t_data *game)
@@ -53,11 +53,11 @@ void init_crowbar_draw(t_data *game)
 	    snprintf(path, sizeof(path), "textures/crowbar/draw%d.xpm", i);
 	    img->ptr = mlx_xpm_file_to_image(game->mlx_ptr, path, &img->w, &img->h);
 	    img->addr = mlx_get_data_addr(img->ptr, &img->bpp, &img->line_len, &img->endian);
-	    ft_lstadd_back(&game->crowbar_draw, ft_lstnew_gc(img, &game->gc));
+	    ft_lstadd_back(&game->crowbar.draw.frames, ft_lstnew_gc(img, &game->gc));
 	    i++;
 	}
-	ft_lstlast(game->crowbar_draw)->next = game->crowbar_draw;
-	game->crowbar_draw_head = game->crowbar_draw;
+	ft_lstlast(game->crowbar.draw.frames)->next = game->crowbar.draw.frames;
+	game->crowbar.draw.head = game->crowbar.draw.frames;
 }
 
 int	main(int ac, char *av[])

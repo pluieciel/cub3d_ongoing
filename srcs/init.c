@@ -27,7 +27,7 @@ void	init(t_data *game)
 	game->map_h = 0;
 	game->map_w = 0;
 	game->dis_p_s = DIS_P_S;
-	game->time = millitimestamp();
+	game->time = get_timestamp_ms();
 	game->op_door = 0;
 	game->doors = NULL;
 	game->mlx_ptr = mlx_init();
@@ -66,13 +66,13 @@ void	init(t_data *game)
 	game->img_door.h = 0;
 	game->img_door.ptr = NULL;
 	game->img_door.addr = NULL;
-	game->crowbar_attack = NULL;
-	game->crowbar_attack_head = NULL;
-	game->crowbar_attack_hit = NULL;
-	game->crowbar_attack_hit_head = NULL;
-	game->crowbar_draw = NULL;
-	game->crowbar_draw_head = NULL;
-	game->crowbar_time = 0;
-	game->crowbar_state = DRAW;
+	game->crowbar.attack.frames = NULL;
+	game->crowbar.attack.head = NULL;
+	game->crowbar.attack_hit.frames = NULL;
+	game->crowbar.attack_hit.head = NULL;
+	game->crowbar.draw.frames = NULL;
+	game->crowbar.draw.head = NULL;
+	game->crowbar.time = 0;
+	game->crowbar.state = DRAW;
 	game->left_click = 0;
 }

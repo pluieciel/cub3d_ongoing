@@ -37,13 +37,22 @@
 #define TRANSPARENT_COLOR 0xFF000000
 #define MOUSE_THRESHOLD 4
 
-typedef enum e_crowbar_state
+typedef struct s_crowbar
 {
-	IDLE,
-	DRAW,
-	ATTACK,
-	ATTACK_HIT
-}	t_crowbar_state;
+	enum e_state
+	{
+		IDLE,
+		DRAW,
+		ATTACK,
+		ATTACK_HIT
+	}	state;
+	struct s_animation
+	{
+		t_list	*frames;
+		t_list 	*head;
+	}	attack, attack_hit, draw;
+	__uint64_t time;
+}	t_crowbar;
 
 typedef struct s_point
 {
@@ -111,12 +120,6 @@ typedef struct s_data
 	void		*win_ptr;
 	float		**map;
 	char		**visited;
-	t_list		*crowbar_attack;
-	t_list 		*crowbar_attack_head;
-	t_list		*crowbar_attack_hit;
-	t_list 		*crowbar_attack_hit_head;
-	t_list		*crowbar_draw;
-	t_list 		*crowbar_draw_head;
 	int			map_w;
 	int			map_h;
 	int			map_index;
@@ -126,7 +129,7 @@ typedef struct s_data
 	t_player	player;
 	t_key		key;
 	t_gc		*gc;
-	long long	time;
+	__uint64_t	time;
 	t_image		img;
 	int			dis_p_s;
 	int left_click;
@@ -151,8 +154,7 @@ typedef struct s_data
 	int 		coll_door_h;
 	int 		coll_door_v;
 	int mouse_centered;
-	long long crowbar_time;
-	t_crowbar_state crowbar_state;
+	t_crowbar crowbar;
 }				t_data;
 
 typedef struct s_raycast
@@ -180,7 +182,7 @@ void		init(t_data *game);
 void		parse_map(t_data *game, char *filename);
 void		hook(t_data *game);
 int			check_map(t_data *game);
-long long	millitimestamp(void);
+__uint64_t	get_timestamp_ms(void);
 int			render(t_data *game);
 void		parse_element(t_data *game, char *filename);
 float		distance(float x1, float y1, float x2, float y2);
@@ -193,5 +195,6 @@ t_point3D	*ro_on_y(t_point3D p, float angle_z);
 t_point3D	*ro_back_on_z(t_point3D p);
 t_point3D	*cross(t_point3D p1, t_point3D p2);
 void		raycast_3D(t_raycast *ray);
-void update_crowbar_state(t_data *game, long long cur_time);
+void update_crowbar_state(t_data *game);
 void	collision(t_data *game, float dir_x, float dir_y, int coll_dis);
+void render_image(t_data *game, t_image *img);

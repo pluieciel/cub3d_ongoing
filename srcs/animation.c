@@ -1,121 +1,41 @@
 #include "../includes/cub3D.h"
 
-void idle_state(t_data *game, long long cur_time)
+void handle_animation_state(t_data *game, struct s_animation *animation)
 {
-	t_image *img;
-	
-	(void)cur_time;
-	img = (t_image *)game->crowbar_attack_head->content;
-    for (int i = 0; i < WIN_W; i++)
+    render_image(game, (t_image *)(*animation).frames->content);
+    if (game->time - game->crowbar.time > FPS)
     {
-        for (int j = 0; j < WIN_H; j++)
-        {
-            if (i < img->w && j < img->h)
-            {
-                unsigned int t = ((unsigned int *)img->addr)[j * img->w + i];
-                if (t != TRANSPARENT_COLOR)
-                    ((unsigned int *)game->img.addr)[j * WIN_W + i] = t;
-            }
-        }
+        animation->frames = (*animation).frames->next;
+        game->crowbar.time = game->time;
     }
-	collision(game, game->player.dir[0], game->player.dir[1], COLL_DIS);
+    if (animation->frames == animation->head)
+    {
+        game->crowbar.state = IDLE;
+        game->key.one = 0;
+        game->left_click = 0;
+    }
+}
+
+void handle_idle_state(t_data *game)
+{
+    render_image(game, (t_image *)game->crowbar.attack.head->content);
+    collision(game, game->player.dir[0], game->player.dir[1], COLL_DIS);
     if (game->left_click && !game->coll_h && !game->coll_v)
-        game->crowbar_state = ATTACK;
+        game->crowbar.state = ATTACK;
     else if (game->left_click && (game->coll_h || game->coll_v))
-        game->crowbar_state = ATTACK_HIT;
+        game->crowbar.state = ATTACK_HIT;
     else if (game->key.one)
-        game->crowbar_state = DRAW;
+        game->crowbar.state = DRAW;
 }
 
-void attack_state(t_data *game, long long cur_time)
+void update_crowbar_state(t_data *game)
 {
-    for (int i = 0; i < WIN_W; i++)
-    {
-        for (int j = 0; j < WIN_H; j++)
-        {
-            t_image *img = (t_image *)game->crowbar_attack->content;
-            if (i < img->w && j < img->h)
-            {
-                unsigned int t = ((unsigned int *)img->addr)[j * img->w + i];
-                if (t != TRANSPARENT_COLOR)
-                    ((unsigned int *)game->img.addr)[j * WIN_W + i] = t;
-            }
-        }
-    }
-    if (cur_time - game->crowbar_time > FPS)
-    {
-        game->crowbar_attack = game->crowbar_attack->next;
-        game->crowbar_time = cur_time;
-    }
-    if (game->crowbar_attack == game->crowbar_attack_head)
-    {
-        game->left_click = 0;
-        game->crowbar_state = IDLE;
-    }
-}
-
-void hit_state(t_data *game, long long cur_time)
-{
-    for (int i = 0; i < WIN_W; i++)
-    {
-        for (int j = 0; j < WIN_H; j++)
-        {
-            t_image *img = (t_image *)game->crowbar_attack_hit->content;
-            if (i < img->w && j < img->h)
-            {
-                unsigned int t = ((unsigned int *)img->addr)[j * img->w + i];
-                if (t != TRANSPARENT_COLOR)
-                    ((unsigned int *)game->img.addr)[j * WIN_W + i] = t;
-            }
-        }
-    }
-    if (cur_time - game->crowbar_time > FPS)
-    {
-        game->crowbar_attack_hit = game->crowbar_attack_hit->next;
-        game->crowbar_time = cur_time;
-    }
-    if (game->crowbar_attack_hit == game->crowbar_attack_hit_head)
-    {
-        game->left_click = 0;
-        game->key.one = 0;
-        game->crowbar_state = IDLE;
-    }
-}
-
-void draw_state(t_data *game, long long cur_time)
-{
-    for (int i = 0; i < WIN_W; i++)
-    {
-        for (int j = 0; j < WIN_H; j++)
-        {
-            t_image *img = (t_image *)game->crowbar_draw->content;
-            if (i < img->w && j < img->h)
-            {
-                unsigned int t = ((unsigned int *)img->addr)[j * img->w + i];
-                if (t != TRANSPARENT_COLOR)
-                    ((unsigned int *)game->img.addr)[j * WIN_W + i] = t;
-            }
-        }
-    }
-    if (cur_time - game->crowbar_time > FPS)
-    {
-        game->crowbar_draw = game->crowbar_draw->next;
-        game->crowbar_time = cur_time;
-    }
-    if (game->crowbar_draw == game->crowbar_draw_head)
-    {
-        game->key.one = 0;
-        game->crowbar_state = IDLE;
-    }
-}
-
-void update_crowbar_state(t_data *game, long long cur_time)
-{
-	static void (*crowbar_animations[])(t_data *, long long) = {
-        idle_state,
-		draw_state,
-		attack_state,
-		hit_state
-    };
-    crowbar_animations[game->crowbar_state](game, cur_time);
+    if (game->crowbar.state == IDLE)
+        handle_idle_state(game);
+    else if (game->crowbar.state == DRAW)
+        handle_animation_state(game, &game->crowbar.draw);
+    else if (game->crowbar.state == ATTACK)
+        handle_animation_state(game, &game->crowbar.attack);
+    else if (game->crowbar.state == ATTACK_HIT)
+        handle_animation_state(game, &game->crowbar.attack_hit);
 }
