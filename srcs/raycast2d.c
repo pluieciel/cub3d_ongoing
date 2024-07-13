@@ -1,4 +1,4 @@
-#include "cub3D.h"
+#include "cub3d.h"
 
 float	raycast_h2(t_data *g, float x, float y, int type)
 {

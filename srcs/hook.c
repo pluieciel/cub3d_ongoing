@@ -1,4 +1,4 @@
-#include "cub3D.h"
+#include "cub3d.h"
 
 void	destroy_imgs(t_data *game)
 {

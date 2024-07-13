@@ -1,4 +1,4 @@
-#include "../includes/cub3D.h"
+#include "../includes/cub3d.h"
 
 void handle_animation_state(t_data *game, struct s_animation *animation, t_animation_type type)
 {

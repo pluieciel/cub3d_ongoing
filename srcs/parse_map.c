@@ -1,4 +1,4 @@
-#include "cub3D.h"
+#include "cub3d.h"
 
 void	get_init_pos(t_data *game, char dir, int i, int j)
 {

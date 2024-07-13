@@ -1,143 +1,82 @@
-#include "cub3D.h"
+#include "cub3d.h"
 
-float	raycast_h_3D(t_raycast *ray)
+void	add_door_h(t_raycast *r)
 {
-	float	dir_x;
-	float	dir_y;
-	float	dir_z;
-	int		range;
-	int		type;
-
-	range = 0;
-	dir_x = ray->game->player.dir3d.x * ray->game->dis_p_s + ray->temp[0];
-	dir_y = ray->game->player.dir3d.y * ray->game->dis_p_s + ray->temp[1];
-	dir_z = ray->game->player.dir3d.z * ray->game->dis_p_s + ray->temp[2];
-	if (dir_y < 0)
-	{
-		ray->res_rc_h_3d[1] = ray->game->player.pos[1] - ray->game->player.pos[1] % B_SIZE;
-		ray->res_rc_h_3d[0] = ray->game->player.pos[0] - (ray->game->player.pos[1] % B_SIZE) * dir_x / dir_y;
-		ray->res_rc_h_3d[2] = (ray->game->player.pos[1] % B_SIZE) * dir_z / -dir_y;
-		ray->res_rc_h_3d[4] = 1;
-	}
-	else if (dir_y > 0)
-	{
-		ray->res_rc_h_3d[1] = ray->game->player.pos[1] + B_SIZE - ray->game->player.pos[1] % B_SIZE;
-		ray->res_rc_h_3d[0] = ray->game->player.pos[0] + (B_SIZE - ray->game->player.pos[1] % B_SIZE) * dir_x / dir_y;
-		ray->res_rc_h_3d[2] = (B_SIZE - ray->game->player.pos[1] % B_SIZE) * dir_z / dir_y;
-		ray->res_rc_h_3d[4] = -1;
-	}
-	else
-	{
-		range = RAYCAST_RANGE;
-		ray->res_rc_h_3d[0] = ray->game->player.pos[0];
-		ray->res_rc_h_3d[1] = ray->game->player.pos[1];
-		ray->res_rc_h_3d[4] = 0;
-	}
-	while (range < RAYCAST_RANGE
-	&& ray->res_rc_h_3d[0] / B_SIZE > 0 && ray->res_rc_h_3d[0] / B_SIZE < ray->game->map_w
-	&& ray->res_rc_h_3d[2] <= B_SIZE / 2 && ray->res_rc_h_3d[2] >= -B_SIZE / 2)
-	{
-		ray->res_rc_h_3d[5] = (int)ray->res_rc_h_3d[0] / B_SIZE;
-		ray->res_rc_h_3d[6] = (int)ray->res_rc_h_3d[1] / B_SIZE - (dir_y < 0);
-		if (dir_y != 0
-		&& ray->res_rc_h_3d[6] >= 0 && ray->res_rc_h_3d[6] < ray->game->map_h)
-		{
-			type = ray->game->map[(int)ray->res_rc_h_3d[6]][(int)ray->res_rc_h_3d[5]];
-			if (type == 1)
-				return distance(ray->res_rc_h_3d[0], ray->res_rc_h_3d[1], ray->game->player.pos[0], ray->game->player.pos[1]);
-			else if (type >= 2)
-			{
-				ray->num_doors_h++;
-				ray->doors_h[ray->num_doors_h][0] = ray->res_rc_h_3d[0];
-				ray->doors_h[ray->num_doors_h][1] = ray->res_rc_h_3d[1];
-				ray->doors_h[ray->num_doors_h][2] = ray->res_rc_h_3d[2];
-				ray->doors_h[ray->num_doors_h][3] = distance(ray->res_rc_h_3d[0], ray->res_rc_h_3d[1], ray->game->player.pos[0], ray->game->player.pos[1]);
-				ray->doors_h[ray->num_doors_h][4] = ray->res_rc_h_3d[4];
-				ray->doors_h[ray->num_doors_h][5] = ray->res_rc_h_3d[5];
-				ray->doors_h[ray->num_doors_h][6] = ray->res_rc_h_3d[6];
-			}
-		}
-		range++;
-		ray->res_rc_h_3d[0] += dir_x / fabs(dir_y) * B_SIZE;
-		ray->res_rc_h_3d[1] += ((dir_y > 0) * 2 - 1) * B_SIZE;
-		ray->res_rc_h_3d[2] += dir_z / fabs(dir_y) * B_SIZE;
-	}
-	return (float)(RAYCAST_RANGE + 1) * B_SIZE;
+	r->num_doors_h++;
+	r->doors_h[r->num_doors_h][0] = r->h[0];
+	r->doors_h[r->num_doors_h][1] = r->h[1];
+	r->doors_h[r->num_doors_h][2] = r->h[2];
+	r->doors_h[r->num_doors_h][3] = distance(r->h[0], r->h[1],
+			r->g->player.pos[0], r->g->player.pos[1]);
+	r->doors_h[r->num_doors_h][4] = r->h[4];
+	r->doors_h[r->num_doors_h][5] = r->h[5];
+	r->doors_h[r->num_doors_h][6] = r->h[6];
 }
 
-float	raycast_v_3D(t_raycast *ray)
+float	raycast_h_3d2(t_raycast *r)
 {
-	float	dir_x;
-	float	dir_y;
-	float	dir_z;
 	int		range;
-	int		type;
 
 	range = 0;
-	dir_x = ray->game->player.dir3d.x * ray->game->dis_p_s + ray->temp[0];
-	dir_y = ray->game->player.dir3d.y * ray->game->dis_p_s + ray->temp[1];
-	dir_z = ray->game->player.dir3d.z * ray->game->dis_p_s + ray->temp[2];
-	if (dir_x < 0)
-	{
-		ray->res_rc_v_3d[0] = ray->game->player.pos[0] - ray->game->player.pos[0] % B_SIZE;
-		ray->res_rc_v_3d[1] = ray->game->player.pos[1] - (ray->game->player.pos[0] % B_SIZE) * dir_y / dir_x;
-		ray->res_rc_v_3d[2] = (ray->game->player.pos[0] % B_SIZE) * dir_z / -dir_x;
-		ray->res_rc_v_3d[4] = -1;
-	}
-	else if (dir_x > 0)
-	{
-		ray->res_rc_v_3d[0] = ray->game->player.pos[0] + B_SIZE - ray->game->player.pos[0] % B_SIZE;
-		ray->res_rc_v_3d[1] = ray->game->player.pos[1] + (B_SIZE - ray->game->player.pos[0] % B_SIZE) * dir_y / dir_x;
-		ray->res_rc_v_3d[2] = (B_SIZE - ray->game->player.pos[0] % B_SIZE) * dir_z / dir_x;
-		ray->res_rc_v_3d[4] = 1;
-	}
-	else
-	{
-		range = RAYCAST_RANGE;
-		ray->res_rc_v_3d[0] = ray->game->player.pos[0];
-		ray->res_rc_v_3d[1] = ray->game->player.pos[1];
-		ray->res_rc_v_3d[4] = 0;
-	}
 	while (range < RAYCAST_RANGE
-	&& ray->res_rc_v_3d[1] / B_SIZE > 0 && ray->res_rc_v_3d[1] / B_SIZE < ray->game->map_h
-	&& ray->res_rc_v_3d[2] <= B_SIZE / 2 && ray->res_rc_v_3d[2] >= -B_SIZE / 2)
+		&& r->h[0] / B_SIZE > 0 && r->h[0] / B_SIZE < r->g->map_w
+		&& r->h[2] <= B_SIZE / 2 && r->h[2] >= -B_SIZE / 2)
 	{
-		ray->res_rc_v_3d[5] = (int)ray->res_rc_v_3d[0] / B_SIZE - (dir_x < 0);
-		ray->res_rc_v_3d[6] = (int)ray->res_rc_v_3d[1] / B_SIZE;
-		if (dir_x != 0
-		&& ray->res_rc_v_3d[5] >= 0 && ray->res_rc_v_3d[5] < ray->game->map_w)
+		r->h[5] = (int)r->h[0] / B_SIZE;
+		r->h[6] = (int)r->h[1] / B_SIZE - (r->xyz[1] < 0);
+		if (r->xyz[1] != 0 && r->h[6] >= 0 && r->h[6] < r->g->map_h)
 		{
-			type = ray->game->map[(int)ray->res_rc_v_3d[6]][(int)ray->res_rc_v_3d[5]];
-			if (type == 1)
-				return distance(ray->res_rc_v_3d[0], ray->res_rc_v_3d[1], ray->game->player.pos[0], ray->game->player.pos[1]);
-			else if (type >= 2)
-			{
-				ray->num_doors_v++;
-				ray->doors_v[ray->num_doors_v][0] = ray->res_rc_v_3d[0];
-				ray->doors_v[ray->num_doors_v][1] = ray->res_rc_v_3d[1];
-				ray->doors_v[ray->num_doors_v][2] = ray->res_rc_v_3d[2];
-				ray->doors_v[ray->num_doors_v][3] = distance(ray->res_rc_v_3d[0], ray->res_rc_v_3d[1], ray->game->player.pos[0], ray->game->player.pos[1]);
-				ray->doors_v[ray->num_doors_v][4] = ray->res_rc_v_3d[4];
-				ray->doors_v[ray->num_doors_v][5] = ray->res_rc_v_3d[5];
-				ray->doors_v[ray->num_doors_v][6] = ray->res_rc_v_3d[6];
-			}
+			if (r->g->map[(int)r->h[6]][(int)r->h[5]] == 1)
+				return (distance(r->h[0], r->h[1],
+						r->g->player.pos[0], r->g->player.pos[1]));
+			else if (r->g->map[(int)r->h[6]][(int)r->h[5]] >= 2)
+				add_door_h(r);
 		}
 		range++;
-		ray->res_rc_v_3d[1] += dir_y / fabs(dir_x) * B_SIZE;
-		ray->res_rc_v_3d[0] += ((dir_x > 0) * 2 - 1) * B_SIZE;
-		ray->res_rc_v_3d[2] += dir_z / fabs(dir_x) * B_SIZE;
+		r->h[0] += r->xyz[0] / fabs(r->xyz[1]) * B_SIZE;
+		r->h[1] += ((r->xyz[1] > 0) * 2 - 1) * B_SIZE;
+		r->h[2] += r->xyz[2] / fabs(r->xyz[1]) * B_SIZE;
 	}
-	return (float)(RAYCAST_RANGE + 1) * B_SIZE;
+	return ((RAYCAST_RANGE + 1.0) * B_SIZE);
 }
 
-void	raycast_3D(t_raycast *ray)
+float	raycast_h_3d(t_raycast *r)
 {
-	ray->num_doors_h = -1;
-	ray->res_rc_h_3d[3] = raycast_h_3D(ray);
-	ray->num_doors_v = -1;
-	ray->res_rc_v_3d[3] = raycast_v_3D(ray);
-	if (ray->res_rc_h_3d[3] < ray->res_rc_v_3d[3])
-		ray->res_rc_3d = ray->res_rc_h_3d;
+	if (r->xyz[1] < 0)
+	{
+		r->h[1] = r->g->player.pos[1] - r->g->player.pos[1] % B_SIZE;
+		r->h[0] = r->g->player.pos[0] - (r->g->player.pos[1] % B_SIZE)
+			* r->xyz[0] / r->xyz[1];
+		r->h[2] = (r->g->player.pos[1] % B_SIZE) * r->xyz[2] / -r->xyz[1];
+		r->h[4] = 1;
+	}
+	else if (r->xyz[1] > 0)
+	{
+		r->h[1] = r->g->player.pos[1] + B_SIZE - r->g->player.pos[1] % B_SIZE;
+		r->h[0] = r->g->player.pos[0] + (B_SIZE - r->g->player.pos[1] % B_SIZE)
+			* r->xyz[0] / r->xyz[1];
+		r->h[2] = (B_SIZE - r->g->player.pos[1] % B_SIZE)
+			* r->xyz[2] / r->xyz[1];
+		r->h[4] = -1;
+	}
 	else
-		ray->res_rc_3d = ray->res_rc_v_3d;
+	{
+		r->h[0] = r->g->player.pos[0];
+		r->h[1] = r->g->player.pos[1];
+		r->h[4] = 0;
+		return ((RAYCAST_RANGE + 1.0) * B_SIZE);
+	}
+	return (raycast_h_3d2(r));
+}
+
+void	raycast_3d(t_raycast *r)
+{
+	r->num_doors_h = -1;
+	r->h[3] = raycast_h_3d(r);
+	r->num_doors_v = -1;
+	r->v[3] = raycast_v_3d(r);
+	if (r->h[3] < r->v[3])
+		r->res_rc_3d = r->h;
+	else
+		r->res_rc_3d = r->v;
 }

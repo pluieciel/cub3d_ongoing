@@ -66,19 +66,19 @@ typedef struct s_crowbar
 	int			equiped;
 }	t_crowbar;
 
-typedef struct s_point3D
+typedef struct s_point3d
 {
 	float	x;
 	float	y;
 	float	z;
 	float	angle;
-}	t_point3D;
+}	t_point3d;
 
 typedef struct s_player
 {
 	int			pos[2];
 	float		dir[2];
-	t_point3D	dir3d;
+	t_point3d	dir3d;
 }	t_player;
 
 typedef struct s_key
@@ -160,15 +160,15 @@ typedef struct s_data
 typedef struct s_raycast
 {
 	pthread_t	tid;
-	t_data		*game;
-	t_point3D	*p1;
-	t_point3D	*p2;
+	t_data		*g;
+	t_point3d	*p1;
+	t_point3d	*p2;
 	int			col_start;
 	int			col_end;
-	float		temp[3];
+	float		xyz[3];
 	//	x y z dis dir idx_x idx_y
-	float		res_rc_h_3d[7];
-	float		res_rc_v_3d[7];
+	float		h[7];
+	float		v[7];
 	float		*res_rc_3d;
 	//	x y z dis dir
 	int			num_doors_h;
@@ -189,11 +189,12 @@ float		distance(float x1, float y1, float x2, float y2);
 float		raycast_h(t_data *game, float x, float y, int type);
 float		raycast_v(t_data *game, float x, float y, int type);
 void		raycast(t_data *game, float x, float y, int type);
-t_point3D	*ro_on_z_to_xz(t_point3D p);
-t_point3D	*ro_on_y(t_point3D p, float angle_z);
-t_point3D	*ro_back_on_z(t_point3D p);
-t_point3D	*cross(t_point3D p1, t_point3D p2);
-void		raycast_3D(t_raycast *ray);
+t_point3d	*ro_on_z_to_xz(t_point3d p);
+t_point3d	*ro_on_y(t_point3d p, float angle_z);
+t_point3d	*ro_back_on_z(t_point3d p);
+t_point3d	*cross(t_point3d p1, t_point3d p2);
+float		raycast_v_3d(t_raycast *r);
+void		raycast_3d(t_raycast *ray);
 void		update_crowbar_state(t_data *game);
 void		collision(t_data *game, float dir_x, float dir_y, int coll_dis);
 void		render_image(t_data *game, t_image *img);
