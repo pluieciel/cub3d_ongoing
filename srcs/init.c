@@ -122,7 +122,7 @@ void init_handgun(t_data *game)
 	game->handgun.shoot.head = NULL;
 	game->handgun.holster.frames = NULL;
 	game->handgun.holster.head = NULL;
-	game->handgun.state = HANDGUN_HOLSTER;
+	game->handgun.state = HANDGUN_IDLE;
 	game->handgun.equiped = 0;
 	init_animation(game, &game->handgun.draw, "handgun/draw", 15);
 	init_animation(game, &game->handgun.shoot, "handgun/shoot", 14);

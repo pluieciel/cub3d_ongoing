@@ -1,6 +1,6 @@
 #include "../includes/cub3D.h"
 
-void handle_animation_state(t_data *game, struct s_animation *animation, t_animation_type type, __uint64_t delay)
+int handle_animation_state(t_data *game, struct s_animation *animation, __uint64_t delay)
 {
     render_image(game, (t_image *)(*animation).frames->content);
     if (game->time - game->animation_time > delay)
@@ -10,19 +10,17 @@ void handle_animation_state(t_data *game, struct s_animation *animation, t_anima
     }
     if (animation->frames == animation->head)
     {
-        if (type == CROWBAR)
-            game->crowbar.state = CROWBAR_IDLE;
-        else if (type == HANDGUN)
-            game->handgun.state = HANDGUN_IDLE;
         game->key.one = 0;
         game->key.two = 0;
         game->left_click = 0;
+        return 1;
     }
+    return 0;
 }
 
 void handle_crowbar_idle_state(t_data *game)
 {
-    if (game->crowbar.equiped)
+    if (game->crowbar.equiped && !game->handgun.equiped)
     {
         render_image(game, (t_image *)game->crowbar.attack.head->content);
         collision(game, game->player.dir[0], game->player.dir[1], COLL_DIS);
@@ -39,7 +37,7 @@ void handle_crowbar_idle_state(t_data *game)
 
 void handle_handgun_idle_state(t_data *game)
 {
-    if (game->handgun.equiped)
+    if (game->handgun.equiped && !game->crowbar.equiped)
     {
         render_image(game, (t_image *)game->handgun.shoot.head->content);
         collision(game, game->player.dir[0], game->player.dir[1], COLL_DIS);
@@ -54,38 +52,56 @@ void handle_handgun_idle_state(t_data *game)
 
 void update_crowbar_state(t_data *game)
 {
+    int completed;
+
+    completed = 0;
     if (game->crowbar.state == CROWBAR_IDLE)
         handle_crowbar_idle_state(game);
     else if (game->crowbar.state == CROWBAR_DRAW)
     {
-        handle_animation_state(game, &game->crowbar.draw, CROWBAR, FPS);
-        game->crowbar.equiped = 1;
+        completed = handle_animation_state(game, &game->crowbar.draw, FPS);
+        if (completed)
+            game->crowbar.equiped = 1;
     }
     else if (game->crowbar.state == CROWBAR_ATTACK)
-        handle_animation_state(game, &game->crowbar.attack, CROWBAR, FPS);
+        completed = handle_animation_state(game, &game->crowbar.attack, FPS);
     else if (game->crowbar.state == CROWBAR_ATTACK_HIT)
-        handle_animation_state(game, &game->crowbar.attack_hit, CROWBAR, FPS);
+        completed = handle_animation_state(game, &game->crowbar.attack_hit, FPS);
     else if (game->crowbar.state == CROWBAR_HOLSTER)
     {
-        handle_animation_state(game, &game->crowbar.holster, CROWBAR, FPS);
-        game->crowbar.equiped = 0;
+        completed = handle_animation_state(game, &game->crowbar.holster, FPS);
+        if (completed)
+            game->crowbar.equiped = 0;
+        if (completed && game->key.two)
+            game->handgun.state = HANDGUN_DRAW;
     }
+    if (completed)
+        game->crowbar.state = CROWBAR_IDLE;
 }
 
 void update_handgun_state(t_data *game)
 {
+    int completed;
+
+    completed = 0;
     if (game->handgun.state == HANDGUN_IDLE)
         handle_handgun_idle_state(game);
     else if (game->handgun.state == HANDGUN_DRAW)
     {
-        handle_animation_state(game, &game->handgun.draw, HANDGUN, FPS);
-        game->handgun.equiped = 1;
+        completed = handle_animation_state(game, &game->handgun.draw, FPS);
+        if (completed)
+            game->handgun.equiped = 1;
     }
     else if (game->handgun.state == HANDGUN_SHOOT)
-        handle_animation_state(game, &game->handgun.shoot, HANDGUN, FPS / 2);
+        completed = handle_animation_state(game, &game->handgun.shoot, FPS / 2);
     else if (game->handgun.state == HANDGUN_HOLSTER)
     {
-        handle_animation_state(game, &game->handgun.holster, HANDGUN, FPS);
-        game->handgun.equiped = 0;
+        completed = handle_animation_state(game, &game->handgun.holster, FPS);
+        if (completed)
+            game->handgun.equiped = 0;
+        if (completed && game->key.one)
+            game->crowbar.state = CROWBAR_DRAW;
     }
+    if (completed)
+        game->handgun.state = HANDGUN_IDLE;
 }
