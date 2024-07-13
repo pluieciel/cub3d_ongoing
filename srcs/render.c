@@ -425,9 +425,13 @@ void	draw_pixel(t_raycast *ray, int col, int row)
 
 void	*render_section(void *arg)
 {
-	t_raycast *ray = (t_raycast *)arg;
-	int col, row;
-	for (col = ray->col_start; col < ray->col_end; col++)
+	t_raycast	*ray;
+	int			col;
+	int			row;
+
+	ray = (t_raycast *)arg;
+	col = ray->col_start;
+	while (col < ray->col_end)
 	{
 		row = 0;
 		while (row < WIN_H)
@@ -445,22 +449,26 @@ void	*render_section(void *arg)
 		ray->temp[0] += ray->p2->x;
 		ray->temp[1] += ray->p2->y;
 		ray->temp[2] += ray->p2->z;
+		col++;
 	}
 	return (NULL);
 }
 
 void	draw_walls_3D(t_data *game)
 {
-	t_point3D	*p1, *p2;
-	t_raycast ray[NUM_THREADS];
+	t_point3D	*p1;
+	t_point3D	*p2;
+	t_raycast	ray[NUM_THREADS];
+	int			i;
+
 	p1 = ro_on_z_to_xz(game->player.dir3d);
 	p2 = ro_on_y(*p1, -M_PI / 2);
 	free(p1);
-	p1 = ro_back_on_z(*p2); // toward down on screen
+	p1 = ro_back_on_z(*p2);
 	free(p2);
-	p2 = cross(game->player.dir3d, *p1); // toward right on screen
-	int	i;
-	for (i = 0; i < NUM_THREADS; i++)
+	p2 = cross(game->player.dir3d, *p1);
+	i = 0;
+	while (i < NUM_THREADS)
 	{
 		ray[i].game = game;
 		ray[i].p1 = p1;
@@ -471,11 +479,11 @@ void	draw_walls_3D(t_data *game)
 		ray[i].temp[1] = -p1->y * WIN_H / 2 - p2->y * WIN_W / 2 + p2->y * ray[i].col_start;
 		ray[i].temp[2] = -p1->z * WIN_H / 2 - p2->z * WIN_W / 2 + p2->z * ray[i].col_start;
 		pthread_create(&ray[i].tid, NULL, render_section, &ray[i]);
+		i++;
 	}
-	for (i = 0; i < NUM_THREADS; i++)
-	{
+	i = -1;
+	while (++i < NUM_THREADS)
 		pthread_join(ray[i].tid, NULL);
-	}
 	free(p1);
 	free(p2);
 }
