@@ -5,37 +5,38 @@ float	distance(float x1, float y1, float x2, float y2)
 	return (sqrt((x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2)));
 }
 
-void render_image(t_data *game, t_image *img)
+void	render_image(t_data *game, t_image *img)
 {
-    int i;
-    int j;
-    
-    i = 0;
-    while (i < WIN_W)
-    {
-        j = 0;
-        while (j < WIN_H)
-        {
-            if (i < img->w && j < img->h)
-            {
-                unsigned int t = ((unsigned int *)img->addr)[j * img->w + i];
-                if (t != TRANSPARENT_COLOR)
-                    ((unsigned int *)game->img.addr)[j * WIN_W + i] = t;
-            }
-            j++;
-        }
-        i++;
-    }
+	int				i;
+	int				j;
+	unsigned int	t;
+
+	i = 0;
+	while (i < WIN_W)
+	{
+		j = 0;
+		while (j < WIN_H)
+		{
+			if (i < img->w && j < img->h)
+			{
+				t = ((unsigned int *)img->addr)[j * img->w + i];
+				if (t != TRANSPARENT_COLOR)
+					((unsigned int *)game->img.addr)[j * WIN_W + i] = t;
+			}
+			j++;
+		}
+		i++;
+	}
 }
 
 void	draw_minimap(t_data *game)
 {
 	int	x;
 	int	y;
-	int i;
-	int j;
-	int newi;
-	int newj;
+	int	i;
+	int	j;
+	int	newi;
+	int	newj;
 	unsigned int	t;
 	float	angle;
 
@@ -51,14 +52,14 @@ void	draw_minimap(t_data *game)
 				t = ((unsigned int *)game->img.addr)[j * WIN_W + i];
 				if (MM_POS_Y > j && atan(1.0 * abs(i - MM_POS_X) / (MM_POS_Y - j)) < angle)
 					((unsigned int *)game->img.addr)[j * WIN_W + i]
-        				= ((((((t >> 16) & 0xff) + 0x00) / 2) & 0xff) << 16)
-        				+ ((((((t >> 8) & 0xff) + 0x00) / 2) & 0xff) << 8)
-        				+ (((((t) & 0xff) + 0x00) / 2) & 0xff);
+						= ((((((t >> 16) & 0xff) + 0x00) / 2) & 0xff) << 16)
+						+ ((((((t >> 8) & 0xff) + 0x00) / 2) & 0xff) << 8)
+						+ (((((t) & 0xff) + 0x00) / 2) & 0xff);
 				else
 					((unsigned int *)game->img.addr)[j * WIN_W + i]
-        				= ((((((t >> 16) & 0xff) + 0x22) / 2) & 0xff) << 16)
-        				+ ((((((t >> 8) & 0xff) + 0x22) / 2) & 0xff) << 8)
-        				+ (((((t) & 0xff) + 0x22) / 2) & 0xff);
+						= ((((((t >> 16) & 0xff) + 0x22) / 2) & 0xff) << 16)
+						+ ((((((t >> 8) & 0xff) + 0x22) / 2) & 0xff) << 8)
+						+ (((((t) & 0xff) + 0x22) / 2) & 0xff);
 			}
 			j++;
 		}
@@ -114,18 +115,18 @@ void	draw_minimap(t_data *game)
 void	collision(t_data *game, float dir_x, float dir_y, int coll_dis)
 {	
 	raycast(game, dir_x, dir_y, (coll_dis == OPEN_DIS));
-    if (game->res_rc_h[2] < coll_dis && game->res_rc_h[2] < game->res_rc_v[2])
-    {
-        game->coll_h = 1;
+	if (game->res_rc_h[2] < coll_dis && game->res_rc_h[2] < game->res_rc_v[2])
+	{
+		game->coll_h = 1;
 		if (coll_dis == OPEN_DIS)
-        	game->coll_door_h = 1;
-    }
-    if (game->res_rc_v[2] < coll_dis && game->res_rc_v[2] < game->res_rc_h[2])
-    {
-        game->coll_v = 1;
+			game->coll_door_h = 1;
+	}
+	if (game->res_rc_v[2] < coll_dis && game->res_rc_v[2] < game->res_rc_h[2])
+	{
+		game->coll_v = 1;
 		if (coll_dis == OPEN_DIS)
-        	game->coll_door_v = 1;
-    }
+			game->coll_door_v = 1;
+	}
 }
 
 void	move_player(t_data *game)
@@ -148,9 +149,9 @@ void	move_player(t_data *game)
 		collision(game, (sqrt(2)/2) * (game->player.dir[0] + game->player.dir[1]), (sqrt(2)/2) * (-game->player.dir[0] + game->player.dir[1]), COLL_DIS);
 
 		if (!game->coll_v)
-    		game->player.pos[0] += round(oldDirX * MOVE_SPEED);
-    	if (!game->coll_h)
-    	    game->player.pos[1] += round(oldDirY * MOVE_SPEED);
+			game->player.pos[0] += round(oldDirX * MOVE_SPEED);
+		if (!game->coll_h)
+			game->player.pos[1] += round(oldDirY * MOVE_SPEED);
 	}
 	else if (game->key.s)
 	{
@@ -161,9 +162,9 @@ void	move_player(t_data *game)
 		collision(game, -(sqrt(2)/2) * (game->player.dir[0] + game->player.dir[1]), -(sqrt(2)/2) * (-game->player.dir[0] + game->player.dir[1]), COLL_DIS);
 
 		if (!game->coll_v)
-    		game->player.pos[0] -= round(oldDirX * MOVE_SPEED);
-    	if (!game->coll_h)
-    	    game->player.pos[1] -= round(oldDirY * MOVE_SPEED);
+			game->player.pos[0] -= round(oldDirX * MOVE_SPEED);
+		if (!game->coll_h)
+			game->player.pos[1] -= round(oldDirY * MOVE_SPEED);
 	}
 	if (game->key.a)
 	{
@@ -174,9 +175,9 @@ void	move_player(t_data *game)
 		collision(game, -(sqrt(2)/2) * (game->player.dir[0] - game->player.dir[1]), -(sqrt(2)/2) * (game->player.dir[0] + game->player.dir[1]), COLL_DIS);
 		
 		if (!game->coll_v)
-    		game->player.pos[0] += round(oldDirY * MOVE_SPEED);
-    	if (!game->coll_h)
-    	    game->player.pos[1] -= round(oldDirX * MOVE_SPEED);
+			game->player.pos[0] += round(oldDirY * MOVE_SPEED);
+		if (!game->coll_h)
+			game->player.pos[1] -= round(oldDirX * MOVE_SPEED);
 	}
 	else if (game->key.d)
 	{
@@ -187,9 +188,9 @@ void	move_player(t_data *game)
 		collision(game, (sqrt(2)/2) * (game->player.dir[0] - game->player.dir[1]), (sqrt(2)/2) * (game->player.dir[0] + game->player.dir[1]), COLL_DIS);
 
 		if (!game->coll_v)
-    		game->player.pos[0] -= round(oldDirY * MOVE_SPEED);
-    	if (!game->coll_h)
-    	    game->player.pos[1] += round(oldDirX * MOVE_SPEED);
+			game->player.pos[0] -= round(oldDirY * MOVE_SPEED);
+		if (!game->coll_h)
+			game->player.pos[1] += round(oldDirX * MOVE_SPEED);
 	}
 	if (game->key.left)
 	{
@@ -504,8 +505,8 @@ void	move_doors(t_data *game)
 		game->coll_door_v = 0;
 		collision(game, game->player.dir[0], game->player.dir[1], OPEN_DIS);
 		if ((game->coll_door_h || game->coll_door_v)
-		&& (game->map[(int)game->res_rc[5]][(int)game->res_rc[4]] == 2
-		|| game->map[(int)game->res_rc[5]][(int)game->res_rc[4]] == 3))
+			&& (game->map[(int)game->res_rc[5]][(int)game->res_rc[4]] == 2
+			|| game->map[(int)game->res_rc[5]][(int)game->res_rc[4]] == 3))
 		{
 			new = gc_malloc(sizeof(t_door), &game->gc);
 			new->next = game->doors;
@@ -531,7 +532,7 @@ void	move_doors(t_data *game)
 	temp = game->doors;
 	prev = NULL;
 	while (temp && (game->map[temp->y][temp->x] <= 2
-					|| game->map[temp->y][temp->x] >= 3))
+		|| game->map[temp->y][temp->x] >= 3))
 	{
 		game->doors = temp->next;
 		temp = game->doors;
@@ -539,7 +540,7 @@ void	move_doors(t_data *game)
 	while (temp)
 	{
 		while (temp && (game->map[temp->y][temp->x] != 2
-						&& game->map[temp->y][temp->x] != 3))
+			&& game->map[temp->y][temp->x] != 3))
 		{
 			prev = temp;
 			temp = temp->next;
@@ -551,21 +552,23 @@ void	move_doors(t_data *game)
 	}
 }
 
-int render(t_data *game)
+int	render(t_data *game)
 {
-    __uint64_t current_time;
+	__uint64_t	current_time;
 
-    current_time = get_timestamp_ms();
-    if (game->win_ptr != NULL && (current_time - game->time) > 1000 / FPS)
-    {
-        game->time = current_time;
-        ft_bzero(game->img.addr, game->img.w * game->img.h * (game->img.bpp / 8));
-        move_doors(game);
-        move_player(game);
-        draw_walls_3d(game);
-        draw_minimap(game);
+	current_time = get_timestamp_ms();
+	if (game->win_ptr != NULL && (current_time - game->time) > 1000 / FPS)
+	{
+		game->time = current_time;
+		ft_bzero(game->img.addr,
+			game->img.w * game->img.h * (game->img.bpp / 8));
+		move_doors(game);
+		move_player(game);
+		draw_walls_3d(game);
+		draw_minimap(game);
 		update_crowbar_state(game);
-        mlx_put_image_to_window(game->mlx_ptr, game->win_ptr, game->img.ptr, 0, 0);
-    }
-    return (0);
+		mlx_put_image_to_window(game->mlx_ptr,
+			game->win_ptr, game->img.ptr, 0, 0);
+	}
+	return (0);
 }
