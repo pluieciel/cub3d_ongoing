@@ -9,10 +9,10 @@ void	init(t_data *game)
 	game->player.pos[1] = 0;
 	game->player.dir[0] = 0;
 	game->player.dir[1] = 0;
-	game->player.dir3D.x = 0;
-	game->player.dir3D.y = 0;
-	game->player.dir3D.z = 0;
-	game->player.dir3D.angle = 0;
+	game->player.dir3d.x = 0;
+	game->player.dir3d.y = 0;
+	game->player.dir3d.z = 0;
+	game->player.dir3d.angle = 0;
 	game->key.w = 0;
 	game->key.a = 0;
 	game->key.s = 0;

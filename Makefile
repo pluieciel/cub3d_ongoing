@@ -5,7 +5,7 @@ HEADERS_DIR = includes
 OBJECTS_DIR = objs
 
 SOURCES = check_map.c  hook.c  init.c  main.c  parse_element.c parse_map.c \
-render.c  time.c raycast.c rotation.c animation.c
+render.c  time.c raycast2d.c raycast3d.c rotation.c animation.c
 
 OBJECTS = $(addprefix $(OBJECTS_DIR)/, $(SOURCES:.c=.o))
 

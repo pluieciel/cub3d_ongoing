@@ -132,8 +132,8 @@ void	move_player(t_data *game)
 {
 	float		oldDirX = game->player.dir[0];
 	float		oldDirY = game->player.dir[1];
-	float		oldDirX_3D = game->player.dir3D.x;
-	float		oldDirY_3D = game->player.dir3D.y;
+	float		oldDirX_3D = game->player.dir3d.x;
+	float		oldDirY_3D = game->player.dir3d.y;
 
 	game->coll_h = 0;
 	game->coll_v = 0;
@@ -195,50 +195,50 @@ void	move_player(t_data *game)
 	{
 		game->player.dir[0] = oldDirX * cos(-ROT_SPEED) - oldDirY * sin(-ROT_SPEED);
 		game->player.dir[1] = oldDirX * sin(-ROT_SPEED) + oldDirY * cos(-ROT_SPEED);
-		game->player.dir3D.x = oldDirX_3D * cos(-ROT_SPEED) - oldDirY_3D * sin(-ROT_SPEED);
-		game->player.dir3D.y = oldDirX_3D * sin(-ROT_SPEED) + oldDirY_3D * cos(-ROT_SPEED);
+		game->player.dir3d.x = oldDirX_3D * cos(-ROT_SPEED) - oldDirY_3D * sin(-ROT_SPEED);
+		game->player.dir3d.y = oldDirX_3D * sin(-ROT_SPEED) + oldDirY_3D * cos(-ROT_SPEED);
 		if (game->player.dir[0] > 0)
-			game->player.dir3D.angle = atan(game->player.dir[1] / game->player.dir[0]);
+			game->player.dir3d.angle = atan(game->player.dir[1] / game->player.dir[0]);
 		else if (game->player.dir[0] < 0)
-			game->player.dir3D.angle = atan(game->player.dir[1] / game->player.dir[0]) + M_PI;
+			game->player.dir3d.angle = atan(game->player.dir[1] / game->player.dir[0]) + M_PI;
 		else
-			game->player.dir3D.angle = ((game->player.dir[1] > 0) * 2 - 1) * M_PI / 2;
+			game->player.dir3d.angle = ((game->player.dir[1] > 0) * 2 - 1) * M_PI / 2;
 	}
 	else if (game->key.right)
 	{
 		game->player.dir[0] = oldDirX * cos(ROT_SPEED) - oldDirY * sin(ROT_SPEED);
 		game->player.dir[1] = oldDirX * sin(ROT_SPEED) + oldDirY * cos(ROT_SPEED);
-		game->player.dir3D.x = oldDirX_3D * cos(ROT_SPEED) - oldDirY_3D * sin(ROT_SPEED);
-		game->player.dir3D.y = oldDirX_3D * sin(ROT_SPEED) + oldDirY_3D * cos(ROT_SPEED);
+		game->player.dir3d.x = oldDirX_3D * cos(ROT_SPEED) - oldDirY_3D * sin(ROT_SPEED);
+		game->player.dir3d.y = oldDirX_3D * sin(ROT_SPEED) + oldDirY_3D * cos(ROT_SPEED);
 		if (game->player.dir[0] > 0)
-			game->player.dir3D.angle = atan(game->player.dir[1] / game->player.dir[0]);
+			game->player.dir3d.angle = atan(game->player.dir[1] / game->player.dir[0]);
 		else if (game->player.dir[0] < 0)
-			game->player.dir3D.angle = atan(game->player.dir[1] / game->player.dir[0]) + M_PI;
+			game->player.dir3d.angle = atan(game->player.dir[1] / game->player.dir[0]) + M_PI;
 		else
-			game->player.dir3D.angle = ((game->player.dir[1] > 0) * 2 - 1) * M_PI / 2;
+			game->player.dir3d.angle = ((game->player.dir[1] > 0) * 2 - 1) * M_PI / 2;
 	}
-	if (game->key.up && game->player.dir3D.z < 0.95)
+	if (game->key.up && game->player.dir3d.z < 0.95)
 	{
-		p1 = ro_on_z_to_xz(game->player.dir3D);
+		p1 = ro_on_z_to_xz(game->player.dir3d);
 		p2 = ro_on_y(*p1, ROT_SPEED);
 		free(p1);
 		p1 = ro_back_on_z(*p2);
 		free(p2);
-		game->player.dir3D.x = p1->x;
-		game->player.dir3D.y = p1->y;
-		game->player.dir3D.z = p1->z;
+		game->player.dir3d.x = p1->x;
+		game->player.dir3d.y = p1->y;
+		game->player.dir3d.z = p1->z;
 		free(p1);
 	}
-	else if (game->key.down && game->player.dir3D.z > -0.95)
+	else if (game->key.down && game->player.dir3d.z > -0.95)
 	{
-		p1 = ro_on_z_to_xz(game->player.dir3D);
+		p1 = ro_on_z_to_xz(game->player.dir3d);
 		p2 = ro_on_y(*p1, -ROT_SPEED);
 		free(p1);
 		p1 = ro_back_on_z(*p2);
 		free(p2);
-		game->player.dir3D.x = p1->x;
-		game->player.dir3D.y = p1->y;
-		game->player.dir3D.z = p1->z;
+		game->player.dir3d.x = p1->x;
+		game->player.dir3d.y = p1->y;
+		game->player.dir3d.z = p1->z;
 		free(p1);
 	}
 }
@@ -331,22 +331,22 @@ void	draw_pixel(t_raycast *ray, int col, int row)
 	unsigned int	t;
 
 	ray->nearest_wall_dis = RAYCAST_RANGE * B_SIZE;
-	if (ray->res_rc_3D[4] != 0
-	&& ray->res_rc_3D[2] >= -32 && ray->res_rc_3D[2] <= 32)
+	if (ray->res_rc_3d[4] != 0
+	&& ray->res_rc_3d[2] >= -32 && ray->res_rc_3d[2] <= 32)
 	{
-		shadow = 1.0 - (fmin(ray->res_rc_3D[3], 8 * B_SIZE) / (8 * B_SIZE));
-		if (ray->res_rc_3D == ray->res_rc_h_3D)
+		shadow = 1.0 - (fmin(ray->res_rc_3d[3], 8 * B_SIZE) / (8 * B_SIZE));
+		if (ray->res_rc_3d == ray->res_rc_h_3d)
 		{
-			if (ray->res_rc_3D[4] == 1)
+			if (ray->res_rc_3d[4] == 1)
 			{
-				c = round(fmod(ray->res_rc_3D[0], B_SIZE) / B_SIZE * ray->game->img_wall_no.w);
-				r = round((1 - fmod(ray->res_rc_3D[2] + 32, B_SIZE) / B_SIZE) * ray->game->img_wall_no.h);
+				c = round(fmod(ray->res_rc_3d[0], B_SIZE) / B_SIZE * ray->game->img_wall_no.w);
+				r = round((1 - fmod(ray->res_rc_3d[2] + 32, B_SIZE) / B_SIZE) * ray->game->img_wall_no.h);
 				t = ((unsigned int *)ray->game->img_wall_no.addr)[(int)r * ray->game->img_wall_no.w + (int)c];
 			}
 			else
 			{
-				c = round((1 - fmod(ray->res_rc_3D[0], B_SIZE) / B_SIZE) * ray->game->img_wall_so.w);
-				r = round((1 - fmod(ray->res_rc_3D[2] + 32, B_SIZE) / B_SIZE) * ray->game->img_wall_so.h);
+				c = round((1 - fmod(ray->res_rc_3d[0], B_SIZE) / B_SIZE) * ray->game->img_wall_so.w);
+				r = round((1 - fmod(ray->res_rc_3d[2] + 32, B_SIZE) / B_SIZE) * ray->game->img_wall_so.h);
 				t = ((unsigned int *)ray->game->img_wall_so.addr)[(int)r * ray->game->img_wall_so.w + (int)c];
 			}
 			((unsigned int *)ray->game->img.addr)[row * WIN_W + col]
@@ -356,16 +356,16 @@ void	draw_pixel(t_raycast *ray, int col, int row)
 		}
 		else
 		{
-			if (ray->res_rc_3D[4] == 1)
+			if (ray->res_rc_3d[4] == 1)
 			{
-				c = round(fmod(ray->res_rc_3D[1], B_SIZE) / B_SIZE * ray->game->img_wall_ea.w);
-				r = round((1 - fmod(ray->res_rc_3D[2] + 32, B_SIZE) / B_SIZE) * ray->game->img_wall_ea.h);
+				c = round(fmod(ray->res_rc_3d[1], B_SIZE) / B_SIZE * ray->game->img_wall_ea.w);
+				r = round((1 - fmod(ray->res_rc_3d[2] + 32, B_SIZE) / B_SIZE) * ray->game->img_wall_ea.h);
 				t = ((unsigned int *)ray->game->img_wall_ea.addr)[(int)r * ray->game->img_wall_ea.w + (int)c];
 			}
 			else
 			{
-				c = round((1 - fmod(ray->res_rc_3D[1], B_SIZE) / B_SIZE) * ray->game->img_wall_we.w);
-				r = round((1 - fmod(ray->res_rc_3D[2] + 32, B_SIZE) / B_SIZE) * ray->game->img_wall_we.h);
+				c = round((1 - fmod(ray->res_rc_3d[1], B_SIZE) / B_SIZE) * ray->game->img_wall_we.w);
+				r = round((1 - fmod(ray->res_rc_3d[2] + 32, B_SIZE) / B_SIZE) * ray->game->img_wall_we.h);
 				t = ((unsigned int *)ray->game->img_wall_we.addr)[(int)r * ray->game->img_wall_we.w + (int)c];
 			}
 			((unsigned int *)ray->game->img.addr)[row * WIN_W + col]
@@ -373,33 +373,33 @@ void	draw_pixel(t_raycast *ray, int col, int row)
 					+ (((int)round(((t >> 8) & 0xff) * shadow) & 0xff) << 8)
 					+ ((int)round(((t) & 0xff) * shadow) & 0xff);
 		}
-		ray->nearest_wall_dis = ray->res_rc_3D[3];
+		ray->nearest_wall_dis = ray->res_rc_3d[3];
 	}
-	else if (ray->res_rc_3D[2] < -32)
+	else if (ray->res_rc_3d[2] < -32)
 	{
-		temp_x = ray->res_rc_3D[0] - ray->game->player.pos[0];
-		temp_y = ray->res_rc_3D[1] - ray->game->player.pos[1];
-		ray->res_rc_3D[0] = temp_x * -32 / ray->res_rc_3D[2] + ray->game->player.pos[0];
-		ray->res_rc_3D[1] = temp_y * -32 / ray->res_rc_3D[2] + ray->game->player.pos[1];
-		c = fmod(ray->res_rc_3D[0], B_SIZE) / B_SIZE;
+		temp_x = ray->res_rc_3d[0] - ray->game->player.pos[0];
+		temp_y = ray->res_rc_3d[1] - ray->game->player.pos[1];
+		ray->res_rc_3d[0] = temp_x * -32 / ray->res_rc_3d[2] + ray->game->player.pos[0];
+		ray->res_rc_3d[1] = temp_y * -32 / ray->res_rc_3d[2] + ray->game->player.pos[1];
+		c = fmod(ray->res_rc_3d[0], B_SIZE) / B_SIZE;
 		c += (c < 0);
 		c = round((1 - c) * ray->game->img_floor.w);
-		r = fmod(ray->res_rc_3D[1], B_SIZE) / B_SIZE;
+		r = fmod(ray->res_rc_3d[1], B_SIZE) / B_SIZE;
 		r += (r < 0);
 		r = round((1 - r) * ray->game->img_floor.h);
-		ray->res_rc_3D[3] = distance(ray->res_rc_3D[0], ray->res_rc_3D[1], ray->game->player.pos[0], ray->game->player.pos[1]);
-		shadow = 1.0 - (fmin(ray->res_rc_3D[3], 8 * B_SIZE) / (8 * B_SIZE));
+		ray->res_rc_3d[3] = distance(ray->res_rc_3d[0], ray->res_rc_3d[1], ray->game->player.pos[0], ray->game->player.pos[1]);
+		shadow = 1.0 - (fmin(ray->res_rc_3d[3], 8 * B_SIZE) / (8 * B_SIZE));
 		t = ((unsigned int *)ray->game->img_floor.addr)[(int)r * ray->game->img_floor.w + (int)c];
 		((unsigned int *)ray->game->img.addr)[row * WIN_W + col]
 		= (((int)round(((t >> 16) & 0xff) * shadow) & 0xff) << 16)
 			+ (((int)round(((t >> 8) & 0xff) * shadow) & 0xff) << 8)
 			+ ((int)round(((t) & 0xff) * shadow) & 0xff);
 	}
-	else if (ray->res_rc_3D[2] >= 0)
+	else if (ray->res_rc_3d[2] >= 0)
 	{
-		temp_x = ray->res_rc_3D[0] - ray->game->player.pos[0];
-		temp_y = ray->res_rc_3D[1] - ray->game->player.pos[1];
-		r = ray->res_rc_3D[2] / sqrt(temp_x * temp_x + temp_y * temp_y + ray->res_rc_3D[2] * ray->res_rc_3D[2]);
+		temp_x = ray->res_rc_3d[0] - ray->game->player.pos[0];
+		temp_y = ray->res_rc_3d[1] - ray->game->player.pos[1];
+		r = ray->res_rc_3d[2] / sqrt(temp_x * temp_x + temp_y * temp_y + ray->res_rc_3d[2] * ray->res_rc_3d[2]);
 		r = fmin(1.0, r);
 		r = 1.0 - asin(r) / (M_PI / 2);
 		if (temp_x != 0)
@@ -453,12 +453,12 @@ void	draw_walls_3D(t_data *game)
 {
 	t_point3D	*p1, *p2;
 	t_raycast ray[NUM_THREADS];
-	p1 = ro_on_z_to_xz(game->player.dir3D);
+	p1 = ro_on_z_to_xz(game->player.dir3d);
 	p2 = ro_on_y(*p1, -M_PI / 2);
 	free(p1);
 	p1 = ro_back_on_z(*p2); // toward down on screen
 	free(p2);
-	p2 = cross(game->player.dir3D, *p1); // toward right on screen
+	p2 = cross(game->player.dir3d, *p1); // toward right on screen
 	int	i;
 	for (i = 0; i < NUM_THREADS; i++)
 	{

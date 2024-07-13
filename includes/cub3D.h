@@ -1,4 +1,4 @@
-#pragma once
+#pragma	once
 
 #include "../libft_gc/includes/libft_gc.h"
 #include "../minilibx/mlx.h"
@@ -46,72 +46,72 @@ typedef enum e_animation_type
 typedef struct s_animation
 {
 	t_list	*frames;
-	t_list 	*head;
+	t_list	*head;
 }	t_animation;
 
 typedef struct s_crowbar
 {
-	enum e_state
+	enum		e_state
 	{
 		IDLE,
 		DRAW,
 		ATTACK,
 		ATTACK_HIT,
 		HOLSTER
-	}	state;
-	t_animation draw;
-	t_animation attack;
+	}			state;
+	t_animation	draw;
+	t_animation	attack;
 	t_animation	attack_hit;
 	t_animation	holster;
-	int equiped;
+	int			equiped;
 }	t_crowbar;
 
 typedef struct s_point3D
 {
-    float x;
-    float y;
-    float z;
-    float angle;
-} t_point3D;
+	float	x;
+	float	y;
+	float	z;
+	float	angle;
+}	t_point3D;
 
 typedef struct s_player
 {
 	int			pos[2];
 	float		dir[2];
-	t_point3D	dir3D;
-}				t_player;
+	t_point3D	dir3d;
+}	t_player;
 
 typedef struct s_key
 {
-	int			w;
-	int			a;
-	int			s;
-	int			d;
-	int			left;
-	int			right;
-	int			up;
-	int			down;
-	int			one;
-}				t_key;
+	int	w;
+	int	a;
+	int	s;
+	int	d;
+	int	left;
+	int	right;
+	int	up;
+	int	down;
+	int	one;
+}	t_key;
 
 typedef struct s_image
 {
-	void		*ptr;
-	char		*addr;
-	int			h;
-	int			w;
-	int			bpp;
-	int			endian;
-	int			line_len;
-}				t_image;
+	void	*ptr;
+	char	*addr;
+	int		h;
+	int		w;
+	int		bpp;
+	int		endian;
+	int		line_len;
+}	t_image;
 
 typedef struct s_door
 {
 	int				x;
 	int				y;
-	int				open_close; // 0:to open, 1:to close
+	int				open_close;	// 0:to open, 1:to close
 	struct s_door	*next;
-}				t_door;
+}	t_door;
 
 typedef struct s_data
 {
@@ -131,11 +131,11 @@ typedef struct s_data
 	__uint64_t	time;
 	t_image		img;
 	int			dis_p_s;
-	int left_click;
-	// 0 1 -> x y
-	// 2 -> dis
-	// 3 -> dir
-	// 4 5 x y idx on map
+	int			left_click;
+	//	0 1 -> x y
+	//	2 -> dis
+	//	3 -> dir
+	//	4 5 x y idx on map
 	float		res_rc_h[6];
 	float		res_rc_v[6];
 	float		*res_rc;
@@ -148,37 +148,37 @@ typedef struct s_data
 	t_image		img_door;
 	int			op_door;
 	t_door		*doors;
-	int 		coll_h;
-	int 		coll_v;
-	int 		coll_door_h;
-	int 		coll_door_v;
-	int mouse_centered;
-	t_crowbar crowbar;
-	__uint64_t animation_time;
-}				t_data;
+	int			coll_h;
+	int			coll_v;
+	int			coll_door_h;
+	int			coll_door_v;
+	int			mouse_centered;
+	t_crowbar	crowbar;
+	__uint64_t	animation_time;
+}	t_data;
 
 typedef struct s_raycast
 {
 	pthread_t	tid;
 	t_data		*game;
-	t_point3D	*p1, *p2;
+	t_point3D	*p1;
+	t_point3D	*p2;
 	int			col_start;
-    int			col_end;
+	int			col_end;
 	float		temp[3];
-	// x y z dis dir idx_x idx_y
-	float		res_rc_h_3D[7];
-	float		res_rc_v_3D[7];
-	float		*res_rc_3D;
-	// x y z dis dir
+	//	x y z dis dir idx_x idx_y
+	float		res_rc_h_3d[7];
+	float		res_rc_v_3d[7];
+	float		*res_rc_3d;
+	//	x y z dis dir
 	int			num_doors_h;
 	int			num_doors_v;
 	float		doors_h[20][7];
 	float		doors_v[20][7];
 	float		nearest_wall_dis;
-	
-}				t_raycast;
+}	t_raycast;
 
-void		init(t_data *game);
+void		init(t_data	*game);
 void		parse_map(t_data *game, char *filename);
 void		hook(t_data *game);
 int			check_map(t_data *game);
@@ -194,7 +194,7 @@ t_point3D	*ro_on_y(t_point3D p, float angle_z);
 t_point3D	*ro_back_on_z(t_point3D p);
 t_point3D	*cross(t_point3D p1, t_point3D p2);
 void		raycast_3D(t_raycast *ray);
-void update_crowbar_state(t_data *game);
-void	collision(t_data *game, float dir_x, float dir_y, int coll_dis);
-void render_image(t_data *game, t_image *img);
-void init_crowbar(t_data *game);
+void		update_crowbar_state(t_data *game);
+void		collision(t_data *game, float dir_x, float dir_y, int coll_dis);
+void		render_image(t_data *game, t_image *img);
+void		init_crowbar(t_data *game);

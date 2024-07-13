@@ -10,25 +10,25 @@ void	get_init_pos(t_data *game, char dir, int i, int j)
 	if (dir == 'N')
 	{
 		game->player.dir[1] = -1;
-		game->player.dir3D.y = -1;
-		game->player.dir3D.angle = -M_PI / 2;
+		game->player.dir3d.y = -1;
+		game->player.dir3d.angle = -M_PI / 2;
 	}
 	else if (dir == 'E')
 	{
 		game->player.dir[0] = 1;
-		game->player.dir3D.x = 1;
+		game->player.dir3d.x = 1;
 	}
 	else if (dir == 'S')
 	{
 		game->player.dir[1] = 1;
-		game->player.dir3D.y = 1;
-		game->player.dir3D.angle = M_PI / 2;
+		game->player.dir3d.y = 1;
+		game->player.dir3d.angle = M_PI / 2;
 	}
 	else if (dir == 'W')
 	{
 		game->player.dir[0] = -1;
-		game->player.dir3D.x = -1;
-		game->player.dir3D.angle = M_PI;
+		game->player.dir3d.x = -1;
+		game->player.dir3d.angle = M_PI;
 	}
 }
 
