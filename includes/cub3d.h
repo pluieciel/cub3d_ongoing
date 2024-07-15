@@ -31,7 +31,7 @@
 #define ELEM_N 7
 #define COLL_DIS 20
 #define OPEN_DIS 80
-#define MOVE_SPEED 4
+#define MOVE_SPEED 3
 #define M_PI 3.14159265358979323846
 #define NUM_THREADS 8
 #define TRANSPARENT_COLOR 0xFF000000
@@ -94,6 +94,7 @@ typedef struct s_key
 	int	down;
 	int	one;
 	int	ctrl;
+	int	shift;
 }	t_key;
 
 typedef struct s_image
@@ -158,6 +159,7 @@ typedef struct s_data
 	int			mouse_centered;
 	t_crowbar	crowbar;
 	__uint64_t	animation_time;
+	int			move_speed;
 }	t_data;
 
 typedef struct s_raycast

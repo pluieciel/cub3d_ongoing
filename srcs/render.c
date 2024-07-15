@@ -173,9 +173,9 @@ void	move_player(t_data *game)
 				+ game->player.dir[1]), (sqrt(2) / 2) * (-game->player.dir[0]
 				+ game->player.dir[1]), COLL_DIS);
 		if (!game->coll_v)
-			game->player.pos[0] += round(oldDirX * MOVE_SPEED);
+			game->player.pos[0] += round(oldDirX * game->move_speed);
 		if (!game->coll_h)
-			game->player.pos[1] += round(oldDirY * MOVE_SPEED);
+			game->player.pos[1] += round(oldDirY * game->move_speed);
 	}
 	else if (game->key.s)
 	{
@@ -189,9 +189,9 @@ void	move_player(t_data *game)
 				+ game->player.dir[1]), -(sqrt(2) / 2) * (-game->player.dir[0]
 				+ game->player.dir[1]), COLL_DIS);
 		if (!game->coll_v)
-			game->player.pos[0] -= round(oldDirX * MOVE_SPEED);
+			game->player.pos[0] -= round(oldDirX * game->move_speed);
 		if (!game->coll_h)
-			game->player.pos[1] -= round(oldDirY * MOVE_SPEED);
+			game->player.pos[1] -= round(oldDirY * game->move_speed);
 	}
 	if (game->key.a)
 	{
@@ -205,9 +205,9 @@ void	move_player(t_data *game)
 				- game->player.dir[1]), -(sqrt(2) / 2) * (game->player.dir[0]
 				+ game->player.dir[1]), COLL_DIS);
 		if (!game->coll_v)
-			game->player.pos[0] += round(oldDirY * MOVE_SPEED);
+			game->player.pos[0] += round(oldDirY * game->move_speed);
 		if (!game->coll_h)
-			game->player.pos[1] -= round(oldDirX * MOVE_SPEED);
+			game->player.pos[1] -= round(oldDirX * game->move_speed);
 	}
 	else if (game->key.d)
 	{
@@ -221,9 +221,9 @@ void	move_player(t_data *game)
 				- game->player.dir[1]), (sqrt(2) / 2) * (game->player.dir[0]
 				+ game->player.dir[1]), COLL_DIS);
 		if (!game->coll_v)
-			game->player.pos[0] -= round(oldDirY * MOVE_SPEED);
+			game->player.pos[0] -= round(oldDirY * game->move_speed);
 		if (!game->coll_h)
-			game->player.pos[1] += round(oldDirX * MOVE_SPEED);
+			game->player.pos[1] += round(oldDirX * game->move_speed);
 	}
 	if (game->key.left)
 	{
@@ -267,6 +267,10 @@ void	move_player(t_data *game)
 		game->player.pos[2] = -20;
 	else
 		game->player.pos[2] = 0;
+	if (game->key.shift)
+		game->move_speed = MOVE_SPEED * 2;
+	else
+		game->move_speed = MOVE_SPEED;
 }
 
 void	do_doors_h(t_raycast *ray, int col, int row)

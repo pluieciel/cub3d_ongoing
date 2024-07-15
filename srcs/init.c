@@ -13,6 +13,7 @@ void	init(t_data *game)
 	game->player.dir3d.x = 0;
 	game->player.dir3d.y = 0;
 	game->player.dir3d.z = 0;
+	game->move_speed = MOVE_SPEED;
 	game->key.w = 0;
 	game->key.a = 0;
 	game->key.s = 0;
@@ -23,6 +24,7 @@ void	init(t_data *game)
 	game->key.down = 0;
 	game->key.one = 0;
 	game->key.ctrl = 0;
+	game->key.shift = 0;
 	game->elem_n = 0;
 	game->map_index = -1;
 	game->map_h = 0;
