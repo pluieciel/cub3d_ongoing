@@ -2,7 +2,7 @@
 
 int handle_animation_state(t_data *game, struct s_animation *animation, __uint64_t delay)
 {
-    render_image(game, (t_image *)(*animation).frames->content);
+    render_image(game, (t_image *)(*animation).frames->content, 0, 0);
     if (game->time - game->animation_time > delay)
     {
         animation->frames = (*animation).frames->next;
@@ -22,7 +22,7 @@ void handle_crowbar_idle_state(t_data *game)
 {
     if (game->crowbar.equiped && !game->handgun.equiped)
     {
-        render_image(game, (t_image *)game->crowbar.attack.head->content);
+        render_image(game, (t_image *)game->crowbar.attack.head->content, 0, 0);
         collision(game, game->player.dir[0], game->player.dir[1], COLL_DIS);
         if (game->left_click && !game->coll_h && !game->coll_v)
             game->crowbar.state = CROWBAR_ATTACK;
@@ -39,7 +39,7 @@ void handle_handgun_idle_state(t_data *game)
 {
     if (game->handgun.equiped && !game->crowbar.equiped)
     {
-        render_image(game, (t_image *)game->handgun.shoot.head->content);
+        render_image(game, (t_image *)game->handgun.shoot.head->content, 0, 0);
         collision(game, game->player.dir[0], game->player.dir[1], COLL_DIS);
         if (game->left_click)
             game->handgun.state = HANDGUN_SHOOT;

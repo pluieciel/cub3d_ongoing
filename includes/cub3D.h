@@ -15,7 +15,7 @@
 #include <unistd.h>
 #include <pthread.h>
 
-#define ASPECT_RATIO (16.0 / 8.0)
+#define ASPECT_RATIO (16.0 / 9.0)
 #define WIN_W 1280
 #define WIN_H (WIN_W / ASPECT_RATIO)
 #define FPS 60
@@ -28,7 +28,7 @@
 #define MM_RANGE 8
 #define DIS_P_S (WIN_W / 2)
 #define RAYCAST_RANGE 20
-#define ELEM_N 7
+#define ELEM_N 8
 #define COLL_DIS 20
 #define OPEN_DIS 80
 #define MOVE_SPEED 4
@@ -36,12 +36,6 @@
 #define NUM_THREADS 8
 #define TRANSPARENT_COLOR 0xFF000000
 #define MOUSE_THRESHOLD 4
-
-typedef enum e_animation_type
-{
-	CROWBAR,
-	HANDGUN
-}	t_animation_type;
 
 typedef struct s_animation
 {
@@ -140,6 +134,7 @@ typedef struct s_data
 	int			map_index;
 	int			floor_color;
 	int			ceiling_color;
+	int			hud_color;
 	int			elem_n;
 	t_player	player;
 	t_key		key;
@@ -162,6 +157,7 @@ typedef struct s_data
 	t_image		img_wall_we;
 	t_image		img_floor;
 	t_image		img_door;
+	t_image		img_hud_health;
 	int			op_door;
 	t_door		*doors;
 	int 		coll_h;
@@ -214,6 +210,7 @@ void		raycast_3D(t_raycast *ray);
 void update_crowbar_state(t_data *game);
 void update_handgun_state(t_data *game);
 void	collision(t_data *game, float dir_x, float dir_y, int coll_dis);
-void render_image(t_data *game, t_image *img);
+void render_image(t_data *game, t_image *img, int x, int y);
 void init_crowbar(t_data *game);
 void init_handgun(t_data *game);
+void change_image_color(t_data *game, t_image *img);

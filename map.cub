@@ -10,6 +10,8 @@ EA ./textures/wall.xpm
 F ./textures/floor3.xpm
 C ./textures/sky4.xpm
 
+H 255,160,0
+
 
 
 

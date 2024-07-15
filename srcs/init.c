@@ -67,6 +67,10 @@ void	init(t_data *game)
 	game->img_door.h = 0;
 	game->img_door.ptr = NULL;
 	game->img_door.addr = NULL;
+	game->img_hud_health.w = 0;
+	game->img_hud_health.h = 0;
+	game->img_hud_health.ptr = NULL;
+	game->img_hud_health.addr = NULL;
 	game->animation_time = 0;
 	game->left_click = 0;
 }

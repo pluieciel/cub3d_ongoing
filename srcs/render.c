@@ -5,23 +5,56 @@ float	distance(float x1, float y1, float x2, float y2)
 	return (sqrt((x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2)));
 }
 
-void render_image(t_data *game, t_image *img)
+void change_image_color(t_data *game, t_image *img)
 {
     int i;
     int j;
     
     i = 0;
-    while (i < WIN_W)
+    while (i < img->w)
     {
         j = 0;
-        while (j < WIN_H)
+        while (j < img->h)
         {
-            if (i < img->w && j < img->h)
-            {
-                unsigned int t = ((unsigned int *)img->addr)[j * img->w + i];
-                if (t != TRANSPARENT_COLOR)
-                    ((unsigned int *)game->img.addr)[j * WIN_W + i] = t;
-            }
+            unsigned int t = ((unsigned int *)img->addr)[j * img->w + i];
+            if (t != TRANSPARENT_COLOR)
+			{
+				unsigned char gray = t & 0xFF;
+              
+                unsigned char target_r = (game->hud_color >> 16) & 0xFF;
+                unsigned char target_g = (game->hud_color >> 8) & 0xFF;
+                unsigned char target_b = game->hud_color & 0xFF;
+                unsigned char new_r = (target_r * gray) / 255;
+                unsigned char new_g = (target_g * gray) / 255;
+                unsigned char new_b = (target_b * gray) / 255;
+                unsigned int new_t = (new_r << 16) | (new_g << 8) | new_b;
+                ((unsigned int *)img->addr)[j * img->w + i] = new_t;
+			}
+            j++;
+        }
+        i++;
+    }
+}
+
+void render_image(t_data *game, t_image *img, int x, int y)
+{
+    int i;
+    int j;
+	int dest_x;
+    int dest_y;
+
+    i = 0;
+    while (i < WIN_W && i < img->w)
+    {
+        j = 0;
+        while (j < WIN_H && j < img->h)
+        {
+            unsigned int t = ((unsigned int *)img->addr)[j * img->w + i];
+           	dest_x = i + x;
+            dest_y = j + y;
+
+            if (dest_x >= 0 && dest_y >= 0 && t != TRANSPARENT_COLOR)
+                ((unsigned int *)game->img.addr)[dest_y * WIN_W + dest_x] = t;
             j++;
         }
         i++;
@@ -555,6 +588,7 @@ int render(t_data *game)
         draw_minimap(game);
 		update_crowbar_state(game);
 		update_handgun_state(game);
+		render_image(game, &game->img_hud_health, 20, WIN_H - game->img_hud_health.h - 20);
         mlx_put_image_to_window(game->mlx_ptr, game->win_ptr, game->img.ptr, 0, 0);
     }
     return (0);

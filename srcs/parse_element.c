@@ -18,8 +18,6 @@ static void	load_texture(t_data *game, t_image *img, char *line)
 	img->addr = mlx_get_data_addr(img->ptr, &img->bpp, &img->line_len, &img->endian);
 	game->elem_n++;
 }
-// V1: only color
-/*
 static int	get_color(t_data *game, char *line)
 {
 	char	**line_split;
@@ -46,7 +44,7 @@ static int	get_color(t_data *game, char *line)
 	gc_free_ptr(&game->gc, line_trim);
 	gc_free_ptr(&game->gc, line_split);
 	return (color);
-}*/
+}
 
 static void	set_elements(t_data *game, char *line)
 {
@@ -73,6 +71,8 @@ static void	set_elements(t_data *game, char *line)
 		load_texture(game, &game->img_floor, line_split[1]);
 	else if (ft_strcmp(line_split[0], "C") == 0 && line_split[1])
 		load_texture(game, &game->img_sky, line_split[1]);
+	else if (ft_strcmp(line_split[0], "H") == 0 && line_split[1])
+		game->hud_color = get_color(game, line_split[1]);
 	gc_free_ptr(&game->gc, line_split);
 }
 
