@@ -173,6 +173,7 @@ typedef struct s_data
 	t_crowbar crowbar;
 	t_handgun handgun;
 	__uint64_t animation_time;
+	int test;
 }				t_data;
 
 typedef struct s_raycast

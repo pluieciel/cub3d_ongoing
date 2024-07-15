@@ -73,6 +73,7 @@ void	init(t_data *game)
 	game->img_hud_health.addr = NULL;
 	game->animation_time = 0;
 	game->left_click = 0;
+	game->test = 0;
 }
 
 void init_animation(t_data *game, struct s_animation *animation, char *state, int frames)
@@ -126,7 +127,7 @@ void init_handgun(t_data *game)
 	game->handgun.shoot.head = NULL;
 	game->handgun.holster.frames = NULL;
 	game->handgun.holster.head = NULL;
-	game->handgun.state = HANDGUN_IDLE;
+	game->handgun.state = HANDGUN_DRAW;
 	game->handgun.equiped = 0;
 	init_animation(game, &game->handgun.draw, "handgun/draw", 15);
 	init_animation(game, &game->handgun.shoot, "handgun/shoot", 14);
