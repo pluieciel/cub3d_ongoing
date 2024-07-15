@@ -84,14 +84,14 @@ void	draw_minimap(t_data *game)
 				t = ((unsigned int *)game->img.addr)[j * WIN_W + i];
 				if (MM_POS_Y > j && atan(1.0 * abs(i - MM_POS_X) / (MM_POS_Y - j)) < angle)
 					((unsigned int *)game->img.addr)[j * WIN_W + i]
-        				= ((((((t >> 16) & 0xff) + 0x00) / 2) & 0xff) << 16)
-        				+ ((((((t >> 8) & 0xff) + 0x00) / 2) & 0xff) << 8)
-        				+ (((((t) & 0xff) + 0x00) / 2) & 0xff);
+        				= ((((((t >> 16) & 0xff) + ((game->hud_color >> 16) & 0xff)) / 2) & 0xff) << 16)
+        				+ ((((((t >> 8) & 0xff) + ((game->hud_color >> 8) & 0xff)) / 2) & 0xff) << 8)
+        				+ (((((t) & 0xff) + ((game->hud_color) & 0xff)) / 2) & 0xff);
 				else
 					((unsigned int *)game->img.addr)[j * WIN_W + i]
-        				= ((((((t >> 16) & 0xff) + 0x22) / 2) & 0xff) << 16)
-        				+ ((((((t >> 8) & 0xff) + 0x22) / 2) & 0xff) << 8)
-        				+ (((((t) & 0xff) + 0x22) / 2) & 0xff);
+        				= ((((((t >> 16) & 0xff) * 2 + ((game->hud_color >> 16) & 0xff)) / 3) & 0xff) << 16)
+        				+ ((((((t >> 8) & 0xff) * 2 + ((game->hud_color >> 8) & 0xff)) / 3) & 0xff) << 8)
+        				+ (((((t) & 0xff) * 2 + ((game->hud_color) & 0xff)) / 3) & 0xff);
 			}
 			j++;
 		}
@@ -119,9 +119,9 @@ void	draw_minimap(t_data *game)
 							t = ((unsigned int *)game->img.addr)[newi * WIN_W + newj];
 							if (game->map[y][x] == 1)
 								((unsigned int *)game->img.addr)[newi * WIN_W + newj]
-								= ((((((t >> 16) & 0xff) * 2 + 0x88) / 3) & 0xff) << 16)
-									+ ((((((t >> 8) & 0xff) * 2 + 0x88) / 3) & 0xff) << 8)
-									+ (((((t) & 0xff) * 2 + 0x88) / 3) & 0xff);
+								= ((((((t >> 16) & 0xff) * 2 + ((game->hud_color >> 16) & 0xff)) / 3) & 0xff) * 6 / 10 << 16)
+									+ ((((((t >> 8) & 0xff) * 2 + ((game->hud_color >> 8) & 0xff)) / 3) & 0xff) * 6 / 10 << 8)
+									+ (((((t) & 0xff) * 2 + (game->hud_color & 0xff)) / 3) & 0xff) * 6 / 10;
 							else if (game->map[y][x] == 3)
 								((unsigned int *)game->img.addr)[newi * WIN_W + newj]
 								= ((((((t >> 16) & 0xff) * 2 + 0x00) / 3) & 0xff) << 16)
