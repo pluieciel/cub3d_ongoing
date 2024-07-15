@@ -113,7 +113,7 @@ void init_crowbar(t_data *game)
 	game->crowbar.holster.head = NULL;
 	game->crowbar.state = CROWBAR_DRAW;
 	game->crowbar.equiped = 0;
-	game->crowbar.completed = 1;
+	game->crowbar.completed = 0;
 	init_animation(game, &game->crowbar.draw, "crowbar/draw", 12);
 	init_animation(game, &game->crowbar.attack, "crowbar/attack", 13);
 	init_animation(game, &game->crowbar.attack_hit, "crowbar/attack_hit", 13);
@@ -130,7 +130,7 @@ void init_handgun(t_data *game)
 	game->handgun.holster.head = NULL;
 	game->handgun.state = HANDGUN_IDLE;
 	game->handgun.equiped = 0;
-	game->handgun.completed = 1;
+	game->handgun.completed = 0;
 	init_animation(game, &game->handgun.draw, "handgun/draw", 15);
 	init_animation(game, &game->handgun.shoot, "handgun/shoot", 14);
 	init_animation(game, &game->handgun.holster, "handgun/holster", 15);

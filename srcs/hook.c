@@ -118,7 +118,11 @@ int handle_mouseclick(int button, int x, int y, t_data *game)
 	(void)x;
 	(void)y;
     if (button == Button1)
-        game->left_click = 1;
+		game->left_click = 1;
+	else if (button == Button4 && game->dis_p_s < 1500)
+		game->dis_p_s += 10;
+	else if (button == Button5 && game->dis_p_s > 400)
+		game->dis_p_s -= 10;
     return (0);
 }
 

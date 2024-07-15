@@ -28,7 +28,7 @@ void handle_crowbar_idle_state(t_data *game)
             game->crowbar.state = CROWBAR_ATTACK;
         else if (game->left_click && (game->coll_h || game->coll_v))
             game->crowbar.state = CROWBAR_ATTACK_HIT;
-        else if (game->key.one || game->key.two)
+        else if ((game->key.one || game->key.two) && game->handgun.state == HANDGUN_IDLE)
         {
             game->crowbar.state = CROWBAR_HOLSTER;
             game->crowbar.completed = 0;
@@ -39,7 +39,7 @@ void handle_crowbar_idle_state(t_data *game)
             }
         }
     }
-    else if (game->key.one)
+    else if (game->key.one && game->handgun.state == HANDGUN_IDLE)
         game->crowbar.state = CROWBAR_DRAW;
 }
 
@@ -51,7 +51,7 @@ void handle_handgun_idle_state(t_data *game)
         collision(game, game->player.dir[0], game->player.dir[1], COLL_DIS);
         if (game->left_click)
             game->handgun.state = HANDGUN_SHOOT;
-        else if (game->key.two || game->key.one)
+        else if ((game->key.two || game->key.one) && game->crowbar.state == CROWBAR_IDLE)
         {
             game->handgun.state = HANDGUN_HOLSTER;
             game->handgun.completed = 0;
@@ -59,7 +59,7 @@ void handle_handgun_idle_state(t_data *game)
                 game->crowbar.state = CROWBAR_DRAW;
         }
     }
-    else if (game->key.two)
+    else if (game->key.two && game->crowbar.state == CROWBAR_IDLE)
         game->handgun.state = HANDGUN_DRAW;
 }
 
