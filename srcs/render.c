@@ -586,9 +586,9 @@ int render(t_data *game)
         move_player(game);
         draw_walls_3D(game);
         draw_minimap(game);
-		if (game->test == 0)
+		if (game->handgun.completed)
 			update_crowbar_state(game);
-		else
+		else if (game->crowbar.completed)
 			update_handgun_state(game);
 		render_image(game, &game->img_hud_health, 20, WIN_H - game->img_hud_health.h - 20);
 		render_image(game, &game->img_hud_one, 20 + game->img_hud_health.w + 10, WIN_H - game->img_hud_one.h - 20);

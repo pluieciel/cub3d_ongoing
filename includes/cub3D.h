@@ -58,6 +58,7 @@ typedef struct s_crowbar
 	t_animation	attack_hit;
 	t_animation	holster;
 	int equiped;
+	int completed;
 }	t_crowbar;
 
 typedef struct s_handgun
@@ -73,6 +74,7 @@ typedef struct s_handgun
 	t_animation shoot;
 	t_animation	holster;
 	int equiped;
+	int completed;
 }	t_handgun;
 
 typedef struct s_point3D

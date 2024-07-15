@@ -31,6 +31,7 @@ void handle_crowbar_idle_state(t_data *game)
         else if (game->key.one || game->key.two)
         {
             game->crowbar.state = CROWBAR_HOLSTER;
+            game->crowbar.completed = 0;
             if (game->key.two)
             {
                 game->handgun.state = HANDGUN_DRAW;
@@ -53,11 +54,9 @@ void handle_handgun_idle_state(t_data *game)
         else if (game->key.two || game->key.one)
         {
             game->handgun.state = HANDGUN_HOLSTER;
+            game->handgun.completed = 0;
             if (game->key.one)
-            {
                 game->crowbar.state = CROWBAR_DRAW;
-                game->test = 0;
-            }
         }
     }
     else if (game->key.two)
@@ -66,56 +65,48 @@ void handle_handgun_idle_state(t_data *game)
 
 void update_crowbar_state(t_data *game)
 {
-    int completed;
-
-    completed = 0;
+    game->crowbar.completed  = 0;
     if (game->crowbar.state == CROWBAR_IDLE)
         handle_crowbar_idle_state(game);
     else if (game->crowbar.state == CROWBAR_DRAW)
     {
-        completed = handle_animation_state(game, &game->crowbar.draw, FPS);
-        if (completed)
+        game->crowbar.completed = handle_animation_state(game, &game->crowbar.draw, FPS);
+        if (game->crowbar.completed)
             game->crowbar.equiped = 1;
     }
     else if (game->crowbar.state == CROWBAR_ATTACK)
-        completed = handle_animation_state(game, &game->crowbar.attack, FPS);
+        game->crowbar.completed = handle_animation_state(game, &game->crowbar.attack, FPS);
     else if (game->crowbar.state == CROWBAR_ATTACK_HIT)
-        completed = handle_animation_state(game, &game->crowbar.attack_hit, FPS);
+        game->crowbar.completed = handle_animation_state(game, &game->crowbar.attack_hit, FPS);
     else if (game->crowbar.state == CROWBAR_HOLSTER)
     {
-        completed = handle_animation_state(game, &game->crowbar.holster, FPS);
-        if (completed)
+        game->crowbar.completed = handle_animation_state(game, &game->crowbar.holster, FPS);
+        if (game->crowbar.completed)
             game->crowbar.equiped = 0;
-        if (completed && game->key.two)
-            game->handgun.state = HANDGUN_DRAW;
     }
-    if (completed)
+    if (game->crowbar.completed)
         game->crowbar.state = CROWBAR_IDLE;
 }
 
 void update_handgun_state(t_data *game)
 {
-    int completed;
-
-    completed = 0;
+    game->handgun.completed = 0;
     if (game->handgun.state == HANDGUN_IDLE)
         handle_handgun_idle_state(game);
     else if (game->handgun.state == HANDGUN_DRAW)
     {
-        completed = handle_animation_state(game, &game->handgun.draw, FPS);
-        if (completed)
+        game->handgun.completed  = handle_animation_state(game, &game->handgun.draw, FPS);
+        if (game->handgun.completed)
             game->handgun.equiped = 1;
     }
     else if (game->handgun.state == HANDGUN_SHOOT)
-        completed = handle_animation_state(game, &game->handgun.shoot, FPS / 2);
+        game->handgun.completed = handle_animation_state(game, &game->handgun.shoot, FPS / 2);
     else if (game->handgun.state == HANDGUN_HOLSTER)
     {
-        completed = handle_animation_state(game, &game->handgun.holster, FPS);
-        if (completed)
+        game->handgun.completed = handle_animation_state(game, &game->handgun.holster, FPS);
+        if (game->handgun.completed)
             game->handgun.equiped = 0;
-        if (completed && game->key.one)
-            game->crowbar.state = CROWBAR_DRAW;
     }
-    if (completed)
+    if (game->handgun.completed)
         game->handgun.state = HANDGUN_IDLE;
 }
