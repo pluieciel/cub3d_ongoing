@@ -23,7 +23,7 @@
 #define ROT_SPEED 0.1
 #define MM_FACTOR 4
 #define MM_RADIUS 100
-#define MM_POS_X (MM_RADIUS + 20)
+#define MM_POS_X (WIN_W - MM_RADIUS - 20)
 #define MM_POS_Y (WIN_H - MM_RADIUS - 20)
 #define MM_RANGE 8
 #define DIS_P_S (WIN_W / 2)
@@ -158,6 +158,11 @@ typedef struct s_data
 	t_image		img_floor;
 	t_image		img_door;
 	t_image		img_hud_health;
+	t_image		img_hud_zero;
+	t_image		img_hud_one;
+	t_image		img_hud_divider;
+	t_image		img_hud_full_suit;
+	t_image		img_hud_flash_full;
 	int			op_door;
 	t_door		*doors;
 	int 		coll_h;

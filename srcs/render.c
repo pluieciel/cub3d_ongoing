@@ -53,7 +53,7 @@ void render_image(t_data *game, t_image *img, int x, int y)
            	dest_x = i + x;
             dest_y = j + y;
 
-            if (dest_x >= 0 && dest_y >= 0 && t != TRANSPARENT_COLOR)
+             if (dest_x >= 0 && dest_x < WIN_W && dest_y >= 0 && dest_y < WIN_H && t != TRANSPARENT_COLOR)
                 ((unsigned int *)game->img.addr)[dest_y * WIN_W + dest_x] = t;
             j++;
         }
@@ -589,7 +589,16 @@ int render(t_data *game)
 		update_crowbar_state(game);
 		update_handgun_state(game);
 		render_image(game, &game->img_hud_health, 20, WIN_H - game->img_hud_health.h - 20);
-        mlx_put_image_to_window(game->mlx_ptr, game->win_ptr, game->img.ptr, 0, 0);
+		render_image(game, &game->img_hud_one, 20 + game->img_hud_health.w + 10, WIN_H - game->img_hud_one.h - 20);
+		render_image(game, &game->img_hud_zero, 20 + game->img_hud_health.w + 20 + game->img_hud_one.w, WIN_H - game->img_hud_zero.h - 20);
+		render_image(game, &game->img_hud_zero, 20 + game->img_hud_health.w + 25 + game->img_hud_one.w + game->img_hud_zero.w, WIN_H - game->img_hud_zero.h - 20);
+		render_image(game, &game->img_hud_divider, 40 + game->img_hud_health.w + 25 + game->img_hud_one.w + game->img_hud_zero.w + game->img_hud_zero.w, WIN_H - game->img_hud_zero.h - 20);
+		render_image(game, &game->img_hud_full_suit, 60 + game->img_hud_health.w + 25 + game->img_hud_one.w + game->img_hud_zero.w + game->img_hud_zero.w, WIN_H - game->img_hud_zero.h - 25);
+        render_image(game, &game->img_hud_one, 190, WIN_H - game->img_hud_one.h - 20);
+		render_image(game, &game->img_hud_zero, 208, WIN_H - game->img_hud_zero.h - 20);
+		render_image(game, &game->img_hud_zero, 230, WIN_H - game->img_hud_zero.h - 20);
+		render_image(game, &game->img_hud_flash_full, WIN_W - game->img_hud_flash_full.w - 20, 20);
+		mlx_put_image_to_window(game->mlx_ptr, game->win_ptr, game->img.ptr, 0, 0);
     }
     return (0);
 }
