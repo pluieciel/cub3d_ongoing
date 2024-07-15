@@ -7,13 +7,14 @@ void	init(t_data *game)
 	game->mlx_ptr = NULL;
 	game->player.pos[0] = 0;
 	game->player.pos[1] = 0;
-	game->player.pos[2] = 0;
+	game->player.z = 0;
 	game->player.dir[0] = 0;
 	game->player.dir[1] = 0;
 	game->player.dir3d.x = 0;
 	game->player.dir3d.y = 0;
 	game->player.dir3d.z = 0;
 	game->move_speed = MOVE_SPEED;
+	game->player.v_up = 0;
 	game->key.w = 0;
 	game->key.a = 0;
 	game->key.s = 0;
@@ -25,6 +26,7 @@ void	init(t_data *game)
 	game->key.one = 0;
 	game->key.ctrl = 0;
 	game->key.shift = 0;
+	game->key.space = 0;
 	game->elem_n = 0;
 	game->map_index = -1;
 	game->map_h = 0;

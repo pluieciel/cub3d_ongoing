@@ -148,6 +148,25 @@ void	collision(t_data *game, float dir_x, float dir_y, int coll_dis)
 	}
 }
 
+void	do_jump(t_data *game)
+{
+	if (game->player.z == 0 && game->player.v_up == 0)
+	{
+		game->player.v_up = 280.0;
+	}
+	else if (game->player.z < 0)
+	{
+		game->player.v_up = 0;
+		game->player.z = 0;
+		game->key.space = 0;
+	}
+	else
+	{
+		game->player.z += game->player.v_up * game->timestep / 1000;
+		game->player.v_up -= 1500.0 * game->timestep / 1000;
+	}
+}
+
 void	move_player(t_data *game)
 {
 	float	oldDirX;
@@ -263,14 +282,16 @@ void	move_player(t_data *game)
 			ROT_SPEED);
 		get_vector_down(game, &game->player.v_right, &game->player.v_down);
 	}
-	if (game->key.ctrl)
-		game->player.pos[2] = -20;
-	else
-		game->player.pos[2] = 0;
+	if (!game->key.space && game->key.ctrl)
+		game->player.z = -20;
+	else if (!game->key.space && !game->key.ctrl)
+		game->player.z = 0;
 	if (game->key.shift)
 		game->move_speed = MOVE_SPEED * 2;
-	else
+	else if (!game->key.shift)
 		game->move_speed = MOVE_SPEED;
+	if (game->key.space)
+		do_jump(game);
 }
 
 void	do_doors_h(t_raycast *ray, int col, int row)
@@ -291,7 +312,7 @@ void	do_doors_h(t_raycast *ray, int col, int row)
 		else
 			c = round((1 - fmod(ray->doors_h[ray->num_doors_h][0], B_SIZE)
 						/ B_SIZE) * ray->g->img_door.w);
-		r = round((1 - fmod(ray->doors_h[ray->num_doors_h][2] + 32 + ray->g->player.pos[2], B_SIZE)
+		r = round((1 - fmod(ray->doors_h[ray->num_doors_h][2] + 32 + ray->g->player.z, B_SIZE)
 					/ B_SIZE) * ray->g->img_door.h);
 		offset = (ray->g->map[(int)ray->doors_h[ray->num_doors_h][6]][(int)ray->doors_h[ray->num_doors_h][5]]
 				- 2) * ray->g->img_door.w;
@@ -341,7 +362,7 @@ void	do_doors_v(t_raycast *ray, int col, int row)
 		else
 			c = round((1 - fmod(ray->doors_v[ray->num_doors_v][1], B_SIZE)
 						/ B_SIZE) * ray->g->img_door.w);
-		r = round((1 - fmod(ray->doors_v[ray->num_doors_v][2] + 32 + ray->g->player.pos[2], B_SIZE)
+		r = round((1 - fmod(ray->doors_v[ray->num_doors_v][2] + 32 + ray->g->player.z, B_SIZE)
 					/ B_SIZE) * ray->g->img_door.h);
 		offset = (ray->g->map[(int)ray->doors_v[ray->num_doors_v][6]][(int)ray->doors_v[ray->num_doors_v][5]]
 				- 2) * ray->g->img_door.w;
@@ -383,8 +404,8 @@ void	draw_pixel(t_raycast *ray, int col, int row)
 	unsigned int	t;
 
 	ray->nearest_wall_dis = RAYCAST_RANGE * B_SIZE;
-	if (ray->res_rc_3d[4] != 0 && ray->res_rc_3d[2] + ray->g->player.pos[2] >= -32
-		&& ray->res_rc_3d[2] + ray->g->player.pos[2] <= 32)
+	if (ray->res_rc_3d[4] != 0 && ray->res_rc_3d[2] + ray->g->player.z >= -32
+		&& ray->res_rc_3d[2] + ray->g->player.z <= 32)
 	{
 		shadow = 1.0 - (fmin(ray->res_rc_3d[3], 8 * B_SIZE) / (8 * B_SIZE));
 		if (ray->res_rc_3d == ray->h)
@@ -393,7 +414,7 @@ void	draw_pixel(t_raycast *ray, int col, int row)
 			{
 				c = round(fmod(ray->res_rc_3d[0], B_SIZE) / B_SIZE
 						* ray->g->img_wall_no.w);
-				r = round((1 - fmod(ray->res_rc_3d[2] + ray->g->player.pos[2] + 32, B_SIZE) / B_SIZE)
+				r = round((1 - fmod(ray->res_rc_3d[2] + ray->g->player.z + 32, B_SIZE) / B_SIZE)
 						* ray->g->img_wall_no.h);
 				t = ((unsigned int *)ray->g->img_wall_no.addr)[(int)r
 					* ray->g->img_wall_no.w + (int)c];
@@ -402,7 +423,7 @@ void	draw_pixel(t_raycast *ray, int col, int row)
 			{
 				c = round((1 - fmod(ray->res_rc_3d[0], B_SIZE) / B_SIZE)
 						* ray->g->img_wall_so.w);
-				r = round((1 - fmod(ray->res_rc_3d[2] + ray->g->player.pos[2] + 32, B_SIZE) / B_SIZE)
+				r = round((1 - fmod(ray->res_rc_3d[2] + ray->g->player.z + 32, B_SIZE) / B_SIZE)
 						* ray->g->img_wall_so.h);
 				t = ((unsigned int *)ray->g->img_wall_so.addr)[(int)r
 					* ray->g->img_wall_so.w + (int)c];
@@ -419,7 +440,7 @@ void	draw_pixel(t_raycast *ray, int col, int row)
 			{
 				c = round(fmod(ray->res_rc_3d[1], B_SIZE) / B_SIZE
 						* ray->g->img_wall_ea.w);
-				r = round((1 - fmod(ray->res_rc_3d[2] + ray->g->player.pos[2] + 32, B_SIZE) / B_SIZE)
+				r = round((1 - fmod(ray->res_rc_3d[2] + ray->g->player.z + 32, B_SIZE) / B_SIZE)
 						* ray->g->img_wall_ea.h);
 				t = ((unsigned int *)ray->g->img_wall_ea.addr)[(int)r
 					* ray->g->img_wall_ea.w + (int)c];
@@ -428,7 +449,7 @@ void	draw_pixel(t_raycast *ray, int col, int row)
 			{
 				c = round((1 - fmod(ray->res_rc_3d[1], B_SIZE) / B_SIZE)
 						* ray->g->img_wall_we.w);
-				r = round((1 - fmod(ray->res_rc_3d[2] + ray->g->player.pos[2] + 32, B_SIZE) / B_SIZE)
+				r = round((1 - fmod(ray->res_rc_3d[2] + ray->g->player.z + 32, B_SIZE) / B_SIZE)
 						* ray->g->img_wall_we.h);
 				t = ((unsigned int *)ray->g->img_wall_we.addr)[(int)r
 					* ray->g->img_wall_we.w + (int)c];
@@ -441,13 +462,13 @@ void	draw_pixel(t_raycast *ray, int col, int row)
 		}
 		ray->nearest_wall_dis = ray->res_rc_3d[3];
 	}
-	else if (ray->res_rc_3d[2] + ray->g->player.pos[2]< -32)
+	else if (ray->res_rc_3d[2] + ray->g->player.z < -32)
 	{
 		temp_x = ray->res_rc_3d[0] - ray->g->player.pos[0];
 		temp_y = ray->res_rc_3d[1] - ray->g->player.pos[1];
-		ray->res_rc_3d[0] = temp_x * (-32 - ray->g->player.pos[2]) / ray->res_rc_3d[2]
+		ray->res_rc_3d[0] = temp_x * (-32 - ray->g->player.z) / ray->res_rc_3d[2]
 			+ ray->g->player.pos[0];
-		ray->res_rc_3d[1] = temp_y * (-32 - ray->g->player.pos[2]) / ray->res_rc_3d[2]
+		ray->res_rc_3d[1] = temp_y * (-32 - ray->g->player.z) / ray->res_rc_3d[2]
 			+ ray->g->player.pos[1];
 		c = fmod(ray->res_rc_3d[0], B_SIZE) / B_SIZE;
 		c += (c < 0);

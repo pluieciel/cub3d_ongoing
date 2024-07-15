@@ -2,6 +2,11 @@
 
 void	get_init_pos(t_data *game, char dir, int i, int j)
 {
+	float	oldDirX;
+	float	oldDirY;
+	float	oldDirX_3d;
+	float	oldDirY_3d;
+
 	if (game->player.dir[0] != 0 || game->player.dir[1] != 0)
 		exit(gc_free(game->gc, "Error: multiple player position\n", 2));
 	game->map[i][j] = 0;
@@ -27,8 +32,23 @@ void	get_init_pos(t_data *game, char dir, int i, int j)
 		game->player.dir[0] = -1;
 		game->player.dir3d.x = -1;
 	}
+	oldDirX = game->player.dir[0];
+	oldDirY = game->player.dir[1];
+	oldDirX_3d = game->player.dir3d.x;
+	oldDirY_3d = game->player.dir3d.y;
+	game->player.dir[0] = oldDirX * cos(-ROT_SPEED) - oldDirY
+		* sin(-ROT_SPEED);
+	game->player.dir[1] = oldDirX * sin(-ROT_SPEED) + oldDirY
+		* cos(-ROT_SPEED);
+	game->player.dir3d.x = oldDirX_3d * cos(-ROT_SPEED) - oldDirY_3d
+		* sin(-ROT_SPEED);
+	game->player.dir3d.y = oldDirX_3d * sin(-ROT_SPEED) + oldDirY_3d
+		* cos(-ROT_SPEED);
 	get_vector_right(game, &game->player.v_right);
 	get_vector_down(game, &game->player.v_right, &game->player.v_down);
+	//printv(game->player.dir3d);
+	//printv(game->player.v_right);
+	//printv(game->player.v_down);
 }
 
 void	parse_map(t_data *game, char *filename)

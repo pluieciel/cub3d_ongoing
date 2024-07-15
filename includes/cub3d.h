@@ -75,8 +75,10 @@ typedef struct s_point3d
 
 typedef struct s_player
 {
-	int			pos[3];
+	int			pos[2];
+	float		z;
 	float		dir[2];
+	float		v_up;
 	t_point3d	dir3d;
 	t_point3d	v_right;
 	t_point3d	v_down;
@@ -95,6 +97,7 @@ typedef struct s_key
 	int	one;
 	int	ctrl;
 	int	shift;
+	int	space;
 }	t_key;
 
 typedef struct s_image
