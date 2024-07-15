@@ -20,7 +20,7 @@ float	raycast_h_3d2(t_raycast *r)
 	range = 0;
 	while (range < RAYCAST_RANGE
 		&& r->h[0] / B_SIZE > 0 && r->h[0] / B_SIZE < r->g->map_w
-		&& r->h[2] <= B_SIZE / 2 && r->h[2] >= -B_SIZE / 2)
+		&& r->h[2] + r->g->player.pos[2] <= B_SIZE / 2 && r->h[2] + r->g->player.pos[2] >= -B_SIZE / 2)
 	{
 		r->h[5] = (int)r->h[0] / B_SIZE;
 		r->h[6] = (int)r->h[1] / B_SIZE - (r->xyz[1] < 0);

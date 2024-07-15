@@ -52,6 +52,8 @@ int	handle_keypress(int key, t_data *game)
 		game->op_door = 1;
 	else if (key == XK_1)
 		game->key.one = 1;
+	else if (key == XK_Control_L)
+		game->key.ctrl = 1;
 	return (0);
 }
 
@@ -75,6 +77,8 @@ int	handle_keyrelease(int key, t_data *game)
 		game->key.down = 0;
 	else if (key == XK_1)
 		game->key.one = 0;
+	else if (key == XK_Control_L)
+		game->key.ctrl = 0;
 	return (0);
 }
 

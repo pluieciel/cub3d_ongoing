@@ -71,14 +71,15 @@ typedef struct s_point3d
 	float	x;
 	float	y;
 	float	z;
-	float	angle;
 }	t_point3d;
 
 typedef struct s_player
 {
-	int			pos[2];
+	int			pos[3];
 	float		dir[2];
 	t_point3d	dir3d;
+	t_point3d	v_right;
+	t_point3d	v_down;
 }	t_player;
 
 typedef struct s_key
@@ -92,6 +93,7 @@ typedef struct s_key
 	int	up;
 	int	down;
 	int	one;
+	int	ctrl;
 }	t_key;
 
 typedef struct s_image
@@ -129,6 +131,7 @@ typedef struct s_data
 	t_key		key;
 	t_gc		*gc;
 	__uint64_t	time;
+	__uint64_t	timestep;
 	t_image		img;
 	int			dis_p_s;
 	int			left_click;
@@ -199,3 +202,7 @@ void		update_crowbar_state(t_data *game);
 void		collision(t_data *game, float dir_x, float dir_y, int coll_dis);
 void		render_image(t_data *game, t_image *img);
 void		init_crowbar(t_data *game);
+void		get_vector_right(t_data *g, t_point3d *v_right);
+void		get_vector_down(t_data *g, t_point3d *v_right, t_point3d *v_down);
+void		rotate_u(t_point3d *todo, t_point3d u, t_point3d v, float angle);
+void		printv(t_point3d p);

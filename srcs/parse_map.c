@@ -11,7 +11,6 @@ void	get_init_pos(t_data *game, char dir, int i, int j)
 	{
 		game->player.dir[1] = -1;
 		game->player.dir3d.y = -1;
-		game->player.dir3d.angle = -M_PI / 2;
 	}
 	else if (dir == 'E')
 	{
@@ -22,14 +21,14 @@ void	get_init_pos(t_data *game, char dir, int i, int j)
 	{
 		game->player.dir[1] = 1;
 		game->player.dir3d.y = 1;
-		game->player.dir3d.angle = M_PI / 2;
 	}
 	else if (dir == 'W')
 	{
 		game->player.dir[0] = -1;
 		game->player.dir3d.x = -1;
-		game->player.dir3d.angle = M_PI;
 	}
+	get_vector_right(game, &game->player.v_right);
+	get_vector_down(game, &game->player.v_right, &game->player.v_down);
 }
 
 void	parse_map(t_data *game, char *filename)
