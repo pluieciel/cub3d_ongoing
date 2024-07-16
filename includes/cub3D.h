@@ -51,7 +51,8 @@ typedef struct s_crowbar
 		CROWBAR_DRAW,
 		CROWBAR_ATTACK,
 		CROWBAR_ATTACK_HIT,
-		CROWBAR_HOLSTER
+		CROWBAR_HOLSTER,
+		CROWBAR_NONE
 	}	state;
 	t_animation draw;
 	t_animation attack;
@@ -68,7 +69,8 @@ typedef struct s_handgun
 		HANDGUN_IDLE,
 		HANDGUN_DRAW,
 		HANDGUN_SHOOT,
-		HANDGUN_HOLSTER
+		HANDGUN_HOLSTER,
+		HANDGUN_NONE
 	}	state;
 	t_animation draw;
 	t_animation shoot;
@@ -175,7 +177,6 @@ typedef struct s_data
 	t_crowbar crowbar;
 	t_handgun handgun;
 	__uint64_t animation_time;
-	int test;
 }				t_data;
 
 typedef struct s_raycast
