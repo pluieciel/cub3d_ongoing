@@ -2,6 +2,7 @@
 
 void	destroy_imgs(t_data *game)
 {
+	// TODO: destroy images
 	mlx_destroy_image(game->mlx_ptr, game->img_sky.ptr);
 	mlx_destroy_image(game->mlx_ptr, game->img_wall_no.ptr);
 	mlx_destroy_image(game->mlx_ptr, game->img_wall_so.ptr);

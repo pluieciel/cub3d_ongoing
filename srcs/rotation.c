@@ -40,9 +40,3 @@ void	rotate_u(t_point3d *todo, t_point3d u, t_point3d v, float angle)
 	todo->y /= len;
 	todo->z /= len;
 }
-
-void	printv(t_point3d p)
-{
-	printf("x: %f, y: %f, z: %f, len: %f\n", p.x, p.y, p.z, sqrt(p.x * p.x + p.y
-			* p.y + p.z * p.z));
-}

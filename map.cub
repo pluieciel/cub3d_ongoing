@@ -4,7 +4,7 @@ WE ./resources/textures/wall2.xpm
 EA ./resources/textures/wall2.xpm
 
 D ./resources/textures/door1.xpm
-F ./resources/textures/floor2.xpm
+F ./resources/textures/floor4.xpm
 C ./resources/textures/sky1.xpm
 
 H 255,160,0
