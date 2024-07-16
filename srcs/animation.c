@@ -7,14 +7,13 @@ int handle_animation_state(t_data *game, struct s_animation *animation, __uint64
     {
         animation->frames = (*animation).frames->next;
         game->animation_time = game->time;
+        if (animation->frames == animation->head)
+        {
+            game->left_click = 0;
+            return 1;
+        }
     }
-    if (animation->frames == animation->head)
-    {
-
-        game->left_click = 0;
-        return 1;
-    }
-    return 0;
+    return 0; 
 }
 
 void handle_crowbar_idle_state(t_data *game)
@@ -79,10 +78,12 @@ void update_crowbar_state(t_data *game)
     }
     if (game->crowbar.completed)
     {
-         if (!game->key.two)
+        if (game->crowbar.state != CROWBAR_NONE)
+        {
             game->crowbar.state = CROWBAR_IDLE;
-        game->key.one = 0;
-        game->key.two = 0;
+            game->key.two = 0;
+            game->key.one = 0;
+        }
     }
 }
 
@@ -114,9 +115,11 @@ void update_handgun_state(t_data *game)
     }
     if (game->handgun.completed)
     {
-        if (!game->key.one)
+        if (game->handgun.state != HANDGUN_NONE)
+        {
             game->handgun.state = HANDGUN_IDLE;
-        game->key.one = 0;
-        game->key.two = 0;
+            game->key.two = 0;
+            game->key.one = 0;
+        }
     }
 }

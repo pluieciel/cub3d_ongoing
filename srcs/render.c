@@ -586,7 +586,6 @@ int render(t_data *game)
         move_player(game);
         draw_walls_3D(game);
         draw_minimap(game);
-		printf("crowbar: %d, handgun: %d\n", game->crowbar.state, game->handgun.state);
 		if (game->crowbar.state != CROWBAR_NONE)
 			update_crowbar_state(game);
 		else if (game->handgun.state != HANDGUN_NONE)
