@@ -1,11 +1,11 @@
-NO ./resources/wall1.xpm
-SO ./resources/wall1.xpm
-WE ./resources/wall1.xpm
-EA ./resources/wall1.xpm
+NO ./resources/textures/wall2.xpm
+SO ./resources/textures/wall2.xpm
+WE ./resources/textures/wall2.xpm
+EA ./resources/textures/wall2.xpm
 
-D ./resources/door1.xpm
-F ./resources/floor1.xpm
-C ./resources/sky1.xpm
+D ./resources/textures/door1.xpm
+F ./resources/textures/floor2.xpm
+C ./resources/textures/sky1.xpm
 
 H 255,160,0
 
