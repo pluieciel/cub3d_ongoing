@@ -6,9 +6,9 @@ static void	handle_crowbar_idle_state(t_data *game)
 	{
 		render_image(game, (t_image *)game->crowbar.attack.head->content, 0, 0);
 		collision(game, game->player.dir_x, game->player.dir_y, COLL_DIS);
-		if (game->left_click && !game->coll_h && !game->coll_v)
+		if (game->left_click && !game->coll_wall_h && !game->coll_wall_v)
 			game->crowbar.state = CROWBAR_ATTACK;
-		else if (game->left_click && (game->coll_h || game->coll_v))
+		else if (game->left_click && (game->coll_wall_h || game->coll_wall_v))
 			game->crowbar.state = CROWBAR_ATTACK_HIT;
 		else if (game->key.one || game->key.two)
 			game->crowbar.state = CROWBAR_HOLSTER;

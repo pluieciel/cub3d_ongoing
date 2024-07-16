@@ -4,7 +4,7 @@ SOURCES_DIR = srcs
 HEADERS_DIR = includes
 OBJECTS_DIR = objs
 
-SOURCES = check_map.c  hook.c  init.c  main.c  parse_element.c parse_map.c \
+SOURCES = check_map.c  hook.c  init.c  main.c  parse_elements.c parse_map.c \
 render.c  time.c raycast2d.c raycast3d.c raycast3d2.c rotation.c animation_utils.c crowbar_animation.c handgun_animation.c init_animation.c \
 hook_key.c utils.c color.c minimap.c
 

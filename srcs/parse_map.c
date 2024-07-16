@@ -105,7 +105,7 @@ void	parse_map(t_data *game, char *filename)
 	char	*line;
 	int		i;
 
-	parse_element(game, filename);
+	parse_elements(game, filename);
 	fd = open(filename, O_RDONLY);
 	if (fd < 0)
 		exit(gc_free(game->gc, "Error: invalid file\n", 2));

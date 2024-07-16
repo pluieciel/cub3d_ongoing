@@ -97,7 +97,7 @@ static void	set_map_dimension(t_data *game, char *line, int fd, int *i)
 	}
 }
 
-void	parse_element(t_data *game, char *filename)
+void	parse_elements(t_data *game, char *filename)
 {
 	char	*line;
 	int		fd;

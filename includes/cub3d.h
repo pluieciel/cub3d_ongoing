@@ -151,27 +151,30 @@ typedef struct s_data
 {
 	void			*mlx_ptr;
 	void			*win_ptr;
-	float			**map;
 	char			**visited;
-	int				map_w;
-	int				map_h;
-	int				map_index;
-	int				elem_n;
-	unsigned int	hud_color;
-	t_player		player;
-	t_key			key;
-	t_gc			*gc;
-	__uint64_t		time;
-	__uint64_t		timestep;
-	int				dis_p_s;
-	int				left_click;
+	float			**map;
+	float			*res_rc;
 	//	0 1 -> x y
 	//	2 -> dis
 	//	3 -> dir
 	//	4 5 x y idx on map
 	float			res_rc_h[6];
 	float			res_rc_v[6];
-	float			*res_rc;
+	int				map_w;
+	int				map_h;
+	int				map_index;
+	int				elem_n;
+	int				coll_wall_h;
+	int				coll_wall_v;
+	int				coll_door_h;
+	int				coll_door_v;
+	int				mouse_centered;
+	int				left_click;
+	int				dis_p_s;
+	unsigned int	hud_color;
+	t_player		player;
+	t_key			key;
+	t_gc			*gc;
 	t_image			img;
 	t_image			img_sky;
 	t_image			img_wall_no;
@@ -187,14 +190,11 @@ typedef struct s_data
 	t_image			img_hud_full_suit;
 	t_image			img_hud_flash_full;
 	t_door			*doors;
-	int				coll_h;
-	int				coll_v;
-	int				coll_door_h;
-	int				coll_door_v;
-	int				mouse_centered;
 	t_crowbar		crowbar;
 	t_handgun		handgun;
+	__uint64_t		time;
 	__uint64_t		animation_time;
+	__uint64_t		timestep;
 }					t_data;
 
 typedef struct s_raycast
@@ -224,7 +224,7 @@ void			hook(t_data *game);
 int				check_map(t_data *game);
 __uint64_t		get_timestamp_ms(void);
 int				render(t_data *game);
-void			parse_element(t_data *game, char *filename);
+void			parse_elements(t_data *game, char *filename);
 float			distance(float x1, float y1, float x2, float y2);
 float			raycast_h(t_data *game, float x, float y, int type);
 float			raycast_v(t_data *game, float x, float y, int type);

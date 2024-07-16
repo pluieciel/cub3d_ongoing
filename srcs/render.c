@@ -64,13 +64,13 @@ void	collision(t_data *game, float dir_x, float dir_y, int coll_dis)
 	raycast(game, dir_x, dir_y, (coll_dis == OPEN_DIS));
 	if (game->res_rc_h[2] < coll_dis && game->res_rc_h[2] < game->res_rc_v[2])
 	{
-		game->coll_h = 1;
+		game->coll_wall_h = 1;
 		if (coll_dis == OPEN_DIS)
 			game->coll_door_h = 1;
 	}
 	if (game->res_rc_v[2] < coll_dis && game->res_rc_v[2] < game->res_rc_h[2])
 	{
-		game->coll_v = 1;
+		game->coll_wall_v = 1;
 		if (coll_dis == OPEN_DIS)
 			game->coll_door_v = 1;
 	}
@@ -104,8 +104,8 @@ void	move_player(t_data *game)
 	oldDirY = game->player.dir_y;
 	oldDirX_3d = game->player.dir3d.x;
 	oldDirY_3d = game->player.dir3d.y;
-	game->coll_h = 0;
-	game->coll_v = 0;
+	game->coll_wall_h = 0;
+	game->coll_wall_v = 0;
 	if (game->key.w)
 	{
 		collision(game, game->player.dir_x, game->player.dir_y, COLL_DIS);
@@ -117,9 +117,9 @@ void	move_player(t_data *game)
 		collision(game, (sqrt(2) / 2) * (game->player.dir_x
 				+ game->player.dir_y), (sqrt(2) / 2) * (-game->player.dir_x
 				+ game->player.dir_y), COLL_DIS);
-		if (!game->coll_v)
+		if (!game->coll_wall_v)
 			game->player.x += round(oldDirX * game->player.speed);
-		if (!game->coll_h)
+		if (!game->coll_wall_h)
 			game->player.y += round(oldDirY * game->player.speed);
 	}
 	else if (game->key.s)
@@ -133,9 +133,9 @@ void	move_player(t_data *game)
 		collision(game, -(sqrt(2) / 2) * (game->player.dir_x
 				+ game->player.dir_y), -(sqrt(2) / 2) * (-game->player.dir_x
 				+ game->player.dir_y), COLL_DIS);
-		if (!game->coll_v)
+		if (!game->coll_wall_v)
 			game->player.x -= round(oldDirX * game->player.speed);
-		if (!game->coll_h)
+		if (!game->coll_wall_h)
 			game->player.y -= round(oldDirY * game->player.speed);
 	}
 	if (game->key.a)
@@ -149,9 +149,9 @@ void	move_player(t_data *game)
 		collision(game, -(sqrt(2) / 2) * (game->player.dir_x
 				- game->player.dir_y), -(sqrt(2) / 2) * (game->player.dir_x
 				+ game->player.dir_y), COLL_DIS);
-		if (!game->coll_v)
+		if (!game->coll_wall_v)
 			game->player.x += round(oldDirY * game->player.speed);
-		if (!game->coll_h)
+		if (!game->coll_wall_h)
 			game->player.y -= round(oldDirX * game->player.speed);
 	}
 	else if (game->key.d)
@@ -165,9 +165,9 @@ void	move_player(t_data *game)
 		collision(game, (sqrt(2) / 2) * (game->player.dir_x
 				- game->player.dir_y), (sqrt(2) / 2) * (game->player.dir_x
 				+ game->player.dir_y), COLL_DIS);
-		if (!game->coll_v)
+		if (!game->coll_wall_v)
 			game->player.x -= round(oldDirY * game->player.speed);
-		if (!game->coll_h)
+		if (!game->coll_wall_h)
 			game->player.y += round(oldDirX * game->player.speed);
 	}
 	if (game->key.left)
