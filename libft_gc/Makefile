@@ -52,7 +52,7 @@ SOURCES = ft_isalpha.c \
     ft_fprintf/ft_fprintf.c \
     ft_fprintf/ft_put_fd.c \
     ft_fprintf/ft_put_flags_fd.c \
-    my_gc.c
+    gc.c
 
 SOURCES_BONUS = ft_lstnew_bonus.c \
     ft_lstadd_front_bonus.c \

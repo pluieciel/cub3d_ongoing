@@ -12,7 +12,7 @@ static void	init_animation(t_data *game, struct s_animation *animation,
 	while (i <= frames)
 	{
 		img = gc_malloc(sizeof(t_image), &game->gc);
-		snprintf(path, sizeof(path), "textures/%s%d.xpm", state, i);
+		snprintf(path, sizeof(path), "resources/%s%d.xpm", state, i);
 		fd = open(path, O_RDONLY);
 		if (fd < 0)
 			exit(gc_free(game->gc, "Error: invalid file\n", 2));

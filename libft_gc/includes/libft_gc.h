@@ -6,14 +6,14 @@
 /*   By: jlefonde <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 11:43:46 by jlefonde          #+#    #+#             */
-/*   Updated: 2024/06/26 09:10:20 by jlefonde         ###   ########.fr       */
+/*   Updated: 2024/07/16 18:03:22 by jlefonde         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef LIBFT_GC_H
 # define LIBFT_GC_H
 
-# include "my_gc.h"
+# include "gc.h"
 # include <stdarg.h>
 # include <stdio.h>
 # include <string.h>
