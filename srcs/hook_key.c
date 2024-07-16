@@ -6,8 +6,6 @@ void	handle_special_keys(int key, t_data *game)
 		game->dis_p_s += 300;
 	else if (key == XK_KP_Subtract && game->dis_p_s > 400)
 		game->dis_p_s -= 300;
-	else if (key == XK_e && game->op_door == 0)
-		game->op_door = 1;
 	else if (key == XK_1)
 	{
 		game->key.one = 1;
@@ -18,11 +16,11 @@ void	handle_special_keys(int key, t_data *game)
 		game->key.one = 0;
 		game->key.two = 1;
 	}
-	else if (key == XK_Control_L)
+	else if (key == XK_Control_L && !game->key.shift)
 		game->key.ctrl = 1;
-	else if (key == XK_Shift_L)
+	else if (key == XK_Shift_L && !game->key.ctrl && !game->key.space)
 		game->key.shift = 1;
-	else if (key == XK_space)
+	else if (key == XK_space && !game->key.ctrl)
 		game->key.space = 1;
 }
 
@@ -38,6 +36,8 @@ int	handle_key_press(int key, t_data *game)
 		game->key.s = 1;
 	else if (key == XK_d)
 		game->key.d = 1;
+	else if (key == XK_e && game->key.e == 0)
+		game->key.e = 1;
 	else if (key == XK_Left)
 		game->key.left = 1;
 	else if (key == XK_Right)

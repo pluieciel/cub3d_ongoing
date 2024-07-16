@@ -610,7 +610,7 @@ void	move_doors(t_data *game)
 	t_door	*prev;
 
 	// add new door into list
-	if (game->op_door == 1)
+	if (game->key.e == 1)
 	{
 		game->coll_door_h = 0;
 		game->coll_door_v = 0;
@@ -627,7 +627,7 @@ void	move_doors(t_data *game)
 			game->doors = new;
 		}
 	}
-	game->op_door = 0;
+	game->key.e = 0;
 	// move the doors in list one by one
 	temp = game->doors;
 	while (temp)

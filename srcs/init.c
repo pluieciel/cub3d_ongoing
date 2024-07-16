@@ -20,6 +20,7 @@ static void	init_keys(t_data *game)
 	game->key.a = 0;
 	game->key.s = 0;
 	game->key.d = 0;
+	game->key.e = 0;
 	game->key.left = 0;
 	game->key.right = 0;
 	game->key.up = 0;
@@ -85,7 +86,6 @@ void	init(t_data *game)
 	game->map_w = 0;
 	game->dis_p_s = DIS_P_S;
 	game->time = get_timestamp_ms();
-	game->op_door = 0;
 	game->doors = NULL;
 	game->mlx_ptr = mlx_init();
 	game->gc = (t_gc *)gc_insert(game->gc, game->mlx_ptr);

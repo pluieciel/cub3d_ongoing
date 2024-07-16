@@ -115,6 +115,7 @@ typedef struct s_key
 	int				a;
 	int				s;
 	int				d;
+	int				e;
 	int				left;
 	int				right;
 	int				up;
@@ -184,7 +185,6 @@ typedef struct s_data
 	t_image			img_hud_divider;
 	t_image			img_hud_full_suit;
 	t_image			img_hud_flash_full;
-	int				op_door;
 	t_door			*doors;
 	int				coll_h;
 	int				coll_v;
