@@ -9,9 +9,15 @@ void	handle_specialkeys(int key, t_data *game)
 	else if (key == XK_e && game->op_door == 0)
 		game->op_door = 1;
 	else if (key == XK_1)
+	{
 		game->key.one = 1;
+		game->key.two = 0;
+	}
 	else if (key == XK_2)
+	{
+		game->key.one = 0;
 		game->key.two = 1;
+	}
 	else if (key == XK_Control_L)
 		game->key.ctrl = 1;
 	else if (key == XK_Shift_L)
