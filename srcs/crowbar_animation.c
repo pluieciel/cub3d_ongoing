@@ -34,7 +34,7 @@ static void	handle_crowbar_completed(t_data *game)
 
 void	update_crowbar_state(t_data *game)
 {
-	int *completed;
+	int	*completed;
 
 	completed = &game->crowbar.completed;
 	*completed = 0;
