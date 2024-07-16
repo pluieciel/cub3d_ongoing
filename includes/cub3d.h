@@ -21,7 +21,7 @@
 #define FPS 60
 #define B_SIZE 64
 #define ROT_SPEED 0.1
-#define MM_FACTOR 4
+#define MM_FACTOR 16
 #define MM_RADIUS 100
 #define MM_POS_X (WIN_W - MM_RADIUS - 20)
 #define MM_POS_Y (WIN_H - MM_RADIUS - 20)
@@ -257,5 +257,5 @@ int				close_window(t_data *game);
 unsigned int	to_rgb(t_color c);
 void			from_rgb(unsigned int color, t_color *c);
 void			add_shadow(t_color *c, float shadow);
-void			mix_color(t_color *c1, t_color c2, int a, int b);
+t_color			*mix_color(t_color *c1, t_color c2, int a, int b);
 void			from_r_g_b(int r, int g, int b, t_color *c);

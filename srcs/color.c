@@ -26,7 +26,7 @@ void	add_shadow(t_color *c, float shadow)
 	c->b = (int)round(c->b * shadow);
 }
 
-void	mix_color(t_color *c1, t_color c2, int a, int b)
+t_color	*mix_color(t_color *c1, t_color c2, int a, int b)
 {
 	int tot;
 
@@ -34,4 +34,5 @@ void	mix_color(t_color *c1, t_color c2, int a, int b)
 	c1->r = (c1->r * a + c2.r * b) / tot;
 	c1->g = (c1->g * a + c2.g * b) / tot;
 	c1->b = (c1->b * a + c2.b * b) / tot;
+    return (c1);
 }
