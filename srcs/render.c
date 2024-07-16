@@ -69,9 +69,12 @@ void	draw_minimap(t_data *game)
 	int				j;
 	int				newi;
 	int				newj;
-	unsigned int	t;
 	float			angle;
+	t_color			c;
+	t_color			hud_c;
+	t_color			c2;
 
+	from_rgb(game->hud_color, &hud_c);
 	angle = atan(1.0 * (WIN_W / 2) / game->dis_p_s);
 	i = MM_POS_X - MM_RADIUS;
 	while (i <= MM_POS_X + MM_RADIUS)
@@ -81,17 +84,17 @@ void	draw_minimap(t_data *game)
 		{
 			if (distance(i, j, MM_POS_X, MM_POS_Y) < MM_RADIUS)
 			{
-				t = ((unsigned int *)game->img.addr)[j * WIN_W + i];
+				from_rgb(((unsigned int *)game->img.addr)[j * WIN_W + i], &c);
 				if (MM_POS_Y > j && atan(1.0 * abs(i - MM_POS_X) / (MM_POS_Y - j)) < angle)
-					((unsigned int *)game->img.addr)[j * WIN_W + i]
-        				= ((((((t >> 16) & 0xff) + ((game->hud_color >> 16) & 0xff)) / 2) & 0xff) << 16)
-        				+ ((((((t >> 8) & 0xff) + ((game->hud_color >> 8) & 0xff)) / 2) & 0xff) << 8)
-        				+ (((((t) & 0xff) + ((game->hud_color) & 0xff)) / 2) & 0xff);
+				{
+					mix_color(&c, hud_c, 1, 1);
+					((unsigned int *)game->img.addr)[j * WIN_W + i] = to_rgb(c);
+				}
 				else
-					((unsigned int *)game->img.addr)[j * WIN_W + i]
-        				= ((((((t >> 16) & 0xff) * 2 + ((game->hud_color >> 16) & 0xff)) / 3) & 0xff) << 16)
-        				+ ((((((t >> 8) & 0xff) * 2 + ((game->hud_color >> 8) & 0xff)) / 3) & 0xff) << 8)
-        				+ (((((t) & 0xff) * 2 + ((game->hud_color) & 0xff)) / 3) & 0xff);
+				{
+					mix_color(&c, hud_c, 2, 1);
+					((unsigned int *)game->img.addr)[j * WIN_W + i] = to_rgb(c);
+				}
 			}
 			j++;
 		}
@@ -125,27 +128,29 @@ void	draw_minimap(t_data *game)
 							newi = round((j - MM_POS_X) * -game->player.dir[0]
 									- (i - MM_POS_Y) * game->player.dir[1])
 								+ MM_POS_Y;
-							t = ((unsigned int *)game->img.addr)[newi * WIN_W
-								+ newj];
+							from_rgb(((unsigned int *)game->img.addr)[newi * WIN_W
+								+ newj], &c);
 							if (game->map[y][x] == 1)
-								((unsigned int *)game->img.addr)[newi * WIN_W + newj]
-								= ((((((t >> 16) & 0xff) * 2 + ((game->hud_color >> 16) & 0xff)) / 3) & 0xff) * 6 / 10 << 16)
-									+ ((((((t >> 8) & 0xff) * 2 + ((game->hud_color >> 8) & 0xff)) / 3) & 0xff) * 6 / 10 << 8)
-									+ (((((t) & 0xff) * 2 + (game->hud_color & 0xff)) / 3) & 0xff) * 6 / 10;
+							{
+								mix_color(&c, hud_c, 2, 1);
+								add_shadow(&c, 0.6);
+								((unsigned int *)game->img.addr)[newi * WIN_W
+									+ newj] = to_rgb(c);
+							}
 							else if (game->map[y][x] == 3)
+							{	
+								from_r_g_b(0, 0x80, 0x80, &c2);
+								mix_color(&c, c2, 2, 1);
 								((unsigned int *)game->img.addr)[newi * WIN_W
-									+ newj] = ((((((t >> 16) & 0xff) * 2 + 0x00)
-												/ 3) & 0xff) << 16)
-									+ ((((((t >> 8) & 0xff) * 2 + 0x80)
-												/ 3) & 0xff) << 8)
-									+ (((((t)&0xff) * 2 + 0x80) / 3) & 0xff);
+									+ newj] = to_rgb(c);
+							}
 							else if (game->map[y][x] >= 2)
+							{	
+								from_r_g_b(0x80, 0, 0, &c2);
+								mix_color(&c, c2, 2, 1);
 								((unsigned int *)game->img.addr)[newi * WIN_W
-									+ newj] = ((((((t >> 16) & 0xff) * 2 + 0x80)
-												/ 3) & 0xff) << 16)
-									+ ((((((t >> 8) & 0xff) * 2 + 0x00)
-												/ 3) & 0xff) << 8)
-									+ (((((t)&0xff) * 2 + 0x00) / 3) & 0xff);
+									+ newj] = to_rgb(c);
+							}
 						}
 						j++;
 					}
