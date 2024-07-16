@@ -31,7 +31,7 @@
 #define ELEM_N 8
 #define COLL_DIS 20
 #define OPEN_DIS 80
-#define MOVE_SPEED 3
+#define SPEED 3
 #define M_PI 3.14159265358979323846
 #define NUM_THREADS 8
 #define TRANSPARENT_COLOR 0xFF000000
@@ -94,6 +94,7 @@ typedef struct s_point3d
 
 typedef struct s_player
 {
+	int			speed;
 	int			pos[2];
 	float		z;
 	float		dir[2];
@@ -156,7 +157,6 @@ typedef struct s_data
 	t_gc		*gc;
 	__uint64_t	time;
 	__uint64_t	timestep;
-	t_image		img;
 	int			dis_p_s;
 	int			left_click;
 	int hud_color;
@@ -167,6 +167,7 @@ typedef struct s_data
 	float		res_rc_h[6];
 	float		res_rc_v[6];
 	float		*res_rc;
+	t_image		img;
 	t_image		img_sky;
 	t_image		img_wall_no;
 	t_image		img_wall_so;
@@ -190,7 +191,6 @@ typedef struct s_data
 	t_crowbar	crowbar;
 	t_handgun	handgun;
 	__uint64_t	animation_time;
-	int			move_speed;
 }	t_data;
 
 typedef struct s_raycast
@@ -225,10 +225,6 @@ float		distance(float x1, float y1, float x2, float y2);
 float		raycast_h(t_data *game, float x, float y, int type);
 float		raycast_v(t_data *game, float x, float y, int type);
 void		raycast(t_data *game, float x, float y, int type);
-t_point3d	*ro_on_z_to_xz(t_point3d p);
-t_point3d	*ro_on_y(t_point3d p, float angle_z);
-t_point3d	*ro_back_on_z(t_point3d p);
-t_point3d	*cross(t_point3d p1, t_point3d p2);
 float		raycast_v_3d(t_raycast *r);
 void		raycast_3d(t_raycast *ray);
 void		update_crowbar_state(t_data *game);

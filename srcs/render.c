@@ -219,9 +219,9 @@ void	move_player(t_data *game)
 				+ game->player.dir[1]), (sqrt(2) / 2) * (-game->player.dir[0]
 				+ game->player.dir[1]), COLL_DIS);
 		if (!game->coll_v)
-			game->player.pos[0] += round(oldDirX * game->move_speed);
+			game->player.pos[0] += round(oldDirX * game->player.speed);
 		if (!game->coll_h)
-			game->player.pos[1] += round(oldDirY * game->move_speed);
+			game->player.pos[1] += round(oldDirY * game->player.speed);
 	}
 	else if (game->key.s)
 	{
@@ -235,9 +235,9 @@ void	move_player(t_data *game)
 				+ game->player.dir[1]), -(sqrt(2) / 2) * (-game->player.dir[0]
 				+ game->player.dir[1]), COLL_DIS);
 		if (!game->coll_v)
-			game->player.pos[0] -= round(oldDirX * game->move_speed);
+			game->player.pos[0] -= round(oldDirX * game->player.speed);
 		if (!game->coll_h)
-			game->player.pos[1] -= round(oldDirY * game->move_speed);
+			game->player.pos[1] -= round(oldDirY * game->player.speed);
 	}
 	if (game->key.a)
 	{
@@ -251,9 +251,9 @@ void	move_player(t_data *game)
 				- game->player.dir[1]), -(sqrt(2) / 2) * (game->player.dir[0]
 				+ game->player.dir[1]), COLL_DIS);
 		if (!game->coll_v)
-			game->player.pos[0] += round(oldDirY * game->move_speed);
+			game->player.pos[0] += round(oldDirY * game->player.speed);
 		if (!game->coll_h)
-			game->player.pos[1] -= round(oldDirX * game->move_speed);
+			game->player.pos[1] -= round(oldDirX * game->player.speed);
 	}
 	else if (game->key.d)
 	{
@@ -267,9 +267,9 @@ void	move_player(t_data *game)
 				- game->player.dir[1]), (sqrt(2) / 2) * (game->player.dir[0]
 				+ game->player.dir[1]), COLL_DIS);
 		if (!game->coll_v)
-			game->player.pos[0] -= round(oldDirY * game->move_speed);
+			game->player.pos[0] -= round(oldDirY * game->player.speed);
 		if (!game->coll_h)
-			game->player.pos[1] += round(oldDirX * game->move_speed);
+			game->player.pos[1] += round(oldDirX * game->player.speed);
 	}
 	if (game->key.left)
 	{
@@ -314,9 +314,9 @@ void	move_player(t_data *game)
 	else if (!game->key.space && !game->key.ctrl)
 		game->player.z = 0;
 	if (game->key.shift)
-		game->move_speed = MOVE_SPEED * 2;
+		game->player.speed = SPEED * 2;
 	else if (!game->key.shift)
-		game->move_speed = MOVE_SPEED;
+		game->player.speed = SPEED;
 	if (game->key.space)
 		do_jump(game);
 }
