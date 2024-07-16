@@ -15,9 +15,11 @@ static void	load_texture(t_data *game, t_image *img, char *line)
 		exit(gc_free(game->gc, "Error: invalid file\n", 2));
 	close(fd);
 	img->ptr = mlx_xpm_file_to_image(game->mlx_ptr, path, &img->w, &img->h);
-	img->addr = mlx_get_data_addr(img->ptr, &img->bpp, &img->line_len, &img->endian);
+	img->addr = mlx_get_data_addr(img->ptr, &img->bpp, &img->line_len,
+			&img->endian);
 	game->elem_n++;
 }
+
 static int	get_color(t_data *game, char *line)
 {
 	char	**line_split;
@@ -31,13 +33,13 @@ static int	get_color(t_data *game, char *line)
 	color = 0;
 	i = 0;
 	while (line_split[i])
-    {
-        value = ft_atoi(line_split[i]);
-        if (value < 0 || value > 255)
-       		exit(gc_free(game->gc, "Error: invalid rgb color\n", 2));
-        color |= value << ((2 - i) * 8);
-        i++;
-    }
+	{
+		value = ft_atoi(line_split[i]);
+		if (value < 0 || value > 255)
+			exit(gc_free(game->gc, "Error: invalid rgb color\n", 2));
+		color |= value << ((2 - i) * 8);
+		i++;
+	}
 	if (i != 3)
 		exit(gc_free(game->gc, "Error: invalid rgb color\n", 2));
 	game->elem_n++;
@@ -61,12 +63,6 @@ static void	set_elements(t_data *game, char *line)
 		load_texture(game, &game->img_wall_we, line_split[1]);
 	else if (ft_strcmp(line_split[0], "D") == 0 && line_split[1])
 		load_texture(game, &game->img_door, line_split[1]);
-	// V1: only color
-	/*else if (ft_strcmp(line_split[0], "F") == 0 && line_split[1])
-		game->floor_color = get_color(game, line_split[1]);
-	else if (ft_strcmp(line_split[0], "C") == 0 && line_split[1])
-		game->ceiling_color = get_color(game, line_split[1]);*/
-	// V2: textures
 	else if (ft_strcmp(line_split[0], "F") == 0 && line_split[1])
 		load_texture(game, &game->img_floor, line_split[1]);
 	else if (ft_strcmp(line_split[0], "C") == 0 && line_split[1])
@@ -76,7 +72,32 @@ static void	set_elements(t_data *game, char *line)
 	gc_free_ptr(&game->gc, line_split);
 }
 
-void parse_element(t_data *game, char *filename)
+static void	set_map_dimension(t_data *game, char *line, int fd, int *i)
+{
+	if (game->elem_n == ELEM_N && game->map_index == -1)
+	{
+		gc_free_ptr(&game->gc, line);
+		line = get_next_line(fd);
+		game->gc = gc_insert(game->gc, line);
+		(*i)++;
+		while (line && line[0] == '\n')
+		{
+			gc_free_ptr(&game->gc, line);
+			line = get_next_line(fd);
+			game->gc = gc_insert(game->gc, line);
+			(*i)++;
+		}
+		game->map_index = *i;
+	}
+	if (game->map_index != -1 && line != NULL)
+	{
+		game->map_h++;
+		if ((int)(ft_strlen(line) - 1) > game->map_w)
+			game->map_w = ft_strlen(line) - 1;
+	}
+}
+
+void	parse_element(t_data *game, char *filename)
 {
 	char	*line;
 	int		fd;
@@ -91,27 +112,7 @@ void parse_element(t_data *game, char *filename)
 	while (line)
 	{
 		set_elements(game, line);
-		if (game->elem_n == ELEM_N && game->map_index == -1)
-		{
-			gc_free_ptr(&game->gc, line);
-			line = get_next_line(fd);
-			game->gc = gc_insert(game->gc, line);
-			i++;
-			while (line && line[0] == '\n')
-			{
-				gc_free_ptr(&game->gc, line);
-				line = get_next_line(fd);
-				game->gc = gc_insert(game->gc, line);
-				i++;
-			}
-			game->map_index = i;
-		}
-		if (game->map_index != -1 && line != NULL)
-		{
-			game->map_h++;
-			if ((int)(ft_strlen(line) - 1) > game->map_w)
-				game->map_w = ft_strlen(line) - 1;
-		}
+		set_map_dimension(game, line, fd, &i);
 		gc_free_ptr(&game->gc, line);
 		line = get_next_line(fd);
 		game->gc = gc_insert(game->gc, line);
