@@ -1,6 +1,6 @@
 #include "cub3d.h"
 
-void	handle_mousethreshold(int dx, int dy, t_data *game)
+void	handle_mouse_threshold(int dx, int dy, t_data *game)
 {
 	if (dx > MOUSE_THRESHOLD)
 		game->key.right = 1;
@@ -22,7 +22,7 @@ void	handle_mousethreshold(int dx, int dy, t_data *game)
 	}
 }
 
-int	handle_mousemove(int x, int y, t_data *game)
+int	handle_mouse_move(int x, int y, t_data *game)
 {
 	int	dx;
 	int	dy;
@@ -34,13 +34,13 @@ int	handle_mousemove(int x, int y, t_data *game)
 	}
 	dx = x - (WIN_W / 2);
 	dy = y - (WIN_H / 2);
-	handle_mousethreshold(dx, dy, game);
+	handle_mouse_threshold(dx, dy, game);
 	game->mouse_centered = 1;
 	mlx_mouse_move(game->mlx_ptr, game->win_ptr, WIN_W / 2, WIN_H / 2);
 	return (0);
 }
 
-int	handle_mouseclick(int button, int x, int y, t_data *game)
+int	handle_mouse_click(int button, int x, int y, t_data *game)
 {
 	(void)x;
 	(void)y;
@@ -59,12 +59,12 @@ void	hook(t_data *game)
 	mlx_mouse_move(game->mlx_ptr, game->win_ptr, WIN_W / 2, WIN_H / 2);
 	mlx_mouse_hide(game->mlx_ptr, game->win_ptr);
 	mlx_loop_hook(game->mlx_ptr, &render, game);
-	mlx_hook(game->win_ptr, KeyPress, KeyPressMask, &handle_keypress, game);
-	mlx_hook(game->win_ptr, KeyRelease, KeyReleaseMask, &handle_keyrelease,
+	mlx_hook(game->win_ptr, KeyPress, KeyPressMask, &handle_key_press, game);
+	mlx_hook(game->win_ptr, KeyRelease, KeyReleaseMask, &handle_key_release,
 		game);
 	mlx_hook(game->win_ptr, DestroyNotify, ButtonPressMask, &close_window,
 		game);
-	mlx_hook(game->win_ptr, MotionNotify, PointerMotionMask, &handle_mousemove,
+	mlx_hook(game->win_ptr, MotionNotify, PointerMotionMask, &handle_mouse_move,
 		game);
-	mlx_mouse_hook(game->win_ptr, &handle_mouseclick, game);
+	mlx_mouse_hook(game->win_ptr, &handle_mouse_click, game);
 }

@@ -16,7 +16,7 @@ float	raycast_h2(t_data *g, float x, float y, int type)
 			|| g->map[(int)g->res_rc_h[5]][(int)g->res_rc_h[4]] == 2
 			|| (type && g->map[(int)g->res_rc_h[5]][(int)g->res_rc_h[4]] == 3)))
 			return (distance(g->res_rc_h[0], g->res_rc_h[1],
-					g->player.pos[0], g->player.pos[1]));
+					g->player.x, g->player.y));
 		range++;
 		g->res_rc_h[0] += x / fabs(y) * B_SIZE;
 		g->res_rc_h[1] += ((y > 0) * 2 - 1) * B_SIZE;
@@ -28,21 +28,21 @@ float	raycast_h(t_data *g, float x, float y, int type)
 {
 	if (y < 0)
 	{
-		g->res_rc_h[1] = g->player.pos[1] - g->player.pos[1] % B_SIZE;
-		g->res_rc_h[0] = g->player.pos[0] - (g->player.pos[1] % B_SIZE) * x / y;
+		g->res_rc_h[1] = g->player.y - g->player.y % B_SIZE;
+		g->res_rc_h[0] = g->player.x - (g->player.y % B_SIZE) * x / y;
 		g->res_rc_h[3] = -1;
 	}
 	else if (y > 0)
 	{
-		g->res_rc_h[1] = g->player.pos[1] + B_SIZE - g->player.pos[1] % B_SIZE;
-		g->res_rc_h[0] = g->player.pos[0]
-			+ (B_SIZE - g->player.pos[1] % B_SIZE) * x / y;
+		g->res_rc_h[1] = g->player.y + B_SIZE - g->player.y % B_SIZE;
+		g->res_rc_h[0] = g->player.x
+			+ (B_SIZE - g->player.y % B_SIZE) * x / y;
 		g->res_rc_h[3] = 1;
 	}
 	else
 	{
-		g->res_rc_h[0] = g->player.pos[0];
-		g->res_rc_h[1] = g->player.pos[1];
+		g->res_rc_h[0] = g->player.x;
+		g->res_rc_h[1] = g->player.y;
 		g->res_rc_h[3] = 0;
 		return ((RAYCAST_RANGE + 1.0) * B_SIZE);
 	}
@@ -65,7 +65,7 @@ float	raycast_v2(t_data *g, float x, float y, int type)
 			|| g->map[(int)g->res_rc_v[5]][(int)g->res_rc_v[4]] == 2
 			|| (type && g->map[(int)g->res_rc_v[5]][(int)g->res_rc_v[4]] == 3)))
 			return (distance(g->res_rc_v[0], g->res_rc_v[1],
-					g->player.pos[0], g->player.pos[1]));
+					g->player.x, g->player.y));
 		range++;
 		g->res_rc_v[1] += y / fabs(x) * B_SIZE;
 		g->res_rc_v[0] += ((x > 0) * 2 - 1) * B_SIZE;
@@ -77,21 +77,21 @@ float	raycast_v(t_data *g, float x, float y, int type)
 {
 	if (x < 0)
 	{
-		g->res_rc_v[0] = g->player.pos[0] - g->player.pos[0] % B_SIZE;
-		g->res_rc_v[1] = g->player.pos[1] - (g->player.pos[0] % B_SIZE) * y / x;
+		g->res_rc_v[0] = g->player.x - g->player.x % B_SIZE;
+		g->res_rc_v[1] = g->player.y - (g->player.x % B_SIZE) * y / x;
 		g->res_rc_v[3] = -1;
 	}
 	else if (x > 0)
 	{
-		g->res_rc_v[0] = g->player.pos[0] + B_SIZE - g->player.pos[0] % B_SIZE;
-		g->res_rc_v[1] = g->player.pos[1]
-			+ (B_SIZE - g->player.pos[0] % B_SIZE) * y / x;
+		g->res_rc_v[0] = g->player.x + B_SIZE - g->player.x % B_SIZE;
+		g->res_rc_v[1] = g->player.y
+			+ (B_SIZE - g->player.x % B_SIZE) * y / x;
 		g->res_rc_v[3] = 1;
 	}
 	else
 	{
-		g->res_rc_v[0] = g->player.pos[0];
-		g->res_rc_v[1] = g->player.pos[1];
+		g->res_rc_v[0] = g->player.x;
+		g->res_rc_v[1] = g->player.y;
 		g->res_rc_v[3] = 0;
 		return ((RAYCAST_RANGE + 1.0) * B_SIZE);
 	}

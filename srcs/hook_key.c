@@ -1,6 +1,6 @@
 #include "cub3d.h"
 
-void	handle_specialkeys(int key, t_data *game)
+void	handle_special_keys(int key, t_data *game)
 {
 	if (key == XK_KP_Add && game->dis_p_s < 1500)
 		game->dis_p_s += 300;
@@ -26,7 +26,7 @@ void	handle_specialkeys(int key, t_data *game)
 		game->key.space = 1;
 }
 
-int	handle_keypress(int key, t_data *game)
+int	handle_key_press(int key, t_data *game)
 {
 	if (key == XK_Escape)
 		close_window(game);
@@ -47,11 +47,11 @@ int	handle_keypress(int key, t_data *game)
 	else if (key == XK_Down)
 		game->key.down = 1;
 	else
-		handle_specialkeys(key, game);
+		handle_special_keys(key, game);
 	return (0);
 }
 
-int	handle_keyrelease(int key, t_data *game)
+int	handle_key_release(int key, t_data *game)
 {
 	if (key == XK_w)
 		game->key.w = 0;

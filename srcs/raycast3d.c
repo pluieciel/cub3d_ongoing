@@ -7,7 +7,7 @@ void	add_door_h(t_raycast *r)
 	r->doors_h[r->num_doors_h][1] = r->h[1];
 	r->doors_h[r->num_doors_h][2] = r->h[2];
 	r->doors_h[r->num_doors_h][3] = distance(r->h[0], r->h[1],
-			r->g->player.pos[0], r->g->player.pos[1]);
+			r->g->player.x, r->g->player.y);
 	r->doors_h[r->num_doors_h][4] = r->h[4];
 	r->doors_h[r->num_doors_h][5] = r->h[5];
 	r->doors_h[r->num_doors_h][6] = r->h[6];
@@ -27,8 +27,8 @@ float	raycast_h_3d2(t_raycast *r)
 		if (r->xyz[1] != 0 && r->h[6] >= 0 && r->h[6] < r->g->map_h)
 		{
 			if (r->g->map[(int)r->h[6]][(int)r->h[5]] == 1)
-				return (distance(r->h[0], r->h[1], r->g->player.pos[0],
-						r->g->player.pos[1]));
+				return (distance(r->h[0], r->h[1], r->g->player.x,
+						r->g->player.y));
 			else if (r->g->map[(int)r->h[6]][(int)r->h[5]] >= 2)
 				add_door_h(r);
 		}
@@ -42,8 +42,8 @@ float	raycast_h_3d2(t_raycast *r)
 
 void	reset_h(t_raycast *r)
 {
-	r->h[0] = r->g->player.pos[0];
-	r->h[1] = r->g->player.pos[1];
+	r->h[0] = r->g->player.x;
+	r->h[1] = r->g->player.y;
 	r->h[2] = r->g->player.z;
 	r->h[4] = 0;
 }
@@ -52,18 +52,18 @@ float	raycast_h_3d(t_raycast *r)
 {
 	if (r->xyz[1] < 0)
 	{
-		r->h[1] = r->g->player.pos[1] - r->g->player.pos[1] % B_SIZE;
-		r->h[0] = r->g->player.pos[0] - (r->g->player.pos[1] % B_SIZE)
+		r->h[1] = r->g->player.y - r->g->player.y % B_SIZE;
+		r->h[0] = r->g->player.x - (r->g->player.y % B_SIZE)
 			* r->xyz[0] / r->xyz[1];
-		r->h[2] = (r->g->player.pos[1] % B_SIZE) * r->xyz[2] / -r->xyz[1];
+		r->h[2] = (r->g->player.y % B_SIZE) * r->xyz[2] / -r->xyz[1];
 		r->h[4] = 1;
 	}
 	else if (r->xyz[1] > 0)
 	{
-		r->h[1] = r->g->player.pos[1] + B_SIZE - r->g->player.pos[1] % B_SIZE;
-		r->h[0] = r->g->player.pos[0] + (B_SIZE - r->g->player.pos[1] % B_SIZE)
+		r->h[1] = r->g->player.y + B_SIZE - r->g->player.y % B_SIZE;
+		r->h[0] = r->g->player.x + (B_SIZE - r->g->player.y % B_SIZE)
 			* r->xyz[0] / r->xyz[1];
-		r->h[2] = (B_SIZE - r->g->player.pos[1] % B_SIZE) * r->xyz[2]
+		r->h[2] = (B_SIZE - r->g->player.y % B_SIZE) * r->xyz[2]
 			/ r->xyz[1];
 		r->h[4] = -1;
 	}

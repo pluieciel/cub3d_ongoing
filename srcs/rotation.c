@@ -2,8 +2,8 @@
 
 void	get_vector_right(t_data *g, t_point3d *v_right)
 {
-	v_right->x = -g->player.dir[1];
-	v_right->y = g->player.dir[0];
+	v_right->x = -g->player.dir_y;
+	v_right->y = g->player.dir_x;
 	v_right->z = 0;
 }
 

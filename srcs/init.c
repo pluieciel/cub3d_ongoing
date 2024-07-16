@@ -3,11 +3,11 @@
 static void	init_player(t_data *game)
 {
 	game->player.speed = SPEED;
-	game->player.pos[0] = 0;
-	game->player.pos[1] = 0;
+	game->player.x = 0;
+	game->player.y = 0;
 	game->player.z = 0;
-	game->player.dir[0] = 0;
-	game->player.dir[1] = 0;
+	game->player.dir_x = 0;
+	game->player.dir_y = 0;
 	game->player.dir3d.x = 0;
 	game->player.dir3d.y = 0;
 	game->player.dir3d.z = 0;

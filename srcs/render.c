@@ -22,10 +22,10 @@ void	change_image_color(t_data *game, t_image *img)
 			t = ((unsigned int *)img->addr)[j * img->w + i];
             if (t != TRANSPARENT_COLOR)
 			{              
-			  	from_rgb(game->hud_color, &target);
-				add_shadow(&target, t & 0xFF);
-				from_r_g_b(target.r / 255, target.g / 255, target.b / 255, &new);
-                ((unsigned int *)img->addr)[j * img->w + i] = to_rgb(new);
+			  	target = int_to_rgb(game->hud_color);
+				shade_color(&target, t & 0xFF);
+				set_rgb(target.r / 255, target.g / 255, target.b / 255, &new);
+                ((unsigned int *)img->addr)[j * img->w + i] = rgb_to_int(new);
 			}
 			j++;
 		}
@@ -70,49 +70,49 @@ void	draw_block(t_data *game)
 	t_color	hud_c;
 	t_color	c2;
 
-	from_rgb(game->hud_color, &hud_c);
+	hud_c = int_to_rgb(game->hud_color);
 	i = MM_POS_Y - MM_RADIUS - 1;
 	while (++i <= MM_POS_Y + MM_RADIUS)
 	{
 		j = MM_POS_X - MM_RADIUS - 1;
 		while (++j <= MM_POS_X + MM_RADIUS)
 		{
-			x = ((j - MM_POS_X) * B_SIZE / MM_FACTOR + game->player.pos[0])
+			x = ((j - MM_POS_X) * B_SIZE / MM_FACTOR + game->player.x)
 				/ B_SIZE;
-			y = ((i - MM_POS_Y) * B_SIZE / MM_FACTOR + game->player.pos[1])
+			y = ((i - MM_POS_Y) * B_SIZE / MM_FACTOR + game->player.y)
 				/ B_SIZE;
 			if (x >= 0 && y >= 0 && x < game->map_w && y < game->map_h
 				&& game->map[y][x] >= 1)
 			if (distance(i, j, MM_POS_Y, MM_POS_X) < MM_RADIUS)
 			{
-				newj = round(-(j - MM_POS_X) * game->player.dir[1]
-						+ (i - MM_POS_Y) * game->player.dir[0])
+				newj = round(-(j - MM_POS_X) * game->player.dir_y
+						+ (i - MM_POS_Y) * game->player.dir_x)
 					+ MM_POS_X;
-				newi = round((j - MM_POS_X) * -game->player.dir[0]
-						- (i - MM_POS_Y) * game->player.dir[1])
+				newi = round((j - MM_POS_X) * -game->player.dir_x
+						- (i - MM_POS_Y) * game->player.dir_y)
 					+ MM_POS_Y;
-				from_rgb(((unsigned int *)game->img.addr)[newi * WIN_W
-					+ newj], &c);
+				c = int_to_rgb(((unsigned int *)game->img.addr)[newi * WIN_W
+					+ newj]);
 				if (game->map[y][x] == 1)
 				{
 					mix_color(&c, hud_c, 2, 1);
-					add_shadow(&c, 0.6);
+					shade_color(&c, 0.6);
 					((unsigned int *)game->img.addr)[newi * WIN_W
-						+ newj] = to_rgb(c);
+						+ newj] = rgb_to_int(c);
 				}
 				else if (game->map[y][x] == 3)
 				{
-					from_r_g_b(0, 0x80, 0x80, &c2);
+					set_rgb(0, 0x80, 0x80, &c2);
 					mix_color(&c, c2, 2, 1);
 					((unsigned int *)game->img.addr)[newi * WIN_W
-						+ newj] = to_rgb(c);
+						+ newj] = rgb_to_int(c);
 				}
 				else if (game->map[y][x] >= 2)
 				{
-					from_r_g_b(0x80, 0, 0, &c2);
+					set_rgb(0x80, 0, 0, &c2);
 					mix_color(&c, c2, 2, 1);
 					((unsigned int *)game->img.addr)[newi * WIN_W
-						+ newj] = to_rgb(c);
+						+ newj] = rgb_to_int(c);
 				}
 			}
 		}
@@ -124,17 +124,17 @@ void	draw_bg(t_data *game, int i, int j, float angle)
 	t_color	c;
 	t_color	hud_c;
 
-	from_rgb(game->hud_color, &hud_c);
+	hud_c = int_to_rgb(game->hud_color);
 	if (distance(i, j, MM_POS_X, MM_POS_Y) < MM_RADIUS)
 	{
-		from_rgb(((unsigned int *)game->img.addr)[j * WIN_W + i], &c);
+		c = int_to_rgb(((unsigned int *)game->img.addr)[j * WIN_W + i]);
 		if (MM_POS_Y > j && atan(1.0 * abs(i - MM_POS_X) / (MM_POS_Y
 					- j)) < angle)
 			((unsigned int *)game->img.addr)[j * WIN_W
-				+ i] = to_rgb(*mix_color(&c, hud_c, 1, 1));
+				+ i] = rgb_to_int(*mix_color(&c, hud_c, 1, 1));
 		else
 			((unsigned int *)game->img.addr)[j * WIN_W
-				+ i] = to_rgb(*mix_color(&c, hud_c, 2, 1));
+				+ i] = rgb_to_int(*mix_color(&c, hud_c, 2, 1));
 	}
 }
 
@@ -175,9 +175,7 @@ void	collision(t_data *game, float dir_x, float dir_y, int coll_dis)
 void	do_jump(t_data *game)
 {
 	if (game->player.z == 0 && game->player.v_up == 0)
-	{
-		game->player.v_up = 280.0;
-	}
+		game->player.v_up = JUMP_VELOCITY;
 	else if (game->player.z < 0)
 	{
 		game->player.v_up = 0;
@@ -187,7 +185,7 @@ void	do_jump(t_data *game)
 	else
 	{
 		game->player.z += game->player.v_up * game->timestep / 1000;
-		game->player.v_up -= 1500.0 * game->timestep / 1000;
+		game->player.v_up -= GRAVITY * game->timestep / 1000;
 	}
 }
 
@@ -198,81 +196,81 @@ void	move_player(t_data *game)
 	float	oldDirX_3d;
 	float	oldDirY_3d;
 
-	oldDirX = game->player.dir[0];
-	oldDirY = game->player.dir[1];
+	oldDirX = game->player.dir_x;
+	oldDirY = game->player.dir_y;
 	oldDirX_3d = game->player.dir3d.x;
 	oldDirY_3d = game->player.dir3d.y;
 	game->coll_h = 0;
 	game->coll_v = 0;
 	if (game->key.w)
 	{
-		collision(game, game->player.dir[0], game->player.dir[1], COLL_DIS);
-		collision(game, game->player.dir[1], -game->player.dir[0], COLL_DIS);
-		collision(game, -game->player.dir[1], game->player.dir[0], COLL_DIS);
-		collision(game, (sqrt(2) / 2) * (game->player.dir[0]
-				- game->player.dir[1]), (sqrt(2) / 2) * (game->player.dir[0]
-				+ game->player.dir[1]), COLL_DIS);
-		collision(game, (sqrt(2) / 2) * (game->player.dir[0]
-				+ game->player.dir[1]), (sqrt(2) / 2) * (-game->player.dir[0]
-				+ game->player.dir[1]), COLL_DIS);
+		collision(game, game->player.dir_x, game->player.dir_y, COLL_DIS);
+		collision(game, game->player.dir_y, -game->player.dir_x, COLL_DIS);
+		collision(game, -game->player.dir_y, game->player.dir_x, COLL_DIS);
+		collision(game, (sqrt(2) / 2) * (game->player.dir_x
+				- game->player.dir_y), (sqrt(2) / 2) * (game->player.dir_x
+				+ game->player.dir_y), COLL_DIS);
+		collision(game, (sqrt(2) / 2) * (game->player.dir_x
+				+ game->player.dir_y), (sqrt(2) / 2) * (-game->player.dir_x
+				+ game->player.dir_y), COLL_DIS);
 		if (!game->coll_v)
-			game->player.pos[0] += round(oldDirX * game->player.speed);
+			game->player.x += round(oldDirX * game->player.speed);
 		if (!game->coll_h)
-			game->player.pos[1] += round(oldDirY * game->player.speed);
+			game->player.y += round(oldDirY * game->player.speed);
 	}
 	else if (game->key.s)
 	{
-		collision(game, -game->player.dir[0], -game->player.dir[1], COLL_DIS);
-		collision(game, game->player.dir[1], -game->player.dir[0], COLL_DIS);
-		collision(game, -game->player.dir[1], game->player.dir[0], COLL_DIS);
-		collision(game, -(sqrt(2) / 2) * (game->player.dir[0]
-				- game->player.dir[1]), -(sqrt(2) / 2) * (game->player.dir[0]
-				+ game->player.dir[1]), COLL_DIS);
-		collision(game, -(sqrt(2) / 2) * (game->player.dir[0]
-				+ game->player.dir[1]), -(sqrt(2) / 2) * (-game->player.dir[0]
-				+ game->player.dir[1]), COLL_DIS);
+		collision(game, -game->player.dir_x, -game->player.dir_y, COLL_DIS);
+		collision(game, game->player.dir_y, -game->player.dir_x, COLL_DIS);
+		collision(game, -game->player.dir_y, game->player.dir_x, COLL_DIS);
+		collision(game, -(sqrt(2) / 2) * (game->player.dir_x
+				- game->player.dir_y), -(sqrt(2) / 2) * (game->player.dir_x
+				+ game->player.dir_y), COLL_DIS);
+		collision(game, -(sqrt(2) / 2) * (game->player.dir_x
+				+ game->player.dir_y), -(sqrt(2) / 2) * (-game->player.dir_x
+				+ game->player.dir_y), COLL_DIS);
 		if (!game->coll_v)
-			game->player.pos[0] -= round(oldDirX * game->player.speed);
+			game->player.x -= round(oldDirX * game->player.speed);
 		if (!game->coll_h)
-			game->player.pos[1] -= round(oldDirY * game->player.speed);
+			game->player.y -= round(oldDirY * game->player.speed);
 	}
 	if (game->key.a)
 	{
-		collision(game, game->player.dir[1], -game->player.dir[0], COLL_DIS);
-		collision(game, -game->player.dir[0], -game->player.dir[1], COLL_DIS);
-		collision(game, game->player.dir[0], game->player.dir[1], COLL_DIS);
-		collision(game, (sqrt(2) / 2) * (game->player.dir[0]
-				+ game->player.dir[1]), (sqrt(2) / 2) * (-game->player.dir[0]
-				+ game->player.dir[1]), COLL_DIS);
-		collision(game, -(sqrt(2) / 2) * (game->player.dir[0]
-				- game->player.dir[1]), -(sqrt(2) / 2) * (game->player.dir[0]
-				+ game->player.dir[1]), COLL_DIS);
+		collision(game, game->player.dir_y, -game->player.dir_x, COLL_DIS);
+		collision(game, -game->player.dir_x, -game->player.dir_y, COLL_DIS);
+		collision(game, game->player.dir_x, game->player.dir_y, COLL_DIS);
+		collision(game, (sqrt(2) / 2) * (game->player.dir_x
+				+ game->player.dir_y), (sqrt(2) / 2) * (-game->player.dir_x
+				+ game->player.dir_y), COLL_DIS);
+		collision(game, -(sqrt(2) / 2) * (game->player.dir_x
+				- game->player.dir_y), -(sqrt(2) / 2) * (game->player.dir_x
+				+ game->player.dir_y), COLL_DIS);
 		if (!game->coll_v)
-			game->player.pos[0] += round(oldDirY * game->player.speed);
+			game->player.x += round(oldDirY * game->player.speed);
 		if (!game->coll_h)
-			game->player.pos[1] -= round(oldDirX * game->player.speed);
+			game->player.y -= round(oldDirX * game->player.speed);
 	}
 	else if (game->key.d)
 	{
-		collision(game, -game->player.dir[1], game->player.dir[0], COLL_DIS);
-		collision(game, -game->player.dir[0], -game->player.dir[1], COLL_DIS);
-		collision(game, game->player.dir[0], game->player.dir[1], COLL_DIS);
-		collision(game, -(sqrt(2) / 2) * (game->player.dir[0]
-				+ game->player.dir[1]), -(sqrt(2) / 2) * (-game->player.dir[0]
-				+ game->player.dir[1]), COLL_DIS);
-		collision(game, (sqrt(2) / 2) * (game->player.dir[0]
-				- game->player.dir[1]), (sqrt(2) / 2) * (game->player.dir[0]
-				+ game->player.dir[1]), COLL_DIS);
+		collision(game, -game->player.dir_y, game->player.dir_x, COLL_DIS);
+		collision(game, -game->player.dir_x, -game->player.dir_y, COLL_DIS);
+		collision(game, game->player.dir_x, game->player.dir_y, COLL_DIS);
+		collision(game, -(sqrt(2) / 2) * (game->player.dir_x
+				+ game->player.dir_y), -(sqrt(2) / 2) * (-game->player.dir_x
+				+ game->player.dir_y), COLL_DIS);
+		collision(game, (sqrt(2) / 2) * (game->player.dir_x
+				- game->player.dir_y), (sqrt(2) / 2) * (game->player.dir_x
+				+ game->player.dir_y), COLL_DIS);
 		if (!game->coll_v)
-			game->player.pos[0] -= round(oldDirY * game->player.speed);
+			game->player.x -= round(oldDirY * game->player.speed);
 		if (!game->coll_h)
-			game->player.pos[1] += round(oldDirX * game->player.speed);
+			game->player.y += round(oldDirX * game->player.speed);
 	}
 	if (game->key.left)
 	{
-		game->player.dir[0] = oldDirX * cos(-ROT_SPEED) - oldDirY
+		game->player.dir_x = oldDirX * cos(-ROT_SPEED) - oldDirY
 			* sin(-ROT_SPEED);
-		game->player.dir[1] = oldDirX * sin(-ROT_SPEED) + oldDirY
+		game->player.dir_y = oldDirX * sin(-ROT_SPEED) + oldDirY
 			* cos(-ROT_SPEED);
 		game->player.dir3d.x = oldDirX_3d * cos(-ROT_SPEED) - oldDirY_3d
 			* sin(-ROT_SPEED);
@@ -283,9 +281,9 @@ void	move_player(t_data *game)
 	}
 	else if (game->key.right)
 	{
-		game->player.dir[0] = oldDirX * cos(ROT_SPEED) - oldDirY
+		game->player.dir_x = oldDirX * cos(ROT_SPEED) - oldDirY
 			* sin(ROT_SPEED);
-		game->player.dir[1] = oldDirX * sin(ROT_SPEED) + oldDirY
+		game->player.dir_y = oldDirX * sin(ROT_SPEED) + oldDirY
 			* cos(ROT_SPEED);
 		game->player.dir3d.x = oldDirX_3d * cos(ROT_SPEED) - oldDirY_3d
 			* sin(ROT_SPEED);
@@ -490,12 +488,12 @@ void	draw_pixel(t_raycast *ray, int col, int row)
 	}
 	else if (ray->res_rc_3d[2] + ray->g->player.z < -32)
 	{
-		temp_x = ray->res_rc_3d[0] - ray->g->player.pos[0];
-		temp_y = ray->res_rc_3d[1] - ray->g->player.pos[1];
+		temp_x = ray->res_rc_3d[0] - ray->g->player.x;
+		temp_y = ray->res_rc_3d[1] - ray->g->player.y;
 		ray->res_rc_3d[0] = temp_x * (-32 - ray->g->player.z)
-			/ ray->res_rc_3d[2] + ray->g->player.pos[0];
+			/ ray->res_rc_3d[2] + ray->g->player.x;
 		ray->res_rc_3d[1] = temp_y * (-32 - ray->g->player.z)
-			/ ray->res_rc_3d[2] + ray->g->player.pos[1];
+			/ ray->res_rc_3d[2] + ray->g->player.y;
 		c = fmod(ray->res_rc_3d[0], B_SIZE) / B_SIZE;
 		c += (c < 0);
 		c = round((1 - c) * ray->g->img_floor.w);
@@ -503,7 +501,7 @@ void	draw_pixel(t_raycast *ray, int col, int row)
 		r += (r < 0);
 		r = round((1 - r) * ray->g->img_floor.h);
 		ray->res_rc_3d[3] = distance(ray->res_rc_3d[0], ray->res_rc_3d[1],
-				ray->g->player.pos[0], ray->g->player.pos[1]);
+				ray->g->player.x, ray->g->player.y);
 		shadow = 1.0 - (fmin(ray->res_rc_3d[3], 8 * B_SIZE) / (8 * B_SIZE));
 		t = ((unsigned int *)ray->g->img_floor.addr)[(int)r
 			* ray->g->img_floor.w + (int)c];
@@ -514,8 +512,8 @@ void	draw_pixel(t_raycast *ray, int col, int row)
 	}
 	else if (ray->res_rc_3d[2] >= 0)
 	{
-		temp_x = ray->res_rc_3d[0] - ray->g->player.pos[0];
-		temp_y = ray->res_rc_3d[1] - ray->g->player.pos[1];
+		temp_x = ray->res_rc_3d[0] - ray->g->player.x;
+		temp_y = ray->res_rc_3d[1] - ray->g->player.y;
 		r = ray->res_rc_3d[2] / sqrt(temp_x * temp_x + temp_y * temp_y
 				+ ray->res_rc_3d[2] * ray->res_rc_3d[2]);
 		r = fmin(1.0, r);
@@ -616,7 +614,7 @@ void	move_doors(t_data *game)
 	{
 		game->coll_door_h = 0;
 		game->coll_door_v = 0;
-		collision(game, game->player.dir[0], game->player.dir[1], OPEN_DIS);
+		collision(game, game->player.dir_x, game->player.dir_y, OPEN_DIS);
 		if ((game->coll_door_h || game->coll_door_v)
 			&& (game->map[(int)game->res_rc[5]][(int)game->res_rc[4]] == 2
 				|| game->map[(int)game->res_rc[5]][(int)game->res_rc[4]] == 3))
@@ -625,7 +623,7 @@ void	move_doors(t_data *game)
 			new->next = game->doors;
 			new->x = (int)game->res_rc[4];
 			new->y = (int)game->res_rc[5];
-			new->open_close = (game->map[new->y][new->x] == 3);
+			new->closed = (game->map[new->y][new->x] == 3);
 			game->doors = new;
 		}
 	}
@@ -634,7 +632,7 @@ void	move_doors(t_data *game)
 	temp = game->doors;
 	while (temp)
 	{
-		game->map[temp->y][temp->x] += ((temp->open_close) * (-2) + 1) * 0.1;
+		game->map[temp->y][temp->x] += ((temp->closed) * (-2) + 1) * 0.1;
 		if (game->map[temp->y][temp->x] <= 2)
 			game->map[temp->y][temp->x] = 2;
 		else if (game->map[temp->y][temp->x] >= 3)

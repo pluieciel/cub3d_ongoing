@@ -15,10 +15,8 @@ int	check_pos(t_data *game, int x, int y, char **visited)
 
 int	check_map(t_data *game)
 {
-	if (game->player.dir[0] == 0 && game->player.dir[1] == 0)
-	{
+	if (game->player.dir_x == 0 && game->player.dir_y == 0)
 		exit(gc_free(game->gc, "Error: no player position\n", 2));
-	}
-	return (check_pos(game, game->player.pos[0] / B_SIZE, game->player.pos[1]
+	return (check_pos(game, game->player.x / B_SIZE, game->player.y
 			/ B_SIZE, game->visited));
 }

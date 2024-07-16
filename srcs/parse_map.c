@@ -4,22 +4,22 @@ void	adddir(t_data *game, char dir)
 {
 	if (dir == 'N')
 	{
-		game->player.dir[1] = -1;
+		game->player.dir_y = -1;
 		game->player.dir3d.y = -1;
 	}
 	else if (dir == 'E')
 	{
-		game->player.dir[0] = 1;
+		game->player.dir_x = 1;
 		game->player.dir3d.x = 1;
 	}
 	else if (dir == 'S')
 	{
-		game->player.dir[1] = 1;
+		game->player.dir_y = 1;
 		game->player.dir3d.y = 1;
 	}
 	else if (dir == 'W')
 	{
-		game->player.dir[0] = -1;
+		game->player.dir_x = -1;
 		game->player.dir3d.x = -1;
 	}
 }
@@ -31,18 +31,18 @@ void	get_init_pos(t_data *game, char dir, int i, int j)
 	float	olddirx_3d;
 	float	olddiry_3d;
 
-	if (game->player.dir[0] != 0 || game->player.dir[1] != 0)
+	if (game->player.dir_x != 0 || game->player.dir_y != 0)
 		exit(gc_free(game->gc, "Error: multiple player position\n", 2));
 	game->map[i][j] = 0;
-	game->player.pos[0] = j * B_SIZE + B_SIZE / 2;
-	game->player.pos[1] = i * B_SIZE + B_SIZE / 2;
+	game->player.x = j * B_SIZE + B_SIZE / 2;
+	game->player.y = i * B_SIZE + B_SIZE / 2;
 	adddir(game, dir);
-	olddirx = game->player.dir[0];
-	olddiry = game->player.dir[1];
+	olddirx = game->player.dir_x;
+	olddiry = game->player.dir_y;
 	olddirx_3d = game->player.dir3d.x;
 	olddiry_3d = game->player.dir3d.y;
-	game->player.dir[0] = olddirx * cos(-ROT_SPEED) - olddiry * sin(-ROT_SPEED);
-	game->player.dir[1] = olddirx * sin(-ROT_SPEED) + olddiry * cos(-ROT_SPEED);
+	game->player.dir_x = olddirx * cos(-ROT_SPEED) - olddiry * sin(-ROT_SPEED);
+	game->player.dir_y = olddirx * sin(-ROT_SPEED) + olddiry * cos(-ROT_SPEED);
 	game->player.dir3d.x = olddirx_3d * cos(-ROT_SPEED) - olddiry_3d
 		* sin(-ROT_SPEED);
 	game->player.dir3d.y = olddirx_3d * sin(-ROT_SPEED) + olddiry_3d

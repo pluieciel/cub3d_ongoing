@@ -37,6 +37,8 @@
 #define NUM_THREADS 8
 #define TRANSPARENT_COLOR 0xFF000000
 #define MOUSE_THRESHOLD 4
+#define GRAVITY 1500
+#define JUMP_VELOCITY (GRAVITY / 6)
 
 typedef enum e_animation_type
 {
@@ -96,13 +98,15 @@ typedef struct s_point3d
 typedef struct s_player
 {
 	int				speed;
-	int				pos[2];
+	int				x;
+	int				y;
 	float			z;
-	float			dir[2];
+	float			dir_x;
+	float			dir_y;
 	float			v_up;
-	t_point3d		dir3d;
 	t_point3d		v_right;
 	t_point3d		v_down;
+	t_point3d		dir3d;
 }					t_player;
 
 typedef struct s_key
@@ -137,7 +141,7 @@ typedef struct s_door
 {
 	int				x;
 	int				y;
-	int open_close; // 0:to open, 1:to close
+	int				closed;
 	struct s_door	*next;
 }					t_door;
 
@@ -150,8 +154,8 @@ typedef struct s_data
 	int				map_w;
 	int				map_h;
 	int				map_index;
-	unsigned int	hud_color;
 	int				elem_n;
+	unsigned int	hud_color;
 	t_player		player;
 	t_key			key;
 	t_gc			*gc;
@@ -215,9 +219,9 @@ typedef struct s_raycast
 
 typedef struct s_color
 {
-	int				r;
-	int				g;
-	int				b;
+	unsigned int	r;
+	unsigned int	g;
+	unsigned int	b;
 }					t_color;
 
 void			init(t_data	*game);
@@ -249,14 +253,14 @@ void			rotate_u(t_point3d *todo, t_point3d u, t_point3d v, float angle);
 void			printv(t_point3d p);
 void			change_image_color(t_data *game, t_image *img);
 int				handle_animation_state(t_data *game, struct s_animation *animation, __uint64_t delay);
-int				handle_keypress(int key, t_data *game);
-int				handle_keyrelease(int key, t_data *game);
+int				handle_key_press(int key, t_data *game);
+int				handle_key_release(int key, t_data *game);
 void			destroy_imgs(t_data *game);
 int				close_window(t_data *game);
-unsigned int	to_rgb(t_color c);
-void			from_rgb(unsigned int color, t_color *c);
-void			add_shadow(t_color *c, float shadow);
-t_color			*mix_color(t_color *c1, t_color c2, int a, int b);
-void			from_r_g_b(int r, int g, int b, t_color *c);
+unsigned int	rgb_to_int(t_color c);
+t_color			int_to_rgb(unsigned int color);
+void			shade_color(t_color *c, float shading);
+t_color			*mix_color(t_color *c1, t_color c2, int base, int blend);
+void			set_rgb(unsigned int r, unsigned int g, unsigned int b, t_color *c);
 
 #endif
