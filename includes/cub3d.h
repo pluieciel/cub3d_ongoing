@@ -221,7 +221,7 @@ typedef struct s_raycast
 void			init(t_data	*game);
 void			parse_map(t_data *game, char *filename);
 void			hook(t_data *game);
-int				check_map(t_data *game);
+int				isvalid_map(t_data *game);
 __uint64_t		get_timestamp_ms(void);
 int				render(t_data *game);
 void			parse_elements(t_data *game, char *filename);

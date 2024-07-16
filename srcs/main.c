@@ -10,7 +10,7 @@ int	main(int ac, char *av[])
 	if (ft_isvalid_extension(av[1], ".cub") != 0)
 		exit(gc_free(game.gc, "Error: invalid file extension\n", 2));
 	parse_map(&game, av[1]);
-	if (check_map(&game))
+	if (!isvalid_map(&game))
 		exit(gc_free(game.gc, "Error: invalid map\n", 2));
 	init_crowbar(&game);
 	init_handgun(&game);
