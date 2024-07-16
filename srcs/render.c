@@ -58,102 +58,6 @@ void	render_image(t_data *game, t_image *img, int x, int y)
 		i++;
 	}
 }
-void	draw_block(t_data *game)
-{
-	int		x;
-	int		y;
-	int		i;
-	int		j;
-	int		newi;
-	int		newj;
-	t_color	c;
-	t_color	hud_c;
-	t_color	c2;
-
-	hud_c = int_to_rgb(game->hud_color);
-	i = MM_POS_Y - MM_RADIUS - 1;
-	while (++i <= MM_POS_Y + MM_RADIUS)
-	{
-		j = MM_POS_X - MM_RADIUS - 1;
-		while (++j <= MM_POS_X + MM_RADIUS)
-		{
-			x = ((j - MM_POS_X) * B_SIZE / MM_FACTOR + game->player.x)
-				/ B_SIZE;
-			y = ((i - MM_POS_Y) * B_SIZE / MM_FACTOR + game->player.y)
-				/ B_SIZE;
-			if (x >= 0 && y >= 0 && x < game->map_w && y < game->map_h
-				&& game->map[y][x] >= 1)
-			if (distance(i, j, MM_POS_Y, MM_POS_X) < MM_RADIUS)
-			{
-				newj = round(-(j - MM_POS_X) * game->player.dir_y
-						+ (i - MM_POS_Y) * game->player.dir_x)
-					+ MM_POS_X;
-				newi = round((j - MM_POS_X) * -game->player.dir_x
-						- (i - MM_POS_Y) * game->player.dir_y)
-					+ MM_POS_Y;
-				c = int_to_rgb(((unsigned int *)game->img.addr)[newi * WIN_W
-					+ newj]);
-				if (game->map[y][x] == 1)
-				{
-					mix_color(&c, hud_c, 2, 1);
-					shade_color(&c, 0.6);
-					((unsigned int *)game->img.addr)[newi * WIN_W
-						+ newj] = rgb_to_int(c);
-				}
-				else if (game->map[y][x] == 3)
-				{
-					set_rgb(0, 0x80, 0x80, &c2);
-					mix_color(&c, c2, 2, 1);
-					((unsigned int *)game->img.addr)[newi * WIN_W
-						+ newj] = rgb_to_int(c);
-				}
-				else if (game->map[y][x] >= 2)
-				{
-					set_rgb(0x80, 0, 0, &c2);
-					mix_color(&c, c2, 2, 1);
-					((unsigned int *)game->img.addr)[newi * WIN_W
-						+ newj] = rgb_to_int(c);
-				}
-			}
-		}
-	}
-}
-
-void	draw_bg(t_data *game, int i, int j, float angle)
-{
-	t_color	c;
-	t_color	hud_c;
-
-	hud_c = int_to_rgb(game->hud_color);
-	if (distance(i, j, MM_POS_X, MM_POS_Y) < MM_RADIUS)
-	{
-		c = int_to_rgb(((unsigned int *)game->img.addr)[j * WIN_W + i]);
-		if (MM_POS_Y > j && atan(1.0 * abs(i - MM_POS_X) / (MM_POS_Y
-					- j)) < angle)
-			((unsigned int *)game->img.addr)[j * WIN_W
-				+ i] = rgb_to_int(*mix_color(&c, hud_c, 1, 1));
-		else
-			((unsigned int *)game->img.addr)[j * WIN_W
-				+ i] = rgb_to_int(*mix_color(&c, hud_c, 2, 1));
-	}
-}
-
-void	draw_minimap(t_data *game)
-{
-	int		i;
-	int		j;
-	float	angle;
-
-	angle = atan(1.0 * (WIN_W / 2) / game->dis_p_s);
-	i = MM_POS_X - MM_RADIUS - 1;
-	while (++i <= MM_POS_X + MM_RADIUS)
-	{
-		j = MM_POS_Y - MM_RADIUS - 1;
-		while (++j <= MM_POS_Y + MM_RADIUS)
-			draw_bg(game, i, j, angle);
-	}
-	draw_block(game);
-}
 
 void	collision(t_data *game, float dir_x, float dir_y, int coll_dis)
 {
@@ -174,18 +78,18 @@ void	collision(t_data *game, float dir_x, float dir_y, int coll_dis)
 
 void	do_jump(t_data *game)
 {
-	if (game->player.z == 0 && game->player.v_up == 0)
-		game->player.v_up = JUMP_VELOCITY;
+	if (game->player.z == 0 && game->player.jump_velocity == 0)
+		game->player.jump_velocity = JUMP_VELOCITY;
 	else if (game->player.z < 0)
 	{
-		game->player.v_up = 0;
+		game->player.jump_velocity = 0;
 		game->player.z = 0;
 		game->key.space = 0;
 	}
 	else
 	{
-		game->player.z += game->player.v_up * game->timestep / 1000;
-		game->player.v_up -= GRAVITY * game->timestep / 1000;
+		game->player.z += game->player.jump_velocity * game->timestep / 1000;
+		game->player.jump_velocity -= GRAVITY * game->timestep / 1000;
 	}
 }
 
@@ -305,7 +209,7 @@ void	move_player(t_data *game)
 		get_vector_down(game, &game->player.v_right, &game->player.v_down);
 	}
 	if (!game->key.space && game->key.ctrl)
-		game->player.z = -20;
+		game->player.z = -10;
 	else if (!game->key.space && !game->key.ctrl)
 		game->player.z = 0;
 	if (game->key.shift)
@@ -691,10 +595,7 @@ int	render(t_data *game)
         move_player(game);
         draw_walls_3d(game);
 		draw_hud(game);
-		if (game->crowbar.state != CROWBAR_NONE)
-			update_crowbar_state(game);
-		else if (game->handgun.state != HANDGUN_NONE)
-			update_handgun_state(game);
+		update_animation(game);
 		mlx_put_image_to_window(game->mlx_ptr, game->win_ptr, game->img.ptr, 0, 0);
     }
     return (0);

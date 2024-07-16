@@ -40,11 +40,12 @@
 #define GRAVITY 1500
 #define JUMP_VELOCITY (GRAVITY / 6)
 
-typedef enum e_animation_type
+typedef struct s_color
 {
-	CROWBAR,
-	HANDGUN
-}					t_animation_type;
+	unsigned int	r;
+	unsigned int	g;
+	unsigned int	b;
+}					t_color;
 
 typedef struct s_animation
 {
@@ -103,7 +104,7 @@ typedef struct s_player
 	float			z;
 	float			dir_x;
 	float			dir_y;
-	float			v_up;
+	float			jump_velocity;
 	t_point3d		v_right;
 	t_point3d		v_down;
 	t_point3d		dir3d;
@@ -217,13 +218,6 @@ typedef struct s_raycast
 	float			nearest_wall_dis;
 }					t_raycast;
 
-typedef struct s_color
-{
-	unsigned int	r;
-	unsigned int	g;
-	unsigned int	b;
-}					t_color;
-
 void			init(t_data	*game);
 void			parse_map(t_data *game, char *filename);
 void			hook(t_data *game);
@@ -235,10 +229,6 @@ float			distance(float x1, float y1, float x2, float y2);
 float			raycast_h(t_data *game, float x, float y, int type);
 float			raycast_v(t_data *game, float x, float y, int type);
 void			raycast(t_data *game, float x, float y, int type);
-t_point3d		*ro_on_z_to_xz(t_point3d p);
-t_point3d		*ro_on_y(t_point3d p, float angle_z);
-t_point3d		*ro_back_on_z(t_point3d p);
-t_point3d		*cross(t_point3d p1, t_point3d p2);
 float			raycast_v_3d(t_raycast *r);
 void			raycast_3d(t_raycast *ray);
 void			update_crowbar_state(t_data *game);
@@ -250,7 +240,6 @@ void 			init_handgun(t_data *game);
 void			get_vector_right(t_data *g, t_point3d *v_right);
 void			get_vector_down(t_data *g, t_point3d *v_right, t_point3d *v_down);
 void			rotate_u(t_point3d *todo, t_point3d u, t_point3d v, float angle);
-void			printv(t_point3d p);
 void			change_image_color(t_data *game, t_image *img);
 int				handle_animation_state(t_data *game, struct s_animation *animation, __uint64_t delay);
 int				handle_key_press(int key, t_data *game);
@@ -262,5 +251,7 @@ t_color			int_to_rgb(unsigned int color);
 void			shade_color(t_color *c, float shading);
 t_color			*mix_color(t_color *c1, t_color c2, int base, int blend);
 void			set_rgb(unsigned int r, unsigned int g, unsigned int b, t_color *c);
+void			update_animation(t_data *game);
+void	draw_minimap(t_data *game);
 
 #endif

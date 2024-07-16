@@ -11,7 +11,7 @@ static void	init_player(t_data *game)
 	game->player.dir3d.x = 0;
 	game->player.dir3d.y = 0;
 	game->player.dir3d.z = 0;
-	game->player.v_up = 0;
+	game->player.jump_velocity = 0;
 }
 
 static void	init_keys(t_data *game)
