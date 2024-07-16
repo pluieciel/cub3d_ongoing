@@ -1,4 +1,4 @@
-#include "cub3D.h"
+#include "cub3d.h"
 
 void	destroy_imgs(t_data *game)
 {
@@ -54,6 +54,12 @@ int	handle_keypress(int key, t_data *game)
 		game->key.one = 1;
 	else if (key == XK_2)
 		game->key.two = 1;
+	else if (key == XK_Control_L)
+		game->key.ctrl = 1;
+	else if (key == XK_Shift_L)
+		game->key.shift = 1;
+	else if (key == XK_space)
+		game->key.space = 1;
 	return (0);
 }
 
@@ -75,6 +81,10 @@ int	handle_keyrelease(int key, t_data *game)
 		game->key.up = 0;
 	else if (key == XK_Down)
 		game->key.down = 0;
+	else if (key == XK_Control_L)
+		game->key.ctrl = 0;
+	else if (key == XK_Shift_L)
+		game->key.shift = 0;
 	return (0);
 }
 

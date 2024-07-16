@@ -1,4 +1,4 @@
-#include "cub3D.h"
+#include "cub3d.h"
 
 void	init(t_data *game)
 {
@@ -7,12 +7,14 @@ void	init(t_data *game)
 	game->mlx_ptr = NULL;
 	game->player.pos[0] = 0;
 	game->player.pos[1] = 0;
+	game->player.z = 0;
 	game->player.dir[0] = 0;
 	game->player.dir[1] = 0;
-	game->player.dir3D.x = 0;
-	game->player.dir3D.y = 0;
-	game->player.dir3D.z = 0;
-	game->player.dir3D.angle = 0;
+	game->player.dir3d.x = 0;
+	game->player.dir3d.y = 0;
+	game->player.dir3d.z = 0;
+	game->move_speed = MOVE_SPEED;
+	game->player.v_up = 0;
 	game->key.w = 0;
 	game->key.a = 0;
 	game->key.s = 0;
@@ -23,6 +25,9 @@ void	init(t_data *game)
 	game->key.down = 0;
 	game->key.one = 0;
 	game->key.two = 0;
+	game->key.ctrl = 0;
+	game->key.shift = 0;
+	game->key.space = 0;
 	game->elem_n = 0;
 	game->map_index = -1;
 	game->map_h = 0;
@@ -73,6 +78,7 @@ void	init(t_data *game)
 	game->img_hud_health.addr = NULL;
 	game->animation_time = 0;
 	game->left_click = 0;
+	game->timestep = 1000 / FPS;
 }
 
 void init_animation(t_data *game, struct s_animation *animation, char *state, int frames)

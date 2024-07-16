@@ -14,6 +14,11 @@
 		"tuple": "c",
 		"type_traits": "c",
 		"utility": "c",
+<<<<<<< HEAD
 		"ostream": "cpp"
+=======
+		"istream": "c",
+		"ostream": "c"
+>>>>>>> yue
 	}
 }

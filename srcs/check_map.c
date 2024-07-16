@@ -1,4 +1,4 @@
-#include "cub3D.h"
+#include "cub3d.h"
 
 int	check_pos(t_data *game, int x, int y, char **visited)
 {
