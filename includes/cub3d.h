@@ -1,42 +1,42 @@
 #ifndef CUB3D_H
 # define CUB3D_H
 
-# include "../libft_gc/includes/libft_gc.h"
-# include "../minilibx/mlx.h"
-# include "../minilibx/mlx_int.h"
-# include <X11/X.h>
-# include <fcntl.h>
-# include <limits.h>
-# include <math.h>
-# include <pthread.h>
-# include <stdarg.h>
-# include <stdio.h>
-# include <stdlib.h>
-# include <string.h>
-# include <sys/time.h>
-# include <unistd.h>
+#include "../libft_gc/includes/libft_gc.h"
+#include "../minilibx/mlx.h"
+#include "../minilibx/mlx_int.h"
+#include <X11/X.h>
+#include <fcntl.h>
+#include <limits.h>
+#include <math.h>
+#include <stdarg.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <sys/time.h>
+#include <unistd.h>
+#include <pthread.h>
 
-# define ASPECT_RATIO (16.0 / 8.0)
-# define WIN_W 1280
-# define WIN_H (WIN_W / ASPECT_RATIO)
-# define FPS 60
-# define B_SIZE 64
-# define ROT_SPEED 0.1
-# define MM_FACTOR 4
-# define MM_RADIUS 100
-# define MM_POS_X (WIN_W - MM_RADIUS - 20)
-# define MM_POS_Y (WIN_H - MM_RADIUS - 20)
-# define MM_RANGE 8
-# define DIS_P_S (WIN_W / 2)
-# define RAYCAST_RANGE 20
-# define ELEM_N 8
-# define COLL_DIS 20
-# define OPEN_DIS 80
-# define SPEED 3
-# define M_PI 3.14159265358979323846
-# define NUM_THREADS 8
-# define TRANSPARENT_COLOR 0xFF000000
-# define MOUSE_THRESHOLD 4
+#define ASPECT_RATIO (16.0 / 8.0)
+#define WIN_W 1280
+#define WIN_H (WIN_W / ASPECT_RATIO)
+#define FPS 60
+#define B_SIZE 64
+#define ROT_SPEED 0.1
+#define MM_FACTOR 16
+#define MM_RADIUS 100
+#define MM_POS_X (WIN_W - MM_RADIUS - 20)
+#define MM_POS_Y (WIN_H - MM_RADIUS - 20)
+#define MM_RANGE 8
+#define DIS_P_S (WIN_W / 2)
+#define RAYCAST_RANGE 20
+#define ELEM_N 8
+#define COLL_DIS 20
+#define OPEN_DIS 80
+#define SPEED 3
+#define M_PI 3.14159265358979323846
+#define NUM_THREADS 8
+#define TRANSPARENT_COLOR 0xFF000000
+#define MOUSE_THRESHOLD 4
 
 typedef enum e_animation_type
 {
@@ -220,47 +220,43 @@ typedef struct s_color
 	int				b;
 }					t_color;
 
-void				init(t_data *game);
-void				parse_map(t_data *game, char *filename);
-void				hook(t_data *game);
-int					check_map(t_data *game);
-__uint64_t			get_timestamp_ms(void);
-int					render(t_data *game);
-void				parse_element(t_data *game, char *filename);
-float				distance(float x1, float y1, float x2, float y2);
-float				raycast_h(t_data *game, float x, float y, int type);
-float				raycast_v(t_data *game, float x, float y, int type);
-void				raycast(t_data *game, float x, float y, int type);
-t_point3d			*ro_on_z_to_xz(t_point3d p);
-t_point3d			*ro_on_y(t_point3d p, float angle_z);
-t_point3d			*ro_back_on_z(t_point3d p);
-t_point3d			*cross(t_point3d p1, t_point3d p2);
-float				raycast_v_3d(t_raycast *r);
-void				raycast_3d(t_raycast *ray);
-void				update_crowbar_state(t_data *game);
-void				update_handgun_state(t_data *game);
-void				collision(t_data *game, float dir_x, float dir_y,
-						int coll_dis);
-void				render_image(t_data *game, t_image *img, int x, int y);
-void				init_crowbar(t_data *game);
-void				init_handgun(t_data *game);
-void				get_vector_right(t_data *g, t_point3d *v_right);
-void				get_vector_down(t_data *g, t_point3d *v_right,
-						t_point3d *v_down);
-void				rotate_u(t_point3d *todo, t_point3d u, t_point3d v,
-						float angle);
-void				printv(t_point3d p);
-void				change_image_color(t_data *game, t_image *img);
-int					handle_animation_state(t_data *game,
-						struct s_animation *animation, __uint64_t delay);
-int					handle_keypress(int key, t_data *game);
-int					handle_keyrelease(int key, t_data *game);
-void				destroy_imgs(t_data *game);
-int					close_window(t_data *game);
-unsigned int		to_rgb(t_color c);
-void				from_rgb(unsigned int color, t_color *c);
-void				add_shadow(t_color *c, float shadow);
-void				mix_color(t_color *c1, t_color c2, int a, int b);
-void				from_r_g_b(int r, int g, int b, t_color *c);
+void			init(t_data	*game);
+void			parse_map(t_data *game, char *filename);
+void			hook(t_data *game);
+int				check_map(t_data *game);
+__uint64_t		get_timestamp_ms(void);
+int				render(t_data *game);
+void			parse_element(t_data *game, char *filename);
+float			distance(float x1, float y1, float x2, float y2);
+float			raycast_h(t_data *game, float x, float y, int type);
+float			raycast_v(t_data *game, float x, float y, int type);
+void			raycast(t_data *game, float x, float y, int type);
+t_point3d		*ro_on_z_to_xz(t_point3d p);
+t_point3d		*ro_on_y(t_point3d p, float angle_z);
+t_point3d		*ro_back_on_z(t_point3d p);
+t_point3d		*cross(t_point3d p1, t_point3d p2);
+float			raycast_v_3d(t_raycast *r);
+void			raycast_3d(t_raycast *ray);
+void			update_crowbar_state(t_data *game);
+void			update_handgun_state(t_data *game);
+void			collision(t_data *game, float dir_x, float dir_y, int coll_dis);
+void			render_image(t_data *game, t_image *img, int x, int y);
+void			init_crowbar(t_data *game);
+void 			init_handgun(t_data *game);
+void			get_vector_right(t_data *g, t_point3d *v_right);
+void			get_vector_down(t_data *g, t_point3d *v_right, t_point3d *v_down);
+void			rotate_u(t_point3d *todo, t_point3d u, t_point3d v, float angle);
+void			printv(t_point3d p);
+void			change_image_color(t_data *game, t_image *img);
+int				handle_animation_state(t_data *game, struct s_animation *animation, __uint64_t delay);
+int				handle_keypress(int key, t_data *game);
+int				handle_keyrelease(int key, t_data *game);
+void			destroy_imgs(t_data *game);
+int				close_window(t_data *game);
+unsigned int	to_rgb(t_color c);
+void			from_rgb(unsigned int color, t_color *c);
+void			add_shadow(t_color *c, float shadow);
+t_color			*mix_color(t_color *c1, t_color c2, int a, int b);
+void			from_r_g_b(int r, int g, int b, t_color *c);
 
 #endif

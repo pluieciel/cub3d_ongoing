@@ -27,137 +27,132 @@ void	change_image_color(t_data *game, t_image *img)
 				from_r_g_b(target.r / 255, target.g / 255, target.b / 255, &new);
                 ((unsigned int *)img->addr)[j * img->w + i] = to_rgb(new);
 			}
-            j++;
-        }
-        i++;
-    }
-}
-
-void render_image(t_data *game, t_image *img, int x, int y)
-{
-    int i;
-    int j;
-	int dest_x;
-    int dest_y;
-
-    i = 0;
-    while (i < WIN_W && i < img->w)
-    {
-        j = 0;
-        while (j < WIN_H && j < img->h)
-        {
-            unsigned int t = ((unsigned int *)img->addr)[j * img->w + i];
-           	dest_x = i + x;
-            dest_y = j + y;
-
-             if (dest_x >= 0 && dest_x < WIN_W && dest_y >= 0 && dest_y < WIN_H && t != TRANSPARENT_COLOR)
-                ((unsigned int *)game->img.addr)[dest_y * WIN_W + dest_x] = t;
-            j++;
-        }
-        i++;
-    }
-}
-
-void	draw_minimap(t_data *game)
-{
-	int				x;
-	int				y;
-	int				i;
-	int				j;
-	int				newi;
-	int				newj;
-	float			angle;
-	t_color			c;
-	t_color			hud_c;
-	t_color			c2;
-
-	from_rgb(game->hud_color, &hud_c);
-	angle = atan(1.0 * (WIN_W / 2) / game->dis_p_s);
-	i = MM_POS_X - MM_RADIUS;
-	while (i <= MM_POS_X + MM_RADIUS)
-	{
-		j = MM_POS_Y - MM_RADIUS;
-		while (j <= MM_POS_Y + MM_RADIUS)
-		{
-			if (distance(i, j, MM_POS_X, MM_POS_Y) < MM_RADIUS)
-			{
-				from_rgb(((unsigned int *)game->img.addr)[j * WIN_W + i], &c);
-				if (MM_POS_Y > j && atan(1.0 * abs(i - MM_POS_X) / (MM_POS_Y - j)) < angle)
-				{
-					mix_color(&c, hud_c, 1, 1);
-					((unsigned int *)game->img.addr)[j * WIN_W + i] = to_rgb(c);
-				}
-				else
-				{
-					mix_color(&c, hud_c, 2, 1);
-					((unsigned int *)game->img.addr)[j * WIN_W + i] = to_rgb(c);
-				}
-			}
 			j++;
 		}
 		i++;
 	}
-	y = game->player.pos[1] / B_SIZE - MM_RANGE;
-	while (y <= game->player.pos[1] / B_SIZE + MM_RANGE)
+}
+
+void	render_image(t_data *game, t_image *img, int x, int y)
+{
+	int				i;
+	int				j;
+	int				dest_x;
+	int				dest_y;
+	unsigned int	t;
+
+	i = 0;
+	while (i < WIN_W && i < img->w)
 	{
-		x = game->player.pos[0] / B_SIZE - MM_RANGE;
-		while (x < game->player.pos[0] / B_SIZE + MM_RANGE)
+		j = 0;
+		while (j < WIN_H && j < img->h)
 		{
+			t = ((unsigned int *)img->addr)[j * img->w + i];
+			dest_x = i + x;
+			dest_y = j + y;
+			if (dest_x >= 0 && dest_x < WIN_W && dest_y >= 0 && dest_y < WIN_H
+				&& t != TRANSPARENT_COLOR)
+				((unsigned int *)game->img.addr)[dest_y * WIN_W + dest_x] = t;
+			j++;
+		}
+		i++;
+	}
+}
+void	draw_block(t_data *game)
+{
+	int		x;
+	int		y;
+	int		i;
+	int		j;
+	int		newi;
+	int		newj;
+	t_color	c;
+	t_color	hud_c;
+	t_color	c2;
+
+	from_rgb(game->hud_color, &hud_c);
+	i = MM_POS_Y - MM_RADIUS - 1;
+	while (++i <= MM_POS_Y + MM_RADIUS)
+	{
+		j = MM_POS_X - MM_RADIUS - 1;
+		while (++j <= MM_POS_X + MM_RADIUS)
+		{
+			x = ((j - MM_POS_X) * B_SIZE / MM_FACTOR + game->player.pos[0])
+				/ B_SIZE;
+			y = ((i - MM_POS_Y) * B_SIZE / MM_FACTOR + game->player.pos[1])
+				/ B_SIZE;
 			if (x >= 0 && y >= 0 && x < game->map_w && y < game->map_h
 				&& game->map[y][x] >= 1)
+			if (distance(i, j, MM_POS_Y, MM_POS_X) < MM_RADIUS)
 			{
-				i = y * B_SIZE / MM_FACTOR + MM_POS_Y - game->player.pos[1]
-					/ MM_FACTOR + 1;
-				while (i < y * B_SIZE / MM_FACTOR + MM_POS_Y
-					- game->player.pos[1] / MM_FACTOR + B_SIZE / MM_FACTOR - 1)
+				newj = round(-(j - MM_POS_X) * game->player.dir[1]
+						+ (i - MM_POS_Y) * game->player.dir[0])
+					+ MM_POS_X;
+				newi = round((j - MM_POS_X) * -game->player.dir[0]
+						- (i - MM_POS_Y) * game->player.dir[1])
+					+ MM_POS_Y;
+				from_rgb(((unsigned int *)game->img.addr)[newi * WIN_W
+					+ newj], &c);
+				if (game->map[y][x] == 1)
 				{
-					j = x * B_SIZE / MM_FACTOR + MM_POS_X - game->player.pos[0]
-						/ MM_FACTOR + 1;
-					while (j < x * B_SIZE / MM_FACTOR + MM_POS_X
-						- game->player.pos[0] / MM_FACTOR + B_SIZE / MM_FACTOR
-						- 1)
-					{
-						if (distance(i, j, MM_POS_Y, MM_POS_X) < MM_RADIUS)
-						{
-							newj = round(-(j - MM_POS_X) * game->player.dir[1]
-									+ (i - MM_POS_Y) * game->player.dir[0])
-								+ MM_POS_X;
-							newi = round((j - MM_POS_X) * -game->player.dir[0]
-									- (i - MM_POS_Y) * game->player.dir[1])
-								+ MM_POS_Y;
-							from_rgb(((unsigned int *)game->img.addr)[newi * WIN_W
-								+ newj], &c);
-							if (game->map[y][x] == 1)
-							{
-								mix_color(&c, hud_c, 2, 1);
-								add_shadow(&c, 0.6);
-								((unsigned int *)game->img.addr)[newi * WIN_W
-									+ newj] = to_rgb(c);
-							}
-							else if (game->map[y][x] == 3)
-							{	
-								from_r_g_b(0, 0x80, 0x80, &c2);
-								mix_color(&c, c2, 2, 1);
-								((unsigned int *)game->img.addr)[newi * WIN_W
-									+ newj] = to_rgb(c);
-							}
-							else if (game->map[y][x] >= 2)
-							{	
-								from_r_g_b(0x80, 0, 0, &c2);
-								mix_color(&c, c2, 2, 1);
-								((unsigned int *)game->img.addr)[newi * WIN_W
-									+ newj] = to_rgb(c);
-							}
-						}
-						j++;
-					}
-					i++;
+					mix_color(&c, hud_c, 2, 1);
+					add_shadow(&c, 0.6);
+					((unsigned int *)game->img.addr)[newi * WIN_W
+						+ newj] = to_rgb(c);
+				}
+				else if (game->map[y][x] == 3)
+				{
+					from_r_g_b(0, 0x80, 0x80, &c2);
+					mix_color(&c, c2, 2, 1);
+					((unsigned int *)game->img.addr)[newi * WIN_W
+						+ newj] = to_rgb(c);
+				}
+				else if (game->map[y][x] >= 2)
+				{
+					from_r_g_b(0x80, 0, 0, &c2);
+					mix_color(&c, c2, 2, 1);
+					((unsigned int *)game->img.addr)[newi * WIN_W
+						+ newj] = to_rgb(c);
 				}
 			}
-			x++;
 		}
-		y++;
 	}
+}
+
+void	draw_bg(t_data *game, int i, int j, float angle)
+{
+	t_color	c;
+	t_color	hud_c;
+
+	from_rgb(game->hud_color, &hud_c);
+	if (distance(i, j, MM_POS_X, MM_POS_Y) < MM_RADIUS)
+	{
+		from_rgb(((unsigned int *)game->img.addr)[j * WIN_W + i], &c);
+		if (MM_POS_Y > j && atan(1.0 * abs(i - MM_POS_X) / (MM_POS_Y
+					- j)) < angle)
+			((unsigned int *)game->img.addr)[j * WIN_W
+				+ i] = to_rgb(*mix_color(&c, hud_c, 1, 1));
+		else
+			((unsigned int *)game->img.addr)[j * WIN_W
+				+ i] = to_rgb(*mix_color(&c, hud_c, 2, 1));
+	}
+}
+
+void	draw_minimap(t_data *game)
+{
+	int		i;
+	int		j;
+	float	angle;
+
+	angle = atan(1.0 * (WIN_W / 2) / game->dis_p_s);
+	i = MM_POS_X - MM_RADIUS - 1;
+	while (++i <= MM_POS_X + MM_RADIUS)
+	{
+		j = MM_POS_Y - MM_RADIUS - 1;
+		while (++j <= MM_POS_Y + MM_RADIUS)
+			draw_bg(game, i, j, angle);
+	}
+	draw_block(game);
 }
 
 void	collision(t_data *game, float dir_x, float dir_y, int coll_dis)
@@ -341,8 +336,9 @@ void	do_doors_h(t_raycast *ray, int col, int row)
 		else
 			c = round((1 - fmod(ray->doors_h[ray->num_doors_h][0], B_SIZE)
 						/ B_SIZE) * ray->g->img_door.w);
-		r = round((1 - fmod(ray->doors_h[ray->num_doors_h][2] + 32 + ray->g->player.z, B_SIZE)
-					/ B_SIZE) * ray->g->img_door.h);
+		r = round((1 - fmod(ray->doors_h[ray->num_doors_h][2] + 32
+						+ ray->g->player.z, B_SIZE) / B_SIZE)
+				* ray->g->img_door.h);
 		offset = (ray->g->map[(int)ray->doors_h[ray->num_doors_h][6]][(int)ray->doors_h[ray->num_doors_h][5]]
 				- 2) * ray->g->img_door.w;
 		if ((int)c < ray->g->img_door.w / 2 && (int)c
@@ -391,8 +387,9 @@ void	do_doors_v(t_raycast *ray, int col, int row)
 		else
 			c = round((1 - fmod(ray->doors_v[ray->num_doors_v][1], B_SIZE)
 						/ B_SIZE) * ray->g->img_door.w);
-		r = round((1 - fmod(ray->doors_v[ray->num_doors_v][2] + 32 + ray->g->player.z, B_SIZE)
-					/ B_SIZE) * ray->g->img_door.h);
+		r = round((1 - fmod(ray->doors_v[ray->num_doors_v][2] + 32
+						+ ray->g->player.z, B_SIZE) / B_SIZE)
+				* ray->g->img_door.h);
 		offset = (ray->g->map[(int)ray->doors_v[ray->num_doors_v][6]][(int)ray->doors_v[ray->num_doors_v][5]]
 				- 2) * ray->g->img_door.w;
 		if ((int)c < ray->g->img_door.w / 2 && (int)c
@@ -443,8 +440,8 @@ void	draw_pixel(t_raycast *ray, int col, int row)
 			{
 				c = round(fmod(ray->res_rc_3d[0], B_SIZE) / B_SIZE
 						* ray->g->img_wall_no.w);
-				r = round((1 - fmod(ray->res_rc_3d[2] + ray->g->player.z + 32, B_SIZE) / B_SIZE)
-						* ray->g->img_wall_no.h);
+				r = round((1 - fmod(ray->res_rc_3d[2] + ray->g->player.z + 32,
+								B_SIZE) / B_SIZE) * ray->g->img_wall_no.h);
 				t = ((unsigned int *)ray->g->img_wall_no.addr)[(int)r
 					* ray->g->img_wall_no.w + (int)c];
 			}
@@ -452,8 +449,8 @@ void	draw_pixel(t_raycast *ray, int col, int row)
 			{
 				c = round((1 - fmod(ray->res_rc_3d[0], B_SIZE) / B_SIZE)
 						* ray->g->img_wall_so.w);
-				r = round((1 - fmod(ray->res_rc_3d[2] + ray->g->player.z + 32, B_SIZE) / B_SIZE)
-						* ray->g->img_wall_so.h);
+				r = round((1 - fmod(ray->res_rc_3d[2] + ray->g->player.z + 32,
+								B_SIZE) / B_SIZE) * ray->g->img_wall_so.h);
 				t = ((unsigned int *)ray->g->img_wall_so.addr)[(int)r
 					* ray->g->img_wall_so.w + (int)c];
 			}
@@ -469,8 +466,8 @@ void	draw_pixel(t_raycast *ray, int col, int row)
 			{
 				c = round(fmod(ray->res_rc_3d[1], B_SIZE) / B_SIZE
 						* ray->g->img_wall_ea.w);
-				r = round((1 - fmod(ray->res_rc_3d[2] + ray->g->player.z + 32, B_SIZE) / B_SIZE)
-						* ray->g->img_wall_ea.h);
+				r = round((1 - fmod(ray->res_rc_3d[2] + ray->g->player.z + 32,
+								B_SIZE) / B_SIZE) * ray->g->img_wall_ea.h);
 				t = ((unsigned int *)ray->g->img_wall_ea.addr)[(int)r
 					* ray->g->img_wall_ea.w + (int)c];
 			}
@@ -478,8 +475,8 @@ void	draw_pixel(t_raycast *ray, int col, int row)
 			{
 				c = round((1 - fmod(ray->res_rc_3d[1], B_SIZE) / B_SIZE)
 						* ray->g->img_wall_we.w);
-				r = round((1 - fmod(ray->res_rc_3d[2] + ray->g->player.z + 32, B_SIZE) / B_SIZE)
-						* ray->g->img_wall_we.h);
+				r = round((1 - fmod(ray->res_rc_3d[2] + ray->g->player.z + 32,
+								B_SIZE) / B_SIZE) * ray->g->img_wall_we.h);
 				t = ((unsigned int *)ray->g->img_wall_we.addr)[(int)r
 					* ray->g->img_wall_we.w + (int)c];
 			}
@@ -495,10 +492,10 @@ void	draw_pixel(t_raycast *ray, int col, int row)
 	{
 		temp_x = ray->res_rc_3d[0] - ray->g->player.pos[0];
 		temp_y = ray->res_rc_3d[1] - ray->g->player.pos[1];
-		ray->res_rc_3d[0] = temp_x * (-32 - ray->g->player.z) / ray->res_rc_3d[2]
-			+ ray->g->player.pos[0];
-		ray->res_rc_3d[1] = temp_y * (-32 - ray->g->player.z) / ray->res_rc_3d[2]
-			+ ray->g->player.pos[1];
+		ray->res_rc_3d[0] = temp_x * (-32 - ray->g->player.z)
+			/ ray->res_rc_3d[2] + ray->g->player.pos[0];
+		ray->res_rc_3d[1] = temp_y * (-32 - ray->g->player.z)
+			/ ray->res_rc_3d[2] + ray->g->player.pos[1];
 		c = fmod(ray->res_rc_3d[0], B_SIZE) / B_SIZE;
 		c += (c < 0);
 		c = round((1 - c) * ray->g->img_floor.w);
