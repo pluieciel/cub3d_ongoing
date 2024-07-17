@@ -582,28 +582,41 @@ t_image *get_hud_image(t_data *game, char *name)
 	return (NULL);
 }
 
-void render_hud_image(t_data *game, char *name, int x, int y)
+void render_hud_image(t_data *game, char *name, int *x, int y)
 {
 	t_image *img;
 
 	img = get_hud_image(game, name);
 	if (img)
-		render_image(game, img, WIN_W - img->w - x, WIN_H - img->h - y);
+	{
+		render_image(game, img, WIN_W - img->w - *x, WIN_H - img->h - y);
+		*x += img->w; 
+	}
 }
 
 void draw_hud(t_data *game)
 {
+	int x;
+
+	x = WIN_W - 40;
+	render_hud_image(game, "hud_cross.xpm", &x, 20);
+	x -= 45;
+	render_hud_image(game, "hud_number_1.xpm", &x, 20);
+	x -= 30;
+	render_hud_image(game, "hud_number_0.xpm", &x, 20);
+	x -= 35;
+	render_hud_image(game, "hud_number_0.xpm", &x, 20);
+	x -= 35;
+	render_hud_image(game, "hud_divider.xpm", &x, 20);
+	x -= 50;
+	render_hud_image(game, "hud_suit_full.xpm", &x, 15);
+	x -= 50;
+	render_hud_image(game, "hud_number_1.xpm", &x, 20);
+	x -= 30;
+	render_hud_image(game, "hud_number_0.xpm", &x, 20);
+	x -= 35;
+	render_hud_image(game, "hud_number_0.xpm", &x, 20);
 	draw_minimap(game);
-	
-	render_hud_image(game, "hud_cross.xpm", WIN_W - 40, 20);
-	render_hud_image(game, "hud_number_1.xpm", 60, 20);
-	render_hud_image(game, "hud_number_0.xpm", 75, 20);
-	render_hud_image(game, "hud_number_0.xpm", 95, 20);
-	render_hud_image(game, "hud_suit_full.xpm", 125, 20);
-	render_hud_image(game, "hud_number_1.xpm", 140, 20);
-	render_hud_image(game, "hud_number_0.xpm", 180, 20);
-	render_hud_image(game, "hud_number_0.xpm", 195, 20);
-	render_hud_image(game, "hud_flash_full.xpm", WIN_W - 20, -WIN_H - 20);
 }
 
 int	render(t_data *game)
