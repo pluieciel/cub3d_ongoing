@@ -34,7 +34,7 @@ void	init_crowbar(t_data *game)
 	game->crowbar.attack_hit.head = NULL;
 	game->crowbar.holster.frames = NULL;
 	game->crowbar.holster.head = NULL;
-	game->crowbar.state = CROWBAR_DRAW;
+	game->crowbar.state = DRAW;
 	game->crowbar.equiped = 0;
 	game->crowbar.completed = 0;
 	init_animation(game, &game->crowbar.draw, "crowbar/draw", 12);
@@ -51,7 +51,7 @@ void	init_handgun(t_data *game)
 	game->handgun.shoot.head = NULL;
 	game->handgun.holster.frames = NULL;
 	game->handgun.holster.head = NULL;
-	game->handgun.state = HANDGUN_NONE;
+	game->handgun.state = NONE;
 	game->handgun.equiped = 0;
 	game->handgun.completed = 0;
 	init_animation(game, &game->handgun.draw, "handgun/draw", 15);

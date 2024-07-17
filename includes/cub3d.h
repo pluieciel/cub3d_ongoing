@@ -17,18 +17,17 @@
 # include <sys/time.h>
 # include <unistd.h>
 
-# define ASPECT_RATIO (16.0 / 8.0)
 # define WIN_W 1280
-# define WIN_H (WIN_W / ASPECT_RATIO)
+# define WIN_H 720
 # define FPS 60
 # define B_SIZE 64
 # define ROT_SPEED 0.1
 # define MM_FACTOR 16
 # define MM_RADIUS 100
-# define MM_POS_X (WIN_W - MM_RADIUS - 20)
-# define MM_POS_Y (WIN_H - MM_RADIUS - 20)
+# define MM_POS_X 1160
+# define MM_POS_Y 600
 # define MM_RANGE 8
-# define DIS_P_S (WIN_W / 2)
+# define DIS_P_S 640
 # define RAYCAST_RANGE 20
 # define ELEM_N 8
 # define COLL_DIS 20
@@ -39,7 +38,7 @@
 # define TRANSPARENT_COLOR 0xFF000000
 # define MOUSE_THRESHOLD 4
 # define GRAVITY 1500
-# define JUMP_VELOCITY (GRAVITY / 6)
+# define JUMP_VELOCITY 250
 
 typedef struct s_color
 {
@@ -54,40 +53,36 @@ typedef struct s_animation
 	t_list			*head;
 }					t_animation;
 
+typedef enum e_state
+{
+	IDLE,
+	DRAW,
+	ATTACK,
+	ATTACK_HIT,
+	SHOOT,
+	HOLSTER,
+	NONE
+}	t_state;
+
 typedef struct s_crowbar
 {
-	enum			e_state_crowbar
-	{
-		CROWBAR_IDLE,
-		CROWBAR_DRAW,
-		CROWBAR_ATTACK,
-		CROWBAR_ATTACK_HIT,
-		CROWBAR_HOLSTER,
-		CROWBAR_NONE
-	} state;
+	int				equiped;
+	int				completed;
 	t_animation		draw;
 	t_animation		attack;
 	t_animation		attack_hit;
 	t_animation		holster;
-	int				equiped;
-	int				completed;
+	t_state			state;
 }					t_crowbar;
 
 typedef struct s_handgun
 {
-	enum			e_state_handgun
-	{
-		HANDGUN_IDLE,
-		HANDGUN_DRAW,
-		HANDGUN_SHOOT,
-		HANDGUN_HOLSTER,
-		HANDGUN_NONE
-	} state;
+	int				equiped;
+	int				completed;
 	t_animation		draw;
 	t_animation		shoot;
 	t_animation		holster;
-	int				equiped;
-	int				completed;
+	t_state			state;
 }					t_handgun;
 
 typedef struct s_point3d
@@ -156,14 +151,14 @@ typedef struct s_door
 
 typedef struct s_res_rc
 {
-	float x;
-	float y;
-	float z;
-	float map_x;
-	float map_y;
-	float dis;
-	float dir;
-}	t_res_rc;
+	float			x;
+	float			y;
+	float			z;
+	float			map_x;
+	float			map_y;
+	float			dis;
+	float			dir;
+}					t_res_rc;
 
 typedef struct s_data
 {
@@ -208,21 +203,21 @@ typedef struct s_data
 
 typedef struct s_raycast
 {
-	pthread_t		thread;
-	t_data			*g;
-	t_point3d		p;
-	t_point3d		*v_down;
-	t_point3d		*v_right;
 	int				col_start;
 	int				col_end;
-	t_res_rc		rc_h;
-	t_res_rc		rc_v;
-	t_res_rc		*rc;
 	int				num_doors_h;
 	int				num_doors_v;
 	float			doors_h[20][7];
 	float			doors_v[20][7];
 	float			nearest_wall_dis;
+	t_data			*g;
+	t_point3d		p;
+	t_point3d		*v_down;
+	t_point3d		*v_right;
+	t_res_rc		rc_h;
+	t_res_rc		rc_v;
+	t_res_rc		*rc;
+	pthread_t		thread;
 }					t_raycast;
 
 void				init(t_data *game);

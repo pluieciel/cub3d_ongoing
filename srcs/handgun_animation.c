@@ -7,24 +7,24 @@ static void	handle_handgun_idle_state(t_data *game)
 		render_image(game, (t_image *)game->handgun.shoot.head->content, 0, 0);
 		check_collision(game, game->player.dir_x, game->player.dir_y, COLL_DIS);
 		if (game->left_click)
-			game->handgun.state = HANDGUN_SHOOT;
+			game->handgun.state = SHOOT;
 		else if (game->key.two || game->key.one)
-			game->handgun.state = HANDGUN_HOLSTER;
+			game->handgun.state = HOLSTER;
 	}
 	else if (game->key.two)
-		game->handgun.state = HANDGUN_DRAW;
+		game->handgun.state = DRAW;
 }
 
 static void	handle_handgun_completed(t_data *game)
 {
 	if (game->key.one)
 	{
-		game->handgun.state = HANDGUN_NONE;
-		game->crowbar.state = CROWBAR_DRAW;
+		game->handgun.state = NONE;
+		game->crowbar.state = DRAW;
 	}
-	if (game->handgun.state != HANDGUN_NONE)
+	if (game->handgun.state != NONE)
 	{
-		game->handgun.state = HANDGUN_IDLE;
+		game->handgun.state = IDLE;
 		game->key.two = 0;
 		game->key.one = 0;
 	}
@@ -36,18 +36,18 @@ void	update_handgun_state(t_data *game)
 
 	completed = &game->handgun.completed;
 	*completed = 0;
-	if (game->handgun.state == HANDGUN_IDLE)
+	if (game->handgun.state == IDLE)
 		handle_handgun_idle_state(game);
-	else if (game->handgun.state == HANDGUN_DRAW)
+	else if (game->handgun.state == DRAW)
 	{
 		*completed = handle_animation_state(game, &game->handgun.draw, FPS);
 		if (*completed)
 			game->handgun.equiped = 1;
 	}
-	else if (game->handgun.state == HANDGUN_SHOOT)
+	else if (game->handgun.state == SHOOT)
 		*completed = handle_animation_state(game, &game->handgun.shoot, FPS
 				/ 2);
-	else if (game->handgun.state == HANDGUN_HOLSTER)
+	else if (game->handgun.state == HOLSTER)
 	{
 		*completed = handle_animation_state(game, &game->handgun.holster, FPS);
 		if (*completed)

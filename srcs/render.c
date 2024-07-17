@@ -10,7 +10,7 @@ void	apply_color_shading(t_data *game, t_image *img)
     int i;
     int j;
 	unsigned int t;
-	t_color c;
+	t_color color;
 	t_color new;
     
     i = 0;
@@ -22,9 +22,9 @@ void	apply_color_shading(t_data *game, t_image *img)
 			t = ((unsigned int *)img->addr)[j * img->w + i];
             if (t != TRANSPARENT_COLOR)
 			{              
-			  	c = int_to_rgb(game->hud_color);
-				shade_color(&c, t & 0xFF);
-				set_rgb(c.r / 255, c.g / 255, c.b / 255, &new);
+			  	color = int_to_rgb(game->hud_color);
+				shade_color(&color, t & 0xFF);
+				set_rgb(color.r / 255, color.g / 255, color.b / 255, &new);
                 ((unsigned int *)img->addr)[j * img->w + i] = rgb_to_int(new);
 			}
 			j++;

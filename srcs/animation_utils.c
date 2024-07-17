@@ -19,8 +19,8 @@ int	handle_animation_state(t_data *game, struct s_animation *animation,
 
 void update_animation(t_data *game)
 {
-	if (game->crowbar.state != CROWBAR_NONE)
+	if (game->crowbar.state != NONE)
 		update_crowbar_state(game);
-	else if (game->handgun.state != HANDGUN_NONE)
+	else if (game->handgun.state != NONE)
 		update_handgun_state(game);
 }
