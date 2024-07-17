@@ -324,12 +324,9 @@ void	draw_door_v(t_raycast *ray, int col, int row)
 	ray->num_doors_v--;
 }
 
-t_color get_texture_color(t_image *img, int row, int col)
+unsigned int get_texture_color(t_image *img, int row, int col)
 {
-	unsigned int color;
-
-	color = ((unsigned int *)img->addr)[row * img->w + col];
-	return (int_to_rgb(color));
+	return (((unsigned int *)img->addr)[row * img->w + col]);
 }
 
 t_color get_wall_color(t_raycast *ray, t_image *img, float pos)
@@ -339,7 +336,7 @@ t_color get_wall_color(t_raycast *ray, t_image *img, float pos)
 
 	col = round(fmod(pos, B_SIZE) / B_SIZE * img->w);
 	row = round((1 - fmod(ray->rc->z + ray->g->player.z + 32, B_SIZE) / B_SIZE) * img->h);
-	return (get_texture_color(img, row, col));
+	return (int_to_rgb(get_texture_color(img, row, col)));
 }
 
 void draw_wall(t_raycast *ray, int row, int col)
@@ -354,8 +351,6 @@ void draw_wall(t_raycast *ray, int row, int col)
 			color = get_wall_color(ray, &ray->g->img_wall_no, ray->rc->x);
 		else
 			color = get_wall_color(ray, &ray->g->img_wall_so, ray->rc->x);
-		shade_color(&color, shadow);
-		((unsigned int *)ray->g->img.addr)[row * WIN_W + col] = rgb_to_int(color);
 	}
 	else
 	{
@@ -363,9 +358,9 @@ void draw_wall(t_raycast *ray, int row, int col)
 			color = get_wall_color(ray, &ray->g->img_wall_no, ray->rc->y);
 		else
 			color = get_wall_color(ray, &ray->g->img_wall_so, ray->rc->y);
-		shade_color(&color, shadow);
-		((unsigned int *)ray->g->img.addr)[row * WIN_W + col] = rgb_to_int(color);
 	}
+	shade_color(&color, shadow);
+	((unsigned int *)ray->g->img.addr)[row * WIN_W + col] = rgb_to_int(color);
 	ray->nearest_wall_dis = ray->rc->dis;
 }
 
@@ -386,7 +381,7 @@ void draw_floor(t_raycast *ray, int row, int col)
 	r = round((1 - r) * ray->g->img_floor.h);
 	ray->rc->dis = distance(ray->rc->x, ray->rc->y, ray->g->player.x, ray->g->player.y);
 	shadow = 1.0 - (fmin(ray->rc->dis, 8 * B_SIZE) / (8 * B_SIZE));
-	color = get_texture_color(&ray->g->img_floor, r, c);
+	color = int_to_rgb(get_texture_color(&ray->g->img_floor, r, c));
 	shade_color(&color, shadow);
 	((unsigned int *)ray->g->img.addr)[row * WIN_W + col] = rgb_to_int(color);
 }
@@ -397,7 +392,7 @@ void draw_sky(t_raycast *ray, int row, int col)
 	float	temp_y;
 	float	r;
 	float	c;
-	t_color	color;
+	unsigned int color;
 
 	temp_x = ray->rc->x - ray->g->player.x;
 	temp_y = ray->rc->y - ray->g->player.y;
@@ -412,7 +407,7 @@ void draw_sky(t_raycast *ray, int row, int col)
 	r *= ray->g->img_sky.h;
 	c *= ray->g->img_sky.w;
 	color = get_texture_color(&ray->g->img_sky, r, c);
-	((unsigned int *)ray->g->img.addr)[row * WIN_W + col] = rgb_to_int(color);
+	((unsigned int *)ray->g->img.addr)[row * WIN_W + col] = color;
 }
 
 void draw_door(t_raycast *ray, int row, int col)
