@@ -87,6 +87,7 @@ void	init(t_data *game)
 	game->dis_p_s = DIS_P_S;
 	game->time = get_timestamp_ms();
 	game->doors = NULL;
+	game->hud_elem = NULL;
 	game->mlx_ptr = mlx_init();
 	game->gc = (t_gc *)gc_insert(game->gc, game->mlx_ptr);
 	game->animation_time = 0;

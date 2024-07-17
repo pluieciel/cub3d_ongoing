@@ -3,17 +3,11 @@
 static void	load_texture(t_data *game, t_image *img, char *line)
 {
 	char	*path;
-	int		fd;
 
 	if (img->ptr != NULL)
 		exit(gc_free(game->gc, "Error: duplicated element\n", 2));
 	path = ft_strtrim_gc(line, "\n", &game->gc);
-	if (ft_isvalid_extension(path, ".xpm") != 0)
-		exit(gc_free(game->gc, "Error: invalid file extension\n", 2));
-	fd = open(path, O_RDONLY);
-	if (fd < 0)
-		exit(gc_free(game->gc, "Error: invalid file\n", 2));
-	close(fd);
+	check_file(game, path, ".xpm");
 	img->ptr = mlx_xpm_file_to_image(game->mlx_ptr, path, &img->w, &img->h);
 	img->addr = mlx_get_data_addr(img->ptr, &img->bpp, &img->line_len,
 			&img->endian);
