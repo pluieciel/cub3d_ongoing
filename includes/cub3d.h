@@ -190,12 +190,6 @@ typedef struct s_data
 	t_image			img_wall_we;
 	t_image			img_floor;
 	t_image			img_door;
-	t_image			img_hud_health;
-	t_image			img_hud_zero;
-	t_image			img_hud_one;
-	t_image			img_hud_divider;
-	t_image			img_hud_full_suit;
-	t_image			img_hud_flash_full;
 	t_list			*hud_elem;
 	t_door			*doors;
 	t_crowbar		crowbar;

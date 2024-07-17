@@ -11,7 +11,7 @@ hook_key.c utils.c color.c minimap.c init_hud.c
 OBJECTS = $(addprefix $(OBJECTS_DIR)/, $(SOURCES:.c=.o))
 
 CFLAGS = -Wall -Wextra -Werror -I$(HEADERS_DIR) -g
-LDFLAGS = -L./libft_gc -L./minilibx -lft_gc -lmlx_Linux -lXext -lX11 -lm -lpthread
+LDFLAGS = -L./libft_gc -L./minilibx -lft_gc -lmlx_Linux -lXext -lX11 -lm -lpthread -Ofast
 AR = ar -rcs
 
 $(OBJECTS_DIR)/%.o: $(SOURCES_DIR)/%.c

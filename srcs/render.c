@@ -455,18 +455,17 @@ void	*render_section(void *arg)
 	int			row;
 
 	ray = (t_raycast *)arg;
-	col = ray->col_start;
-	while (col < ray->col_end)
+	col = ray->col_start - 1;
+	while (++col < ray->col_end)
 	{
-		row = 0;
-		while (row < WIN_H)
+		row = -1;
+		while (++row < WIN_H)
 		{
 			raycast_3d(ray);
 			draw_pixel(ray, col, row);
 			ray->xyz[0] += ray->p1->x;
 			ray->xyz[1] += ray->p1->y;
 			ray->xyz[2] += ray->p1->z;
-			row++;
 		}
 		ray->xyz[0] -= ray->p1->x * WIN_H;
 		ray->xyz[1] -= ray->p1->y * WIN_H;
@@ -474,7 +473,6 @@ void	*render_section(void *arg)
 		ray->xyz[0] += ray->p2->x;
 		ray->xyz[1] += ray->p2->y;
 		ray->xyz[2] += ray->p2->z;
-		col++;
 	}
 	return (NULL);
 }
@@ -484,8 +482,8 @@ void	draw_walls_3d(t_data *g)
 	t_raycast	ray[NUM_THREADS];
 	int			i;
 
-	i = 0;
-	while (i < NUM_THREADS)
+	i = -1;
+	while (++i < NUM_THREADS)
 	{
 		ray[i].g = g;
 		ray[i].p1 = &g->player.v_down;
@@ -502,7 +500,6 @@ void	draw_walls_3d(t_data *g)
 			* WIN_H / 2 - g->player.v_right.z * WIN_W / 2 + g->player.v_right.z
 			* ray[i].col_start;
 		pthread_create(&ray[i].tid, NULL, render_section, &ray[i]);
-		i++;
 	}
 	i = -1;
 	while (++i < NUM_THREADS)
@@ -585,41 +582,28 @@ t_image *get_hud_image(t_data *game, char *name)
 	return (NULL);
 }
 
-void draw_hud(t_data *game)
+void render_hud_image(t_data *game, char *name, int x, int y)
 {
 	t_image *img;
 
+	img = get_hud_image(game, name);
+	if (img)
+		render_image(game, img, WIN_W - img->w - x, WIN_H - img->h - y);
+}
+
+void draw_hud(t_data *game)
+{
 	draw_minimap(game);
-	img = get_hud_image(game, "hud_cross.xpm");
-	if (img)
-		render_image(game, img, 20, WIN_H - img->h - 20);
-	img = get_hud_image(game, "hud_number_1.xpm");
-	if (img)
-		render_image(game, img, 60, WIN_H - img->h - 20);
-	img = get_hud_image(game, "hud_number_0.xpm");
-	if (img)
-		render_image(game, img, 75, WIN_H - img->h - 20);
-	img = get_hud_image(game, "hud_number_0.xpm");
-	if (img)
-		render_image(game, img, 95, WIN_H - img->h - 20);
-	img = get_hud_image(game, "hud_divider.xpm");
-	if (img)
-		render_image(game, img, 125, WIN_H - img->h - 20);
-	img = get_hud_image(game, "hud_suit_full.xpm");
-	if (img)
-		render_image(game, img, 140, WIN_H - img->h - 15);
-	img = get_hud_image(game, "hud_number_1.xpm");
-	if (img)
-		render_image(game, img, 180, WIN_H - img->h - 20);
-	img = get_hud_image(game, "hud_number_0.xpm");
-	if (img)
-		render_image(game, img, 195, WIN_H - img->h - 20);
-	img = get_hud_image(game, "hud_number_0.xpm");
-	if (img)
-		render_image(game, img, 215, WIN_H - img->h - 20);
-	img = get_hud_image(game, "hud_flash_full.xpm");
-	if (img)
-		render_image(game, img, WIN_W - img->w - 20, 20);
+	
+	render_hud_image(game, "hud_cross.xpm", WIN_W - 40, 20);
+	render_hud_image(game, "hud_number_1.xpm", 60, 20);
+	render_hud_image(game, "hud_number_0.xpm", 75, 20);
+	render_hud_image(game, "hud_number_0.xpm", 95, 20);
+	render_hud_image(game, "hud_suit_full.xpm", 125, 20);
+	render_hud_image(game, "hud_number_1.xpm", 140, 20);
+	render_hud_image(game, "hud_number_0.xpm", 180, 20);
+	render_hud_image(game, "hud_number_0.xpm", 195, 20);
+	render_hud_image(game, "hud_flash_full.xpm", WIN_W - 20, -WIN_H - 20);
 }
 
 int	render(t_data *game)
