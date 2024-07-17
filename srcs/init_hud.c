@@ -20,7 +20,7 @@ void	init_hud(t_data *game)
 			snprintf(path, sizeof(path), "resources/hud/%s", elem->name);
 			check_file(game, path, ".xpm");
 			set_image(game, &elem->img, path);
-			change_image_color(game, elem->img);
+			apply_color_shading(game, elem->img);
 			ft_lstadd_back(&game->hud_elem, ft_lstnew_gc(elem, &game->gc));
 		}
 		dp = readdir(hud_dir);

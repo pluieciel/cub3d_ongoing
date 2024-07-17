@@ -5,12 +5,12 @@ float	distance(float x1, float y1, float x2, float y2)
 	return (sqrt((x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2)));
 }
 
-void	change_image_color(t_data *game, t_image *img)
+void	apply_color_shading(t_data *game, t_image *img)
 {
     int i;
     int j;
 	unsigned int t;
-	t_color target;
+	t_color c;
 	t_color new;
     
     i = 0;
@@ -22,9 +22,9 @@ void	change_image_color(t_data *game, t_image *img)
 			t = ((unsigned int *)img->addr)[j * img->w + i];
             if (t != TRANSPARENT_COLOR)
 			{              
-			  	target = int_to_rgb(game->hud_color);
-				shade_color(&target, t & 0xFF);
-				set_rgb(target.r / 255, target.g / 255, target.b / 255, &new);
+			  	c = int_to_rgb(game->hud_color);
+				shade_color(&c, t & 0xFF);
+				set_rgb(c.r / 255, c.g / 255, c.b / 255, &new);
                 ((unsigned int *)img->addr)[j * img->w + i] = rgb_to_int(new);
 			}
 			j++;
@@ -64,13 +64,13 @@ void	render_image(t_data *game, t_image *img, int x, int y)
 void	collision(t_data *game, float dir_x, float dir_y, int coll_dis)
 {
 	raycast(game, dir_x, dir_y, (coll_dis == OPEN_DIS));
-	if (game->res_rc_h.dis < coll_dis && game->res_rc_h.dis < game->res_rc_v.dis)
+	if (game->rc_h.dis < coll_dis && game->rc_h.dis < game->rc_v.dis)
 	{
 		game->coll_wall_h = 1;
 		if (coll_dis == OPEN_DIS)
 			game->coll_door_h = 1;
 	}
-	if (game->res_rc_v.dis < coll_dis && game->res_rc_v.dis < game->res_rc_h.dis)
+	if (game->rc_v.dis < coll_dis && game->rc_v.dis < game->rc_h.dis)
 	{
 		game->coll_wall_v = 1;
 		if (coll_dis == OPEN_DIS)
@@ -334,26 +334,26 @@ void	draw_pixel(t_raycast *ray, int col, int row)
 	unsigned int	t;
 
 	ray->nearest_wall_dis = RAYCAST_RANGE * B_SIZE;
-	if (ray->res_rc->dir != 0 && ray->res_rc->z + ray->g->player.z >= -32
-		&& ray->res_rc->z + ray->g->player.z <= 32)
+	if (ray->rc->dir != 0 && ray->rc->z + ray->g->player.z >= -32
+		&& ray->rc->z + ray->g->player.z <= 32)
 	{
-		shadow = 1.0 - (fmin(ray->res_rc->dis, 8 * B_SIZE) / (8 * B_SIZE));
-		if (ray->res_rc == &ray->res_rc_h)
+		shadow = 1.0 - (fmin(ray->rc->dis, 8 * B_SIZE) / (8 * B_SIZE));
+		if (ray->rc == &ray->rc_h)
 		{
-			if (ray->res_rc->dir == 1)
+			if (ray->rc->dir == 1)
 			{
-				c = round(fmod(ray->res_rc->x, B_SIZE) / B_SIZE
+				c = round(fmod(ray->rc->x, B_SIZE) / B_SIZE
 						* ray->g->img_wall_no.w);
-				r = round((1 - fmod(ray->res_rc->z + ray->g->player.z + 32,
+				r = round((1 - fmod(ray->rc->z + ray->g->player.z + 32,
 								B_SIZE) / B_SIZE) * ray->g->img_wall_no.h);
 				t = ((unsigned int *)ray->g->img_wall_no.addr)[(int)r
 					* ray->g->img_wall_no.w + (int)c];
 			}
 			else
 			{
-				c = round((1 - fmod(ray->res_rc->x, B_SIZE) / B_SIZE)
+				c = round((1 - fmod(ray->rc->x, B_SIZE) / B_SIZE)
 						* ray->g->img_wall_so.w);
-				r = round((1 - fmod(ray->res_rc->z + ray->g->player.z + 32,
+				r = round((1 - fmod(ray->rc->z + ray->g->player.z + 32,
 								B_SIZE) / B_SIZE) * ray->g->img_wall_so.h);
 				t = ((unsigned int *)ray->g->img_wall_so.addr)[(int)r
 					* ray->g->img_wall_so.w + (int)c];
@@ -366,20 +366,20 @@ void	draw_pixel(t_raycast *ray, int col, int row)
 		}
 		else
 		{
-			if (ray->res_rc->dir == 1)
+			if (ray->rc->dir == 1)
 			{
-				c = round(fmod(ray->res_rc->y, B_SIZE) / B_SIZE
+				c = round(fmod(ray->rc->y, B_SIZE) / B_SIZE
 						* ray->g->img_wall_ea.w);
-				r = round((1 - fmod(ray->res_rc->z + ray->g->player.z + 32,
+				r = round((1 - fmod(ray->rc->z + ray->g->player.z + 32,
 								B_SIZE) / B_SIZE) * ray->g->img_wall_ea.h);
 				t = ((unsigned int *)ray->g->img_wall_ea.addr)[(int)r
 					* ray->g->img_wall_ea.w + (int)c];
 			}
 			else
 			{
-				c = round((1 - fmod(ray->res_rc->y, B_SIZE) / B_SIZE)
+				c = round((1 - fmod(ray->rc->y, B_SIZE) / B_SIZE)
 						* ray->g->img_wall_we.w);
-				r = round((1 - fmod(ray->res_rc->z + ray->g->player.z + 32,
+				r = round((1 - fmod(ray->rc->z + ray->g->player.z + 32,
 								B_SIZE) / B_SIZE) * ray->g->img_wall_we.h);
 				t = ((unsigned int *)ray->g->img_wall_we.addr)[(int)r
 					* ray->g->img_wall_we.w + (int)c];
@@ -390,25 +390,25 @@ void	draw_pixel(t_raycast *ray, int col, int row)
 				+ (((int)round(((t >> 8) & 0xff) * shadow) & 0xff) << 8)
 				+ ((int)round(((t)&0xff) * shadow) & 0xff);
 		}
-		ray->nearest_wall_dis = ray->res_rc->dis;
+		ray->nearest_wall_dis = ray->rc->dis;
 	}
-	else if (ray->res_rc->z + ray->g->player.z < -32)
+	else if (ray->rc->z + ray->g->player.z < -32)
 	{
-		temp_x = ray->res_rc->x - ray->g->player.x;
-		temp_y = ray->res_rc->y - ray->g->player.y;
-		ray->res_rc->x = temp_x * (-32 - ray->g->player.z)
-			/ ray->res_rc->z + ray->g->player.x;
-		ray->res_rc->y = temp_y * (-32 - ray->g->player.z)
-			/ ray->res_rc->z + ray->g->player.y;
-		c = fmod(ray->res_rc->x, B_SIZE) / B_SIZE;
+		temp_x = ray->rc->x - ray->g->player.x;
+		temp_y = ray->rc->y - ray->g->player.y;
+		ray->rc->x = temp_x * (-32 - ray->g->player.z)
+			/ ray->rc->z + ray->g->player.x;
+		ray->rc->y = temp_y * (-32 - ray->g->player.z)
+			/ ray->rc->z + ray->g->player.y;
+		c = fmod(ray->rc->x, B_SIZE) / B_SIZE;
 		c += (c < 0);
 		c = round((1 - c) * ray->g->img_floor.w);
-		r = fmod(ray->res_rc->y, B_SIZE) / B_SIZE;
+		r = fmod(ray->rc->y, B_SIZE) / B_SIZE;
 		r += (r < 0);
 		r = round((1 - r) * ray->g->img_floor.h);
-		ray->res_rc->dis = distance(ray->res_rc->x, ray->res_rc->y,
+		ray->rc->dis = distance(ray->rc->x, ray->rc->y,
 				ray->g->player.x, ray->g->player.y);
-		shadow = 1.0 - (fmin(ray->res_rc->dis, 8 * B_SIZE) / (8 * B_SIZE));
+		shadow = 1.0 - (fmin(ray->rc->dis, 8 * B_SIZE) / (8 * B_SIZE));
 		t = ((unsigned int *)ray->g->img_floor.addr)[(int)r
 			* ray->g->img_floor.w + (int)c];
 		((unsigned int *)ray->g->img.addr)[row * WIN_W
@@ -416,12 +416,12 @@ void	draw_pixel(t_raycast *ray, int col, int row)
 			+ (((int)round(((t >> 8) & 0xff) * shadow) & 0xff) << 8)
 			+ ((int)round(((t)&0xff) * shadow) & 0xff);
 	}
-	else if (ray->res_rc->z >= 0)
+	else if (ray->rc->z >= 0)
 	{
-		temp_x = ray->res_rc->x - ray->g->player.x;
-		temp_y = ray->res_rc->y - ray->g->player.y;
-		r = ray->res_rc->z / sqrt(temp_x * temp_x + temp_y * temp_y
-				+ ray->res_rc->z * ray->res_rc->z);
+		temp_x = ray->rc->x - ray->g->player.x;
+		temp_y = ray->rc->y - ray->g->player.y;
+		r = ray->rc->z / sqrt(temp_x * temp_x + temp_y * temp_y
+				+ ray->rc->z * ray->rc->z);
 		r = fmin(1.0, r);
 		r = 1.0 - asin(r) / (M_PI / 2);
 		if (temp_x != 0)
@@ -463,16 +463,16 @@ void	*render_section(void *arg)
 		{
 			raycast_3d(ray);
 			draw_pixel(ray, col, row);
-			ray->p.x += ray->p1->x;
-			ray->p.y += ray->p1->y;
-			ray->p.z += ray->p1->z;
+			ray->p.x += ray->v_down->x;
+			ray->p.y += ray->v_down->y;
+			ray->p.z += ray->v_down->z;
 		}
-		ray->p.x -= ray->p1->x * WIN_H;
-		ray->p.y -= ray->p1->y * WIN_H;
-		ray->p.z -= ray->p1->z * WIN_H;
-		ray->p.x += ray->p2->x;
-		ray->p.y += ray->p2->y;
-		ray->p.z += ray->p2->z;
+		ray->p.x -= ray->v_down->x * WIN_H;
+		ray->p.y -= ray->v_down->y * WIN_H;
+		ray->p.z -= ray->v_down->z * WIN_H;
+		ray->p.x += ray->v_right->x;
+		ray->p.y += ray->v_right->y;
+		ray->p.z += ray->v_right->z;
 	}
 	return (NULL);
 }
@@ -486,8 +486,8 @@ void	draw_walls_3d(t_data *g)
 	while (++i < NUM_THREADS)
 	{
 		ray[i].g = g;
-		ray[i].p1 = &g->player.v_down;
-		ray[i].p2 = &g->player.v_right;
+		ray[i].v_down = &g->player.v_down;
+		ray[i].v_right = &g->player.v_right;
 		ray[i].col_start = i * (WIN_W / NUM_THREADS);
 		ray[i].col_end = (i + 1) * (WIN_W / NUM_THREADS);
 		ray[i].p.x = g->player.dir3d.x * g->dis_p_s - g->player.v_down.x
@@ -519,13 +519,13 @@ void	move_doors(t_data *game)
 		game->coll_door_v = 0;
 		collision(game, game->player.dir_x, game->player.dir_y, OPEN_DIS);
 		if ((game->coll_door_h || game->coll_door_v)
-			&& (game->map[(int)game->res_rc->map_y][(int)game->res_rc->map_x] == 2
-				|| game->map[(int)game->res_rc->map_y][(int)game->res_rc->map_x] == 3))
+			&& (game->map[(int)game->rc->map_y][(int)game->rc->map_x] == 2
+				|| game->map[(int)game->rc->map_y][(int)game->rc->map_x] == 3))
 		{
 			new = gc_malloc(sizeof(t_door), &game->gc);
 			new->next = game->doors;
-			new->x = (int)game->res_rc->map_x;
-			new->y = (int)game->res_rc->map_y;
+			new->x = (int)game->rc->map_x;
+			new->y = (int)game->rc->map_y;
 			new->closed = (game->map[new->y][new->x] == 3);
 			game->doors = new;
 		}
