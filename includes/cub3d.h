@@ -35,7 +35,7 @@
 # define OPEN_DIS 80
 # define SPEED 3
 # define M_PI 3.14159265358979323846
-# define NUM_THREADS 12
+# define NUM_THREADS 8
 # define TRANSPARENT_COLOR 0xFF000000
 # define MOUSE_THRESHOLD 4
 # define GRAVITY 1500
@@ -207,7 +207,9 @@ typedef struct s_raycast
 	t_point3d		*p2;
 	int				col_start;
 	int				col_end;
-	float			xyz[3];
+	float			x;
+	float			y;
+	float			z;
 	//	x y z dis dir idx_x idx_y
 	float			h[7];
 	float			v[7];

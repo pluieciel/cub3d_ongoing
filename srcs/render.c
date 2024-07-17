@@ -463,16 +463,16 @@ void	*render_section(void *arg)
 		{
 			raycast_3d(ray);
 			draw_pixel(ray, col, row);
-			ray->xyz[0] += ray->p1->x;
-			ray->xyz[1] += ray->p1->y;
-			ray->xyz[2] += ray->p1->z;
+			ray->x += ray->p1->x;
+			ray->y += ray->p1->y;
+			ray->z += ray->p1->z;
 		}
-		ray->xyz[0] -= ray->p1->x * WIN_H;
-		ray->xyz[1] -= ray->p1->y * WIN_H;
-		ray->xyz[2] -= ray->p1->z * WIN_H;
-		ray->xyz[0] += ray->p2->x;
-		ray->xyz[1] += ray->p2->y;
-		ray->xyz[2] += ray->p2->z;
+		ray->x -= ray->p1->x * WIN_H;
+		ray->y -= ray->p1->y * WIN_H;
+		ray->z -= ray->p1->z * WIN_H;
+		ray->x += ray->p2->x;
+		ray->y += ray->p2->y;
+		ray->z += ray->p2->z;
 	}
 	return (NULL);
 }
@@ -490,13 +490,13 @@ void	draw_walls_3d(t_data *g)
 		ray[i].p2 = &g->player.v_right;
 		ray[i].col_start = i * (WIN_W / NUM_THREADS);
 		ray[i].col_end = (i + 1) * (WIN_W / NUM_THREADS);
-		ray[i].xyz[0] = g->player.dir3d.x * g->dis_p_s - g->player.v_down.x
+		ray[i].x = g->player.dir3d.x * g->dis_p_s - g->player.v_down.x
 			* WIN_H / 2 - g->player.v_right.x * WIN_W / 2 + g->player.v_right.x
 			* ray[i].col_start;
-		ray[i].xyz[1] = g->player.dir3d.y * g->dis_p_s - g->player.v_down.y
+		ray[i].y = g->player.dir3d.y * g->dis_p_s - g->player.v_down.y
 			* WIN_H / 2 - g->player.v_right.y * WIN_W / 2 + g->player.v_right.y
 			* ray[i].col_start;
-		ray[i].xyz[2] = g->player.dir3d.z * g->dis_p_s - g->player.v_down.z
+		ray[i].z = g->player.dir3d.z * g->dis_p_s - g->player.v_down.z
 			* WIN_H / 2 - g->player.v_right.z * WIN_W / 2 + g->player.v_right.z
 			* ray[i].col_start;
 		pthread_create(&ray[i].tid, NULL, render_section, &ray[i]);

@@ -22,9 +22,9 @@ float	raycast_v_3d2(t_raycast *r)
 		/ B_SIZE < r->g->map_h && r->v[2] + r->g->player.z <= B_SIZE / 2
 		&& r->v[2] + r->g->player.z >= -B_SIZE / 2)
 	{
-		r->v[5] = (int)r->v[0] / B_SIZE - (r->xyz[0] < 0);
+		r->v[5] = (int)r->v[0] / B_SIZE - (r->x < 0);
 		r->v[6] = (int)r->v[1] / B_SIZE;
-		if (r->xyz[0] != 0 && r->v[5] >= 0 && r->v[5] < r->g->map_w)
+		if (r->x != 0 && r->v[5] >= 0 && r->v[5] < r->g->map_w)
 		{
 			if (r->g->map[(int)r->v[6]][(int)r->v[5]] == 1)
 				return (distance(r->v[0], r->v[1], r->g->player.x,
@@ -33,9 +33,9 @@ float	raycast_v_3d2(t_raycast *r)
 				add_door_v(r);
 		}
 		range++;
-		r->v[1] += r->xyz[1] / fabs(r->xyz[0]) * B_SIZE;
-		r->v[0] += ((r->xyz[0] > 0) * 2 - 1) * B_SIZE;
-		r->v[2] += r->xyz[2] / fabs(r->xyz[0]) * B_SIZE;
+		r->v[1] += r->y / fabs(r->x) * B_SIZE;
+		r->v[0] += ((r->x > 0) * 2 - 1) * B_SIZE;
+		r->v[2] += r->z / fabs(r->x) * B_SIZE;
 	}
 	return ((RAYCAST_RANGE + 1.0) * B_SIZE);
 }
@@ -50,21 +50,21 @@ void	reset_v(t_raycast *r)
 
 float	raycast_v_3d(t_raycast *r)
 {
-	if (r->xyz[0] < 0)
+	if (r->x < 0)
 	{
 		r->v[0] = r->g->player.x - r->g->player.x % B_SIZE;
 		r->v[1] = r->g->player.y - (r->g->player.x % B_SIZE)
-			* r->xyz[1] / r->xyz[0];
-		r->v[2] = (r->g->player.x % B_SIZE) * r->xyz[2] / -r->xyz[0];
+			* r->y / r->x;
+		r->v[2] = (r->g->player.x % B_SIZE) * r->z / -r->x;
 		r->v[4] = -1;
 	}
-	else if (r->xyz[0] > 0)
+	else if (r->x > 0)
 	{
 		r->v[0] = r->g->player.x + B_SIZE - r->g->player.x % B_SIZE;
 		r->v[1] = r->g->player.y + (B_SIZE - r->g->player.x % B_SIZE)
-			* r->xyz[1] / r->xyz[0];
-		r->v[2] = (B_SIZE - r->g->player.x % B_SIZE) * r->xyz[2]
-			/ r->xyz[0];
+			* r->y / r->x;
+		r->v[2] = (B_SIZE - r->g->player.x % B_SIZE) * r->z
+			/ r->x;
 		r->v[4] = 1;
 	}
 	else
