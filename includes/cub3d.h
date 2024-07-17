@@ -154,19 +154,26 @@ typedef struct s_door
 	struct s_door	*next;
 }					t_door;
 
+typedef struct s_res_rc
+{
+	float x;
+	float y;
+	float z;
+	float map_x;
+	float map_y;
+	float dis;
+	float dir;
+}	t_res_rc;
+
 typedef struct s_data
 {
 	void			*mlx_ptr;
 	void			*win_ptr;
 	char			**visited;
 	float			**map;
-	float			*res_rc;
-	//	0 1 -> x y
-	//	2 -> dis
-	//	3 -> dir
-	//	4 5 x y idx on map
-	float			res_rc_h[6];
-	float			res_rc_v[6];
+	t_res_rc		res_rc_h;
+	t_res_rc		res_rc_v;
+	t_res_rc		*res_rc;
 	int				map_w;
 	int				map_h;
 	int				map_index;
@@ -201,20 +208,16 @@ typedef struct s_data
 
 typedef struct s_raycast
 {
-	pthread_t		tid;
+	pthread_t		thread;
 	t_data			*g;
+	t_point3d		p;
 	t_point3d		*p1;
 	t_point3d		*p2;
 	int				col_start;
 	int				col_end;
-	float			x;
-	float			y;
-	float			z;
-	//	x y z dis dir idx_x idx_y
-	float			h[7];
-	float			v[7];
-	float			*res_rc_3d;
-	//	x y z dis dir
+	t_res_rc		res_rc_h;
+	t_res_rc		res_rc_v;
+	t_res_rc		*res_rc;
 	int				num_doors_h;
 	int				num_doors_v;
 	float			doors_h[20][7];
