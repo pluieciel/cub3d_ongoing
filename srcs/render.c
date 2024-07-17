@@ -61,7 +61,7 @@ void	render_image(t_data *game, t_image *img, int x, int y)
 	}
 }
 
-void	collision(t_data *game, float dir_x, float dir_y, int coll_dis)
+void	check_collision(t_data *game, float dir_x, float dir_y, int coll_dis)
 {
 	raycast(game, dir_x, dir_y, (coll_dis == OPEN_DIS));
 	if (game->rc_h.dis < coll_dis && game->rc_h.dis < game->rc_v.dis)
@@ -78,7 +78,7 @@ void	collision(t_data *game, float dir_x, float dir_y, int coll_dis)
 	}
 }
 
-void	do_jump(t_data *game)
+void	player_jump(t_data *game)
 {
 	if (game->player.z == 0 && game->player.jump_velocity == 0)
 		game->player.jump_velocity = JUMP_VELOCITY;
@@ -95,109 +95,84 @@ void	do_jump(t_data *game)
 	}
 }
 
-void	move_player(t_data *game)
+void	check_collisions(t_data *game, float dir_x, float dir_y, float scale)
 {
-	float	oldDirX;
-	float	oldDirY;
-	float	oldDirX_3d;
-	float	oldDirY_3d;
+	check_collision(game, dir_x, dir_y, COLL_DIS);
+	check_collision(game, dir_y, -dir_x, COLL_DIS);
+	check_collision(game, -dir_y, dir_x, COLL_DIS);
+	check_collision(game, scale * (dir_x - dir_y), scale * (dir_x + dir_y), COLL_DIS);
+	check_collision(game, scale * (dir_x + dir_y), scale * (-dir_x + dir_y), COLL_DIS);
+}
 
-	oldDirX = game->player.dir_x;
-	oldDirY = game->player.dir_y;
-	oldDirX_3d = game->player.dir3d.x;
-	oldDirY_3d = game->player.dir3d.y;
+void	move_forward(t_data *game, float dir_x, float dir_y, float scale)
+{
+	check_collisions(game, game->player.dir_x, game->player.dir_y, scale);
+	if (!game->coll_wall_v)
+		game->player.x += round(dir_x * game->player.speed);
+	if (!game->coll_wall_h)
+		game->player.y += round(dir_y * game->player.speed);
+}
+
+void	move_backward(t_data *game, float dir_x, float dir_y, float scale)
+{
+	check_collisions(game, -game->player.dir_x, -game->player.dir_y, -scale);
+	if (!game->coll_wall_v)
+		game->player.x -= round(dir_x * game->player.speed);
+	if (!game->coll_wall_h)
+		game->player.y -= round(dir_y * game->player.speed);
+}
+
+void	move_left(t_data *game, float dir_x, float dir_y, float scale)
+{
+	check_collisions(game, game->player.dir_y, -game->player.dir_x, scale);
+	if (!game->coll_wall_v)
+		game->player.x += round(dir_y * game->player.speed);
+	if (!game->coll_wall_h)
+		game->player.y -= round(dir_x * game->player.speed);
+}
+
+void	move_right(t_data *game, float dir_x, float dir_y, float scale)
+{
+	check_collisions(game, -game->player.dir_y, game->player.dir_x, -scale);
+	if (!game->coll_wall_v)
+		game->player.x -= round(dir_y * game->player.speed);
+	if (!game->coll_wall_h)
+		game->player.y += round(dir_x * game->player.speed);
+}
+
+void update_player_state(t_data *game)
+{
+	if (game->key.shift)
+		game->player.speed = SPEED * 2;
+	else if (!game->key.shift)
+		game->player.speed = SPEED;
+	if (!game->key.space && game->key.ctrl)
+		game->player.z = -10;
+	else if (!game->key.space && !game->key.ctrl)
+		game->player.z = 0;
+	if (game->key.space)
+		player_jump(game);
+}
+
+void	move_player(t_data *game, float dir_x, float dir_y)
+{
+	float	scale;
+
 	game->coll_wall_h = 0;
 	game->coll_wall_v = 0;
+	scale = sqrt(2) / 2;
 	if (game->key.w)
-	{
-		collision(game, game->player.dir_x, game->player.dir_y, COLL_DIS);
-		collision(game, game->player.dir_y, -game->player.dir_x, COLL_DIS);
-		collision(game, -game->player.dir_y, game->player.dir_x, COLL_DIS);
-		collision(game, (sqrt(2) / 2) * (game->player.dir_x
-				- game->player.dir_y), (sqrt(2) / 2) * (game->player.dir_x
-				+ game->player.dir_y), COLL_DIS);
-		collision(game, (sqrt(2) / 2) * (game->player.dir_x
-				+ game->player.dir_y), (sqrt(2) / 2) * (-game->player.dir_x
-				+ game->player.dir_y), COLL_DIS);
-		if (!game->coll_wall_v)
-			game->player.x += round(oldDirX * game->player.speed);
-		if (!game->coll_wall_h)
-			game->player.y += round(oldDirY * game->player.speed);
-	}
+		move_forward(game, dir_x, dir_y, scale);
 	else if (game->key.s)
-	{
-		collision(game, -game->player.dir_x, -game->player.dir_y, COLL_DIS);
-		collision(game, game->player.dir_y, -game->player.dir_x, COLL_DIS);
-		collision(game, -game->player.dir_y, game->player.dir_x, COLL_DIS);
-		collision(game, -(sqrt(2) / 2) * (game->player.dir_x
-				- game->player.dir_y), -(sqrt(2) / 2) * (game->player.dir_x
-				+ game->player.dir_y), COLL_DIS);
-		collision(game, -(sqrt(2) / 2) * (game->player.dir_x
-				+ game->player.dir_y), -(sqrt(2) / 2) * (-game->player.dir_x
-				+ game->player.dir_y), COLL_DIS);
-		if (!game->coll_wall_v)
-			game->player.x -= round(oldDirX * game->player.speed);
-		if (!game->coll_wall_h)
-			game->player.y -= round(oldDirY * game->player.speed);
-	}
+		move_backward(game, dir_x, dir_y, scale);
 	if (game->key.a)
-	{
-		collision(game, game->player.dir_y, -game->player.dir_x, COLL_DIS);
-		collision(game, -game->player.dir_x, -game->player.dir_y, COLL_DIS);
-		collision(game, game->player.dir_x, game->player.dir_y, COLL_DIS);
-		collision(game, (sqrt(2) / 2) * (game->player.dir_x
-				+ game->player.dir_y), (sqrt(2) / 2) * (-game->player.dir_x
-				+ game->player.dir_y), COLL_DIS);
-		collision(game, -(sqrt(2) / 2) * (game->player.dir_x
-				- game->player.dir_y), -(sqrt(2) / 2) * (game->player.dir_x
-				+ game->player.dir_y), COLL_DIS);
-		if (!game->coll_wall_v)
-			game->player.x += round(oldDirY * game->player.speed);
-		if (!game->coll_wall_h)
-			game->player.y -= round(oldDirX * game->player.speed);
-	}
+		move_left(game, dir_x, dir_y, scale);
 	else if (game->key.d)
-	{
-		collision(game, -game->player.dir_y, game->player.dir_x, COLL_DIS);
-		collision(game, -game->player.dir_x, -game->player.dir_y, COLL_DIS);
-		collision(game, game->player.dir_x, game->player.dir_y, COLL_DIS);
-		collision(game, -(sqrt(2) / 2) * (game->player.dir_x
-				+ game->player.dir_y), -(sqrt(2) / 2) * (-game->player.dir_x
-				+ game->player.dir_y), COLL_DIS);
-		collision(game, (sqrt(2) / 2) * (game->player.dir_x
-				- game->player.dir_y), (sqrt(2) / 2) * (game->player.dir_x
-				+ game->player.dir_y), COLL_DIS);
-		if (!game->coll_wall_v)
-			game->player.x -= round(oldDirY * game->player.speed);
-		if (!game->coll_wall_h)
-			game->player.y += round(oldDirX * game->player.speed);
-	}
-	if (game->key.left)
-	{
-		game->player.dir_x = oldDirX * cos(-ROT_SPEED) - oldDirY
-			* sin(-ROT_SPEED);
-		game->player.dir_y = oldDirX * sin(-ROT_SPEED) + oldDirY
-			* cos(-ROT_SPEED);
-		game->player.dir3d.x = oldDirX_3d * cos(-ROT_SPEED) - oldDirY_3d
-			* sin(-ROT_SPEED);
-		game->player.dir3d.y = oldDirX_3d * sin(-ROT_SPEED) + oldDirY_3d
-			* cos(-ROT_SPEED);
-		get_vector_right(game, &game->player.v_right);
-		get_vector_down(game, &game->player.v_right, &game->player.v_down);
-	}
-	else if (game->key.right)
-	{
-		game->player.dir_x = oldDirX * cos(ROT_SPEED) - oldDirY
-			* sin(ROT_SPEED);
-		game->player.dir_y = oldDirX * sin(ROT_SPEED) + oldDirY
-			* cos(ROT_SPEED);
-		game->player.dir3d.x = oldDirX_3d * cos(ROT_SPEED) - oldDirY_3d
-			* sin(ROT_SPEED);
-		game->player.dir3d.y = oldDirX_3d * sin(ROT_SPEED) + oldDirY_3d
-			* cos(ROT_SPEED);
-		get_vector_right(game, &game->player.v_right);
-		get_vector_down(game, &game->player.v_right, &game->player.v_down);
-	}
+		move_right(game, dir_x, dir_y, scale);
+}
+
+void rotate_vertical_view(t_data *game)
+{
 	if (game->key.up && game->player.dir3d.z < 0.95)
 	{
 		rotate_u(&game->player.dir3d, game->player.dir3d, game->player.v_down,
@@ -210,16 +185,50 @@ void	move_player(t_data *game)
 			ROT_SPEED);
 		get_vector_down(game, &game->player.v_right, &game->player.v_down);
 	}
-	if (!game->key.space && game->key.ctrl)
-		game->player.z = -10;
-	else if (!game->key.space && !game->key.ctrl)
-		game->player.z = 0;
-	if (game->key.shift)
-		game->player.speed = SPEED * 2;
-	else if (!game->key.shift)
-		game->player.speed = SPEED;
-	if (game->key.space)
-		do_jump(game);
+}
+
+void	rotate_player(t_data *game, float dir_x, float dir_y, t_point3d *dir3d)
+{
+	if (game->key.left)
+	{
+		game->player.dir_x = dir_x * cos(-ROT_SPEED) - dir_y
+			* sin(-ROT_SPEED);
+		game->player.dir_y = dir_x * sin(-ROT_SPEED) + dir_y
+			* cos(-ROT_SPEED);
+		game->player.dir3d.x = dir3d->x * cos(-ROT_SPEED) - dir3d->y
+			* sin(-ROT_SPEED);
+		game->player.dir3d.y = dir3d->x * sin(-ROT_SPEED) + dir3d->y
+			* cos(-ROT_SPEED);
+	}
+	else if (game->key.right)
+	{
+		game->player.dir_x = dir_x * cos(ROT_SPEED) - dir_y
+			* sin(ROT_SPEED);
+		game->player.dir_y = dir_x * sin(ROT_SPEED) + dir_y
+			* cos(ROT_SPEED);
+		game->player.dir3d.x = dir3d->x * cos(ROT_SPEED) - dir3d->y
+			* sin(ROT_SPEED);
+		game->player.dir3d.y = dir3d->x * sin(ROT_SPEED) + dir3d->y
+			* cos(ROT_SPEED);
+	}
+	get_vector_right(game, &game->player.v_right);
+	get_vector_down(game, &game->player.v_right, &game->player.v_down);
+	rotate_vertical_view(game);
+}
+
+void update_player(t_data *game)
+{
+	float		dir_x;
+	float		dir_y;
+	t_point3d	dir3d;
+
+	dir_x = game->player.dir_x;
+	dir_y = game->player.dir_y;
+	dir3d.x = game->player.dir3d.x;
+	dir3d.y = game->player.dir3d.y;
+	move_player(game, dir_x, dir_y);
+	rotate_player(game, dir_x, dir_y, &dir3d);
+	update_player_state(game);
 }
 
 void	draw_door_h(t_raycast *ray, int col, int row)
@@ -496,7 +505,7 @@ void	draw_textures(t_data *g)
 		pthread_join(ray[i].thread, NULL);
 }
 
-void	move_doors(t_data *game)
+void	update_doors(t_data *game)
 {
 	t_door	*new;
 	t_door	*temp;
@@ -507,7 +516,7 @@ void	move_doors(t_data *game)
 	{
 		game->coll_door_h = 0;
 		game->coll_door_v = 0;
-		collision(game, game->player.dir_x, game->player.dir_y, OPEN_DIS);
+		check_collision(game, game->player.dir_x, game->player.dir_y, OPEN_DIS);
 		if ((game->coll_door_h || game->coll_door_v)
 			&& (game->map[(int)game->rc->map_y][(int)game->rc->map_x] == 2
 				|| game->map[(int)game->rc->map_y][(int)game->rc->map_x] == 3))
@@ -618,8 +627,8 @@ int	render(t_data *game)
     {
         game->time = current_time;
         ft_bzero(game->img.addr, game->img.w * game->img.h * (game->img.bpp / 8));
-        move_doors(game);
-        move_player(game);
+        update_doors(game);
+        update_player(game);
         draw_textures(game);
 		draw_hud(game);
 		update_animation(game);

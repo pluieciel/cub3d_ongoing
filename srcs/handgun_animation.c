@@ -5,7 +5,7 @@ static void	handle_handgun_idle_state(t_data *game)
 	if (game->handgun.equiped)
 	{
 		render_image(game, (t_image *)game->handgun.shoot.head->content, 0, 0);
-		collision(game, game->player.dir_x, game->player.dir_y, COLL_DIS);
+		check_collision(game, game->player.dir_x, game->player.dir_y, COLL_DIS);
 		if (game->left_click)
 			game->handgun.state = HANDGUN_SHOOT;
 		else if (game->key.two || game->key.one)
