@@ -6,11 +6,21 @@
 /*   By: jlefonde <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/18 15:09:55 by jlefonde          #+#    #+#             */
-/*   Updated: 2024/07/18 16:26:40 by jlefonde         ###   ########.fr       */
+/*   Updated: 2024/07/18 17:07:13 by jlefonde         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
+
+static void update_fps_counter(t_data *game, u_int64_t current_time, u_int64_t last_time)
+{
+	char *fps;
+	
+	fps = ft_itoa_gc((int)(round(1000.0 / (current_time - last_time))), &game->gc);
+    mlx_string_put(game->mlx_ptr, game->win_ptr, WIN_W - 45, 20, game->hud_color, fps);
+    mlx_string_put(game->mlx_ptr, game->win_ptr, WIN_W - 35, 20, game->hud_color, " FPS");
+	gc_free_ptr(&game->gc, fps);
+}
 
 void	render_hud_image(t_data *game, char *name, int *x, int y)
 {
@@ -83,19 +93,22 @@ void	*render_section(void *arg)
 
 int	render(t_data *game)
 {
-	__uint64_t	current_time;
+    static __uint64_t last_time = 0;
+    __uint64_t current_time;
 
-	current_time = get_timestamp_ms();
-	if (game->win_ptr != NULL && (current_time - game->time) > 1000 / FPS)
-	{
-		game->time = current_time;
-		ft_bzero(game->img.addr, game->img.w * game->img.h * (game->img.bpp / 8));
-		update_doors(game);
-		update_player(game);
-		draw_textures(game);
-		draw_hud(game);
-		update_animation(game);
-		mlx_put_image_to_window(game->mlx_ptr, game->win_ptr, game->img.ptr, 0, 0);
-	}
-	return (0);
+    current_time = get_timestamp_ms();
+    if (game->win_ptr != NULL && (current_time - game->time) > 1000 / FPS)
+    {
+        game->time = current_time;
+        ft_bzero(game->img.addr, game->img.w * game->img.h * (game->img.bpp / 8));
+        update_doors(game);
+        update_player(game);
+        draw_textures(game);
+        draw_hud(game);
+        update_animation(game);
+        mlx_put_image_to_window(game->mlx_ptr, game->win_ptr, game->img.ptr, 0, 0);
+		update_fps_counter(game, current_time, last_time);
+        last_time = current_time;
+    }
+    return (0);
 }
