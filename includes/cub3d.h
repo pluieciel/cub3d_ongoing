@@ -6,7 +6,7 @@
 /*   By: jlefonde <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/18 15:10:20 by jlefonde          #+#    #+#             */
-/*   Updated: 2024/07/18 15:14:14 by jlefonde         ###   ########.fr       */
+/*   Updated: 2024/07/18 15:51:32 by jlefonde         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -299,5 +299,6 @@ void update_player(t_data *game);
 void set_image(t_data *game, t_image **img, char *path);
 t_image	*get_hud_image(t_data *game, char *name);
 void	render_hud_image(t_data *game, char *name, int *x, int y);
+void	set_dir(t_data *game, char dir);
 
 #endif

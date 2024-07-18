@@ -6,37 +6,13 @@
 /*   By: jlefonde <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/18 15:09:24 by jlefonde          #+#    #+#             */
-/*   Updated: 2024/07/18 15:09:24 by jlefonde         ###   ########.fr       */
+/*   Updated: 2024/07/18 15:53:53 by jlefonde         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
 
-void	adddir(t_data *game, char dir)
-{
-	if (dir == 'N')
-	{
-		game->player.dir_y = -1;
-		game->player.dir3d.y = -1;
-	}
-	else if (dir == 'E')
-	{
-		game->player.dir_x = 1;
-		game->player.dir3d.x = 1;
-	}
-	else if (dir == 'S')
-	{
-		game->player.dir_y = 1;
-		game->player.dir3d.y = 1;
-	}
-	else if (dir == 'W')
-	{
-		game->player.dir_x = -1;
-		game->player.dir3d.x = -1;
-	}
-}
-
-void	get_init_pos(t_data *game, char dir, int i, int j)
+static void	get_init_pos(t_data *game, char dir, int i, int j)
 {
 	float	olddirx;
 	float	olddiry;
@@ -48,7 +24,7 @@ void	get_init_pos(t_data *game, char dir, int i, int j)
 	game->map[i][j] = 0;
 	game->player.x = j * B_SIZE + B_SIZE / 2;
 	game->player.y = i * B_SIZE + B_SIZE / 2;
-	adddir(game, dir);
+	set_dir(game, dir);
 	olddirx = game->player.dir_x;
 	olddiry = game->player.dir_y;
 	olddirx_3d = game->player.dir3d.x;
@@ -63,52 +39,65 @@ void	get_init_pos(t_data *game, char dir, int i, int j)
 	get_vector_down(game, &game->player.v_right, &game->player.v_down);
 }
 
-void	parse_map3(t_data *game, int fd, char *l, int *i)
+static void	handle_map_char(t_data *game, char *line, int i, int j)
 {
-	i[0] = 0;
-	while (l)
+	if (line[j] == '1')
+		game->map[i][j] = 1;
+	else if (line[j] == '2')
+		game->map[i][j] = 2;
+	else if (line[j] == '0')
+		game->map[i][j] = 0;
+	else if (line[j] == 'N' || line[j] == 'S' || line[j] == 'W'
+		|| line[j] == 'E')
+		get_init_pos(game, line[j], i, j);
+	else if (line[j] == ' ' || line[j] == '\t' || line[j] == '\n')
+		;
+	else
+		exit(gc_free(game->gc, "Error: invalid char in map\n", 2));
+}
+
+static void	fill_map(t_data *game, int fd, char *line)
+{
+	int	i;
+	int	j;
+
+	i = 0;
+	while (line)
 	{
-		i[1] = 0;
-		while (l[i[1]])
+		j = 0;
+		while (line[j])
 		{
-			if (l[i[1]] == '1')
-				game->map[i[0]][i[1]] = 1;
-			else if (l[i[1]] == '2')
-				game->map[i[0]][i[1]] = 2;
-			else if (l[i[1]] == '0')
-				game->map[i[0]][i[1]] = 0;
-			else if (l[i[1]] == 'N' || l[i[1]] == 'S' || l[i[1]] == 'W'
-				|| l[i[1]] == 'E')
-				get_init_pos(game, l[i[1]], i[0], i[1]);
-			else if (l[i[1]] == ' ' || l[i[1]] == '\t' || l[i[1]] == '\n')
-				;
-			else
-				exit(gc_free(game->gc, "Error: invalid char in map\n", 2));
-			(i[1])++;
+			handle_map_char(game, line, i, j);
+			j++;
 		}
-		(i[0])++;
-		l = get_next_line(fd);
-		game->gc = gc_insert(game->gc, l);
+		i++;
+		line = get_next_line(fd);
+		game->gc = gc_insert(game->gc, line);
 	}
 }
 
-void	parse_map2(t_data *game, int fd, char *line)
+static void	init_map(t_data *game, int fd, char *line)
 {
-	int		i[2];
+	int		i;
+	int		j;
 
-	i[0] = -1;
-	while (++(i[0]) < game->map_h)
+	line = get_next_line(fd);
+	game->gc = gc_insert(game->gc, line);
+	game->map = gc_malloc(sizeof(float *) * game->map_h, &game->gc);
+	game->visited = gc_malloc(sizeof(int *) * game->map_h, &game->gc);
+	i = -1;
+	while (++(i) < game->map_h)
 	{
-		game->map[i[0]] = gc_malloc(sizeof(float) * game->map_w, &game->gc);
-		game->visited[i[0]] = gc_malloc(sizeof(int) * game->map_w, &game->gc);
-		i[1] = -1;
-		while (++(i[1]) < game->map_w)
+		game->map[i] = gc_malloc(sizeof(float) * game->map_w, &game->gc);
+		game->visited[i] = gc_malloc(sizeof(int) * game->map_w, &game->gc);
+		j = -1;
+		while (++j < game->map_w)
 		{
-			game->map[i[0]][i[1]] = -1;
-			game->visited[i[0]][i[1]] = 0;
+			game->map[i][j] = -1;
+			game->visited[i][j] = 0;
 		}
 	}
-	parse_map3(game, fd, line, i);
+	fill_map(game, fd, line);
 }
 
 void	parse_map(t_data *game, char *filename)
@@ -127,9 +116,5 @@ void	parse_map(t_data *game, char *filename)
 		line = get_next_line(fd);
 		game->gc = gc_insert(game->gc, line);
 	}
-	line = get_next_line(fd);
-	game->gc = gc_insert(game->gc, line);
-	game->map = gc_malloc(sizeof(float *) * game->map_h, &game->gc);
-	game->visited = gc_malloc(sizeof(int *) * game->map_h, &game->gc);
-	parse_map2(game, fd, line);
+	init_map(game, fd, line);
 }
