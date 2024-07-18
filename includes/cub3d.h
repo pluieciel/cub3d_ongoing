@@ -92,6 +92,12 @@ typedef struct s_point3d
 	float			z;
 }					t_point3d;
 
+typedef struct s_point
+{
+	int				x;
+	int				y;
+}					t_point;
+
 typedef struct s_player
 {
 	int				speed;
