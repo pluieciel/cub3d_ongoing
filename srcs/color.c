@@ -7,7 +7,7 @@ unsigned int	rgb_to_int(t_color c)
 
 t_color	int_to_rgb(unsigned int color)
 {
-	t_color c;
+	t_color	c;
 
 	c.r = (color & 0xFF0000) >> 16;
 	c.g = (color & 0xFF00) >> 8;
@@ -29,13 +29,13 @@ void	shade_color(t_color *c, float shading)
 	c->b = (int)round(c->b * shading);
 }
 
-t_color *mix_color(t_color *c1, t_color c2, int base, int blend)
+t_color	*mix_color(t_color *c1, t_color c2, int base, int blend)
 {
-    int weight;
+	int	weight;
 
-    weight = base + blend;
-    c1->r = (c1->r * base + c2.r * blend) / weight;
-    c1->g = (c1->g * base + c2.g * blend) / weight;
-    c1->b = (c1->b * base + c2.b * blend) / weight;
-    return (c1);
+	weight = base + blend;
+	c1->r = (c1->r * base + c2.r * blend) / weight;
+	c1->g = (c1->g * base + c2.g * blend) / weight;
+	c1->b = (c1->b * base + c2.b * blend) / weight;
+	return (c1);
 }

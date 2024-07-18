@@ -267,8 +267,23 @@ void				update_animation(t_data *game);
 void				draw_minimap(t_data *game);
 void				check_file(t_data *game, char *path, char *ext);
 void				init_hud(t_data *game);
-void				set_image(t_data *game, t_image **img, char *path);
 void				set_image_color(t_image *img, int row, int col, unsigned int color);
 unsigned int get_image_color(t_image *img, int row, int col);
+void	move_player(t_data *game, float dir_x, float dir_y);
+void	check_collision(t_data *game, float dir_x, float dir_y, int coll_dis);
+void	check_collisions(t_data *game, float dir_x, float dir_y, float scale);
+void	update_doors(t_data *game);
+void draw_hud(t_data *game);
+void	draw_pixel(t_raycast *ray, int col, int row);
+t_color get_wall_color(t_raycast *ray, t_image *img, float pos);
+void set_image_color(t_image *img, int row, int col, unsigned int color);
+unsigned int get_image_color(t_image *img, int row, int col);
+void	draw_door_h(t_raycast *ray, int col, int row);
+void	draw_door_v(t_raycast *ray, int col, int row);
+void	*render_section(void *arg);
+void	draw_textures(t_data *g);
+void	rotate_player(t_data *game, float dir_x, float dir_y, t_point3d *dir3d);
+void update_player(t_data *game);
+void set_image(t_data *game, t_image **img, char *path);
 
 #endif

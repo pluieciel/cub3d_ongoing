@@ -2,22 +2,22 @@
 
 static void	apply_color_shading(t_data *game, t_image *img)
 {
-    int i;
-    int j;
-	unsigned int t;
-	t_color color;
-	t_color new;
-    
-    i = 0;
-    while (i < img->w)
-    {
-        j = 0;
-        while (j < img->h)
-        {
+	int				i;
+	int				j;
+	unsigned int	t;
+	t_color			color;
+	t_color			new;
+
+	i = 0;
+	while (i < img->w)
+	{
+		j = 0;
+		while (j < img->h)
+		{
 			t = get_image_color(img, j, i);
-            if (t != TRANSPARENT_COLOR)
-			{              
-			  	color = int_to_rgb(game->hud_color);
+			if (t != TRANSPARENT_COLOR)
+			{
+				color = int_to_rgb(game->hud_color);
 				shade_color(&color, t & 0xFF);
 				set_rgb(color.r / 255, color.g / 255, color.b / 255, &new);
 				set_image_color(img, j, i, rgb_to_int(new));

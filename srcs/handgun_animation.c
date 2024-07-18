@@ -1,4 +1,4 @@
-#include "../includes/cub3d.h"
+#include "cub3d.h"
 
 static void	handle_handgun_idle_state(t_data *game)
 {

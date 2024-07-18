@@ -1,9 +1,9 @@
-#include "../includes/cub3d.h"
+#include "cub3d.h"
 
-static void fill_block(t_data *game, t_point *p1, t_point *p2, t_color hud_c)
+static void	fill_block(t_data *game, t_point *p1, t_point *p2, t_color hud_c)
 {
-	t_color c;
-	t_color c2;
+	t_color	c;
+	t_color	c2;
 
 	c = int_to_rgb(((unsigned int *)game->img.addr)[p1->x * WIN_W + p1->y]);
 	if (game->map[p2->y][p2->x] == 1)
@@ -24,12 +24,12 @@ static void fill_block(t_data *game, t_point *p1, t_point *p2, t_color hud_c)
 	}
 }
 
-static void draw_block(t_data *game, int i, int j, t_color hud_c)
+static void	draw_block(t_data *game, int i, int j, t_color hud_c)
 {
-	int x;
-	int y;
-	t_point p1;
-	t_point p2;
+	int		x;
+	int		y;
+	t_point	p1;
+	t_point	p2;
 
 	x = ((j - MM_POS_X) * B_SIZE / MM_FACTOR + game->player.x) / B_SIZE;
 	y = ((i - MM_POS_Y) * B_SIZE / MM_FACTOR + game->player.y) / B_SIZE;
@@ -43,10 +43,10 @@ static void draw_block(t_data *game, int i, int j, t_color hud_c)
 	}
 }
 
-static void draw_background(t_data *game, int i, int j, float angle)
+static void	draw_background(t_data *game, int i, int j, float angle)
 {
-	t_color c;
-	t_color hud_c;
+	t_color	c;
+	t_color	hud_c;
 
 	hud_c = int_to_rgb(game->hud_color);
 	if (distance(i, j, MM_POS_X, MM_POS_Y) < MM_RADIUS)
@@ -59,11 +59,11 @@ static void draw_background(t_data *game, int i, int j, float angle)
 	}
 }
 
-void draw_minimap(t_data *game)
+void	draw_minimap(t_data *game)
 {
-	int i;
-	int j;
-	float angle;
+	int		i;
+	int		j;
+	float	angle;
 
 	angle = atan(1.0 * (WIN_W / 2) / game->dis_p_s);
 	i = MM_POS_X - MM_RADIUS - 1;

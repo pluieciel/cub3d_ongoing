@@ -1,4 +1,4 @@
-#include "../includes/cub3d.h"
+#include "cub3d.h"
 
 int	handle_animation_state(t_data *game, struct s_animation *animation,
 		__uint64_t delay)
@@ -17,7 +17,7 @@ int	handle_animation_state(t_data *game, struct s_animation *animation,
 	return (0);
 }
 
-void update_animation(t_data *game)
+void	update_animation(t_data *game)
 {
 	if (game->crowbar.state != NONE)
 		update_crowbar_state(game);

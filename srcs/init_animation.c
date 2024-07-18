@@ -1,4 +1,4 @@
-#include "../includes/cub3d.h"
+#include "cub3d.h"
 
 static void	init_animation(t_data *game, struct s_animation *animation,
 		char *state, int frames)

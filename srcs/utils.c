@@ -1,8 +1,9 @@
 #include "cub3d.h"
 
-void destroy_animation(t_data *game, t_animation *anim)
+void	destroy_animation(t_data *game, t_animation *anim)
 {
-	t_image *img;
+	t_image	*img;
+
 	while (anim->frames)
 	{
 		img = (t_image *)anim->frames->content;
@@ -16,7 +17,7 @@ void destroy_animation(t_data *game, t_animation *anim)
 
 void	destroy_imgs(t_data *game)
 {
-	t_hud *hud;
+	t_hud	*hud;
 
 	if (game->img.ptr)
 		mlx_destroy_image(game->mlx_ptr, game->img.ptr);
@@ -63,11 +64,7 @@ void	check_file(t_data *game, char *path, char *ext)
 	close(fd);
 }
 
-void	set_image(t_data *game, t_image **img, char *path)
+float	distance(float x1, float y1, float x2, float y2)
 {
-	*img = gc_malloc(sizeof(t_image), &game->gc);
-	(*img)->ptr = mlx_xpm_file_to_image(game->mlx_ptr, path, &(*img)->w,
-			&(*img)->h);
-	(*img)->addr = mlx_get_data_addr((*img)->ptr, &(*img)->bpp,
-			&(*img)->line_len, &(*img)->endian);
+	return (sqrt((x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2)));
 }
