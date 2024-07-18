@@ -251,7 +251,6 @@ void				get_vector_down(t_data *g, t_point3d *v_right,
 						t_point3d *v_down);
 void				rotate_u(t_point3d *todo, t_point3d u, t_point3d v,
 						float angle);
-void				apply_color_shading(t_data *game, t_image *img);
 int					handle_animation_state(t_data *game,
 						struct s_animation *animation, __uint64_t delay);
 int					handle_key_press(int key, t_data *game);
@@ -269,5 +268,7 @@ void				draw_minimap(t_data *game);
 void				check_file(t_data *game, char *path, char *ext);
 void				init_hud(t_data *game);
 void				set_image(t_data *game, t_image **img, char *path);
+void				set_image_color(t_image *img, int row, int col, unsigned int color);
+unsigned int get_image_color(t_image *img, int row, int col);
 
 #endif

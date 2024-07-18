@@ -1,36 +1,18 @@
 #include "cub3d.h"
 
+unsigned int get_image_color(t_image *img, int row, int col)
+{
+	return (((unsigned int *)img->addr)[row * img->w + col]);
+}
+
+void set_image_color(t_image *img, int row, int col, unsigned int color)
+{
+	((unsigned int *)img->addr)[row * img->w + col] = color;
+}
+
 float	distance(float x1, float y1, float x2, float y2)
 {
 	return (sqrt((x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2)));
-}
-
-void	apply_color_shading(t_data *game, t_image *img)
-{
-    int i;
-    int j;
-	unsigned int t;
-	t_color color;
-	t_color new;
-    
-    i = 0;
-    while (i < img->w)
-    {
-        j = 0;
-        while (j < img->h)
-        {
-			t = ((unsigned int *)img->addr)[j * img->w + i];
-            if (t != TRANSPARENT_COLOR)
-			{              
-			  	color = int_to_rgb(game->hud_color);
-				shade_color(&color, t & 0xFF);
-				set_rgb(color.r / 255, color.g / 255, color.b / 255, &new);
-                ((unsigned int *)img->addr)[j * img->w + i] = rgb_to_int(new);
-			}
-			j++;
-		}
-		i++;
-	}
 }
 
 void	render_image(t_data *game, t_image *img, int x, int y)
@@ -39,7 +21,7 @@ void	render_image(t_data *game, t_image *img, int x, int y)
 	int				j;
 	int				dest_x;
 	int				dest_y;
-	unsigned int	t;
+	unsigned int	color;
 
 	if (!img)
 		return ;
@@ -49,12 +31,12 @@ void	render_image(t_data *game, t_image *img, int x, int y)
 		j = 0;
 		while (j < WIN_H && j < img->h)
 		{
-			t = ((unsigned int *)img->addr)[j * img->w + i];
+			color = get_image_color(img, j, i);
 			dest_x = i + x;
 			dest_y = j + y;
 			if (dest_x >= 0 && dest_x < WIN_W && dest_y >= 0 && dest_y < WIN_H
-				&& t != TRANSPARENT_COLOR)
-				((unsigned int *)game->img.addr)[dest_y * WIN_W + dest_x] = t;
+				&& color != TRANSPARENT_COLOR)
+				((unsigned int *)game->img.addr)[dest_y * WIN_W + dest_x] = color;
 			j++;
 		}
 		i++;
@@ -333,11 +315,6 @@ void	draw_door_v(t_raycast *ray, int col, int row)
 	ray->num_doors_v--;
 }
 
-unsigned int get_texture_color(t_image *img, int row, int col)
-{
-	return (((unsigned int *)img->addr)[row * img->w + col]);
-}
-
 t_color get_wall_color(t_raycast *ray, t_image *img, float pos)
 {
 	float	col;
@@ -345,7 +322,7 @@ t_color get_wall_color(t_raycast *ray, t_image *img, float pos)
 
 	col = round(fmod(pos, B_SIZE) / B_SIZE * img->w);
 	row = round((1 - fmod(ray->rc->z + ray->g->player.z + 32, B_SIZE) / B_SIZE) * img->h);
-	return (int_to_rgb(get_texture_color(img, row, col)));
+	return (int_to_rgb(get_image_color(img, row, col)));
 }
 
 void draw_wall(t_raycast *ray, int row, int col)
@@ -390,7 +367,7 @@ void draw_floor(t_raycast *ray, int row, int col)
 	r = round((1 - r) * ray->g->img_floor.h);
 	ray->rc->dis = distance(ray->rc->x, ray->rc->y, ray->g->player.x, ray->g->player.y);
 	shadow = 1.0 - (fmin(ray->rc->dis, 8 * B_SIZE) / (8 * B_SIZE));
-	color = int_to_rgb(get_texture_color(&ray->g->img_floor, r, c));
+	color = int_to_rgb(get_image_color(&ray->g->img_floor, r, c));
 	shade_color(&color, shadow);
 	((unsigned int *)ray->g->img.addr)[row * WIN_W + col] = rgb_to_int(color);
 }
@@ -415,7 +392,7 @@ void draw_sky(t_raycast *ray, int row, int col)
 		c = 1.0 / 4 + 1.0 / 2 * (temp_y < 0);
 	r *= ray->g->img_sky.h;
 	c *= ray->g->img_sky.w;
-	color = get_texture_color(&ray->g->img_sky, r, c);
+	color = get_image_color(&ray->g->img_sky, r, c);
 	((unsigned int *)ray->g->img.addr)[row * WIN_W + col] = color;
 }
 
@@ -505,43 +482,31 @@ void	draw_textures(t_data *g)
 		pthread_join(ray[i].thread, NULL);
 }
 
-void	update_doors(t_data *game)
+void add_door(t_data *game)
 {
 	t_door	*new;
+
+	game->coll_door_h = 0;
+	game->coll_door_v = 0;
+	check_collision(game, game->player.dir_x, game->player.dir_y, OPEN_DIS);
+	if ((game->coll_door_h || game->coll_door_v)
+		&& (game->map[(int)game->rc->map_y][(int)game->rc->map_x] == 2
+			|| game->map[(int)game->rc->map_y][(int)game->rc->map_x] == 3))
+	{
+		new = gc_malloc(sizeof(t_door), &game->gc);
+		new->next = game->doors;
+		new->x = (int)game->rc->map_x;
+		new->y = (int)game->rc->map_y;
+		new->closed = (game->map[new->y][new->x] == 3);
+		game->doors = new;
+	}
+}
+
+void remove_door(t_data *game)
+{
 	t_door	*temp;
 	t_door	*prev;
 
-	// add new door into list
-	if (game->key.e == 1)
-	{
-		game->coll_door_h = 0;
-		game->coll_door_v = 0;
-		check_collision(game, game->player.dir_x, game->player.dir_y, OPEN_DIS);
-		if ((game->coll_door_h || game->coll_door_v)
-			&& (game->map[(int)game->rc->map_y][(int)game->rc->map_x] == 2
-				|| game->map[(int)game->rc->map_y][(int)game->rc->map_x] == 3))
-		{
-			new = gc_malloc(sizeof(t_door), &game->gc);
-			new->next = game->doors;
-			new->x = (int)game->rc->map_x;
-			new->y = (int)game->rc->map_y;
-			new->closed = (game->map[new->y][new->x] == 3);
-			game->doors = new;
-		}
-	}
-	game->key.e = 0;
-	// move the doors in list one by one
-	temp = game->doors;
-	while (temp)
-	{
-		game->map[temp->y][temp->x] += ((temp->closed) * (-2) + 1) * 0.1;
-		if (game->map[temp->y][temp->x] <= 2)
-			game->map[temp->y][temp->x] = 2;
-		else if (game->map[temp->y][temp->x] >= 3)
-			game->map[temp->y][temp->x] = 3;
-		temp = temp->next;
-	}
-	// remove finished doors from the list
 	temp = game->doors;
 	prev = NULL;
 	while (temp && (game->map[temp->y][temp->x] <= 2
@@ -563,6 +528,26 @@ void	update_doors(t_data *game)
 		prev->next = temp->next;
 		temp = prev->next;
 	}
+}
+
+void	update_doors(t_data *game)
+{
+	t_door	*temp;
+
+	if (game->key.e == 1)
+		add_door(game);
+	game->key.e = 0;
+	temp = game->doors;
+	while (temp)
+	{
+		game->map[temp->y][temp->x] += ((temp->closed) * (-2) + 1) * 0.1;
+		if (game->map[temp->y][temp->x] <= 2)
+			game->map[temp->y][temp->x] = 2;
+		else if (game->map[temp->y][temp->x] >= 3)
+			game->map[temp->y][temp->x] = 3;
+		temp = temp->next;
+	}
+	remove_door(game);
 }
 
 t_image *get_hud_image(t_data *game, char *name)
