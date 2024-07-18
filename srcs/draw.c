@@ -6,7 +6,7 @@
 /*   By: jlefonde <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/18 15:08:11 by jlefonde          #+#    #+#             */
-/*   Updated: 2024/07/18 20:55:36 by jlefonde         ###   ########.fr       */
+/*   Updated: 2024/07/18 21:08:59 by jlefonde         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,10 +48,10 @@ static void	draw_floor(t_raycast *ray, int row, int col)
 	ray->rc->y = (ray->rc->y - ray->g->player.y) * (-32 - ray->g->player.z) / ray->rc->z + ray->g->player.y;
 	c = fmod(ray->rc->x, B_SIZE) / B_SIZE;
 	c += (c < 0);
-	c = round((1 - c) * ray->g->img_floor.w);
+	c = round((1 - c) * (ray->g->img_floor.w - 1));
 	r = fmod(ray->rc->y, B_SIZE) / B_SIZE;
 	r += (r < 0);
-	r = round((1 - r) * ray->g->img_floor.h);
+	r = round((1 - r) * (ray->g->img_floor.h - 1));
 	ray->rc->dis = distance(ray->rc->x, ray->rc->y, ray->g->player.x, ray->g->player.y);
 	shadow = 1.0 - (fmin(ray->rc->dis, 8 * B_SIZE) / (8 * B_SIZE));
 	color = int_to_rgb(get_image_color(&ray->g->img_floor, r, c));
