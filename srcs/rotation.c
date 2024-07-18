@@ -6,11 +6,16 @@
 /*   By: jlefonde <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/18 15:10:00 by jlefonde          #+#    #+#             */
-/*   Updated: 2024/07/18 15:10:00 by jlefonde         ###   ########.fr       */
+/*   Updated: 2024/07/18 15:59:48 by jlefonde         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
+
+static float	dot(t_point3d u, t_point3d v)
+{
+	return (u.x * v.x + u.y * v.y + u.z * v.z);
+}
 
 void	get_vector_right(t_data *g, t_point3d *v_right)
 {
@@ -24,11 +29,6 @@ void	get_vector_down(t_data *g, t_point3d *v_right, t_point3d *v_down)
 	v_down->x = v_right->y * g->player.dir3d.z - v_right->z * g->player.dir3d.y;
 	v_down->y = v_right->z * g->player.dir3d.x - v_right->x * g->player.dir3d.z;
 	v_down->z = v_right->x * g->player.dir3d.y - v_right->y * g->player.dir3d.x;
-}
-
-float	dot(t_point3d u, t_point3d v)
-{
-	return (u.x * v.x + u.y * v.y + u.z * v.z);
 }
 
 void	rotate_u(t_point3d *todo, t_point3d u, t_point3d v, float angle)

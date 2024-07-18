@@ -6,13 +6,13 @@
 /*   By: jlefonde <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/18 15:08:39 by jlefonde          #+#    #+#             */
-/*   Updated: 2024/07/18 15:08:39 by jlefonde         ###   ########.fr       */
+/*   Updated: 2024/07/18 15:58:11 by jlefonde         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
 
-void	handle_mouse_threshold(int dx, int dy, t_data *game)
+static void	handle_mouse_threshold(int dx, int dy, t_data *game)
 {
 	if (dx > MOUSE_THRESHOLD)
 		game->key.right = 1;
@@ -34,7 +34,7 @@ void	handle_mouse_threshold(int dx, int dy, t_data *game)
 	}
 }
 
-int	handle_mouse_move(int x, int y, t_data *game)
+static int	handle_mouse_move(int x, int y, t_data *game)
 {
 	int	dx;
 	int	dy;
@@ -52,7 +52,7 @@ int	handle_mouse_move(int x, int y, t_data *game)
 	return (0);
 }
 
-int	handle_mouse_click(int button, int x, int y, t_data *game)
+static int	handle_mouse_click(int button, int x, int y, t_data *game)
 {
 	(void)x;
 	(void)y;
