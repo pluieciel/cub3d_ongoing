@@ -6,11 +6,23 @@
 /*   By: jlefonde <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/18 15:09:55 by jlefonde          #+#    #+#             */
-/*   Updated: 2024/07/18 15:09:56 by jlefonde         ###   ########.fr       */
+/*   Updated: 2024/07/18 15:14:07 by jlefonde         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
+
+void	render_hud_image(t_data *game, char *name, int *x, int y)
+{
+	t_image	*img;
+
+	img = get_hud_image(game, name);
+	if (img)
+	{
+		render_image(game, img, WIN_W - img->w - *x, WIN_H - img->h - y);
+		*x += img->w;
+	}
+}
 
 void	render_image(t_data *game, t_image *img, int x, int y)
 {

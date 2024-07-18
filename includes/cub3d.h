@@ -6,7 +6,7 @@
 /*   By: jlefonde <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/18 15:10:20 by jlefonde          #+#    #+#             */
-/*   Updated: 2024/07/18 15:10:21 by jlefonde         ###   ########.fr       */
+/*   Updated: 2024/07/18 15:14:14 by jlefonde         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -297,5 +297,7 @@ void	draw_textures(t_data *g);
 void	rotate_player(t_data *game, float dir_x, float dir_y, t_point3d *dir3d);
 void update_player(t_data *game);
 void set_image(t_data *game, t_image **img, char *path);
+t_image	*get_hud_image(t_data *game, char *name);
+void	render_hud_image(t_data *game, char *name, int *x, int y);
 
 #endif
