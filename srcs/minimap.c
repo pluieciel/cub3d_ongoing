@@ -6,7 +6,7 @@
 /*   By: jlefonde <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/18 15:09:14 by jlefonde          #+#    #+#             */
-/*   Updated: 2024/07/18 15:09:15 by jlefonde         ###   ########.fr       */
+/*   Updated: 2024/07/18 16:27:17 by jlefonde         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,22 +17,22 @@ static void	fill_block(t_data *game, t_point *p1, t_point *p2, t_color hud_c)
 	t_color	c;
 	t_color	c2;
 
-	c = int_to_rgb(((unsigned int *)game->img.addr)[p1->x * WIN_W + p1->y]);
+	c = int_to_rgb(get_image_color(&game->img, p1->x, p1->y));
 	if (game->map[p2->y][p2->x] == 1)
 	{
 		mix_color(&c, hud_c, 2, 1);
 		shade_color(&c, 0.6);
-		((unsigned int *)game->img.addr)[p1->x * WIN_W + p1->y] = rgb_to_int(c);
+		set_image_color(&game->img, p1->x, p1->y, rgb_to_int(c));
 	}
 	else if (game->map[p2->y][p2->x] == 3)
 	{
 		set_rgb(0, 0x80, 0, &c2);
-		((unsigned int *)game->img.addr)[p1->x * WIN_W + p1->y] = rgb_to_int(*(mix_color(&c, c2, 1, 1)));
+		set_image_color(&game->img, p1->x, p1->y, rgb_to_int(*(mix_color(&c, c2, 1, 1))));
 	}
 	else if (game->map[p2->y][p2->x] >= 2)
 	{
 		set_rgb(0x80, 0, 0, &c2);
-		((unsigned int *)game->img.addr)[p1->x * WIN_W + p1->y] = rgb_to_int(*(mix_color(&c, c2, 1, 1)));
+		set_image_color(&game->img, p1->x, p1->y, rgb_to_int(*(mix_color(&c, c2, 1, 1))));
 	}
 }
 
@@ -63,11 +63,11 @@ static void	draw_background(t_data *game, int i, int j, float angle)
 	hud_c = int_to_rgb(game->hud_color);
 	if (distance(i, j, MM_POS_X, MM_POS_Y) < MM_RADIUS)
 	{
-		c = int_to_rgb(((unsigned int *)game->img.addr)[j * WIN_W + i]);
+		c = int_to_rgb(get_image_color(&game->img, j, i));
 		if (MM_POS_Y > j && atan(1.0 * abs(i - MM_POS_X) / (MM_POS_Y - j)) < angle)
-			((unsigned int *)game->img.addr)[j * WIN_W + i] = rgb_to_int(*mix_color(&c, hud_c, 1, 1));
+			set_image_color(&game->img, j, i, rgb_to_int(*mix_color(&c, hud_c, 1, 1)));
 		else
-			((unsigned int *)game->img.addr)[j * WIN_W + i] = rgb_to_int(*mix_color(&c, hud_c, 2, 1));
+			set_image_color(&game->img, j, i, rgb_to_int(*mix_color(&c, hud_c, 2, 1)));
 	}
 }
 

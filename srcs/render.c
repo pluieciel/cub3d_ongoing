@@ -6,7 +6,7 @@
 /*   By: jlefonde <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/18 15:09:55 by jlefonde          #+#    #+#             */
-/*   Updated: 2024/07/18 15:14:07 by jlefonde         ###   ########.fr       */
+/*   Updated: 2024/07/18 16:26:40 by jlefonde         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ void	render_image(t_data *game, t_image *img, int x, int y)
 			dest_y = j + y;
 			if (dest_x >= 0 && dest_x < WIN_W && dest_y >= 0 && dest_y < WIN_H
 				&& color != TRANSPARENT_COLOR)
-				((unsigned int *)game->img.addr)[dest_y * WIN_W + dest_x] = color;
+				set_image_color(&game->img, dest_y, dest_x, color);
 			j++;
 		}
 		i++;

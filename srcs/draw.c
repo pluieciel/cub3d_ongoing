@@ -6,7 +6,7 @@
 /*   By: jlefonde <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/18 15:08:11 by jlefonde          #+#    #+#             */
-/*   Updated: 2024/07/18 15:08:12 by jlefonde         ###   ########.fr       */
+/*   Updated: 2024/07/18 16:18:42 by jlefonde         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ static void	draw_wall(t_raycast *ray, int row, int col)
 			color = get_wall_color(ray, &ray->g->img_wall_so, ray->rc->y);
 	}
 	shade_color(&color, shadow);
-	((unsigned int *)ray->g->img.addr)[row * WIN_W + col] = rgb_to_int(color);
+	set_image_color(&ray->g->img, row, col, rgb_to_int(color));
 	ray->nearest_wall_dis = ray->rc->dis;
 }
 
@@ -56,7 +56,7 @@ static void	draw_floor(t_raycast *ray, int row, int col)
 	shadow = 1.0 - (fmin(ray->rc->dis, 8 * B_SIZE) / (8 * B_SIZE));
 	color = int_to_rgb(get_image_color(&ray->g->img_floor, r, c));
 	shade_color(&color, shadow);
-	((unsigned int *)ray->g->img.addr)[row * WIN_W + col] = rgb_to_int(color);
+	set_image_color(&ray->g->img, row, col, rgb_to_int(color));
 }
 
 static void	draw_sky(t_raycast *ray, int row, int col)
@@ -80,7 +80,7 @@ static void	draw_sky(t_raycast *ray, int row, int col)
 	r *= ray->g->img_sky.h;
 	c *= ray->g->img_sky.w;
 	color = get_image_color(&ray->g->img_sky, r, c);
-	((unsigned int *)ray->g->img.addr)[row * WIN_W + col] = color;
+	set_image_color(&ray->g->img, row, col, color);
 }
 
 static void	draw_door(t_raycast *ray, int row, int col)
