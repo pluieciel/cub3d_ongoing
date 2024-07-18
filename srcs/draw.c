@@ -6,7 +6,7 @@
 /*   By: jlefonde <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/18 15:08:11 by jlefonde          #+#    #+#             */
-/*   Updated: 2024/07/18 16:18:42 by jlefonde         ###   ########.fr       */
+/*   Updated: 2024/07/18 20:55:36 by jlefonde         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,9 +28,9 @@ static void	draw_wall(t_raycast *ray, int row, int col)
 	else
 	{
 		if (ray->rc->dir == 1)
-			color = get_wall_color(ray, &ray->g->img_wall_no, ray->rc->y);
+			color = get_wall_color(ray, &ray->g->img_wall_ea, ray->rc->y);
 		else
-			color = get_wall_color(ray, &ray->g->img_wall_so, ray->rc->y);
+			color = get_wall_color(ray, &ray->g->img_wall_we, ray->rc->y);
 	}
 	shade_color(&color, shadow);
 	set_image_color(&ray->g->img, row, col, rgb_to_int(color));

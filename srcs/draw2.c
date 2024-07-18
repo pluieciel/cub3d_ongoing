@@ -6,7 +6,7 @@
 /*   By: jlefonde <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/18 15:08:18 by jlefonde          #+#    #+#             */
-/*   Updated: 2024/07/18 15:14:38 by jlefonde         ###   ########.fr       */
+/*   Updated: 2024/07/18 17:30:46 by jlefonde         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,6 +70,7 @@ void	draw_door_v(t_raycast *ray, int col, int row)
 	unsigned int	t;
 	float			shadow;
 	float			offset;
+	t_color			color;
 
 	if (ray->doors_v[ray->num_doors_v][3] < ray->nearest_wall_dis)
 	{
@@ -89,26 +90,24 @@ void	draw_door_v(t_raycast *ray, int col, int row)
 		if ((int)c < ray->g->img_door.w / 2 && (int)c
 			+ (int)offset < ray->g->img_door.w / 2)
 		{
-			t = ((unsigned int *)ray->g->img_door.addr)[(int)r
-				* ray->g->img_door.w + (int)c + (int)offset];
+			t = get_image_color(&ray->g->img_door, r, c + offset);
 			if (t != TRANSPARENT_COLOR)
-				((unsigned int *)ray->g->img.addr)[row * WIN_W
-					+ col] = (((int)round(((t >> 16) & 0xff)
-								* shadow) & 0xff) << 16)
-					+ (((int)round(((t >> 8) & 0xff) * shadow) & 0xff) << 8)
-					+ ((int)round(((t)&0xff) * shadow) & 0xff);
+			{
+				color = int_to_rgb(t);
+				shade_color(&color, shadow);
+				set_image_color(&ray->g->img, row, col, rgb_to_int(color));
+			}
 		}
 		else if ((int)c > ray->g->img_door.w / 2 && (int)c
 			- (int)offset > ray->g->img_door.w / 2)
 		{
-			t = ((unsigned int *)ray->g->img_door.addr)[(int)r
-				* ray->g->img_door.w + (int)c - (int)offset];
+			t = get_image_color(&ray->g->img_door, r, c - offset);
 			if (t != TRANSPARENT_COLOR)
-				((unsigned int *)ray->g->img.addr)[row * WIN_W
-					+ col] = (((int)round(((t >> 16) & 0xff)
-								* shadow) & 0xff) << 16)
-					+ (((int)round(((t >> 8) & 0xff) * shadow) & 0xff) << 8)
-					+ ((int)round(((t)&0xff) * shadow) & 0xff);
+			{
+				color = int_to_rgb(t);
+				shade_color(&color, shadow);
+				set_image_color(&ray->g->img, row, col, rgb_to_int(color));
+			}
 		}
 	}
 	ray->num_doors_v--;

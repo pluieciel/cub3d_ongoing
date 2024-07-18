@@ -6,7 +6,7 @@
 /*   By: jlefonde <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/18 15:10:20 by jlefonde          #+#    #+#             */
-/*   Updated: 2024/07/18 15:51:32 by jlefonde         ###   ########.fr       */
+/*   Updated: 2024/07/18 17:10:46 by jlefonde         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@
 # define OPEN_DIS 80
 # define SPEED 3
 # define M_PI 3.14159265358979323846
-# define NUM_THREADS 8
+# define NUM_THREADS 16
 # define TRANSPARENT_COLOR 0xFF000000
 # define MOUSE_THRESHOLD 4
 # define GRAVITY 1500
