@@ -6,7 +6,7 @@
 /*   By: jlefonde <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/18 15:08:22 by jlefonde          #+#    #+#             */
-/*   Updated: 2024/07/18 15:08:23 by jlefonde         ###   ########.fr       */
+/*   Updated: 2024/07/18 22:16:23 by jlefonde         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ static void	handle_handgun_idle_state(t_data *game)
 		check_collision(game, game->player.dir_x, game->player.dir_y, COLL_DIS);
 		if (game->left_click)
 			game->handgun.state = SHOOT;
-		else if (game->key.two || game->key.one)
+		else if (game->key.one)
 			game->handgun.state = HOLSTER;
 	}
 	else if (game->key.two)

@@ -6,7 +6,7 @@
 /*   By: jlefonde <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/18 15:07:56 by jlefonde          #+#    #+#             */
-/*   Updated: 2024/07/18 15:07:57 by jlefonde         ###   ########.fr       */
+/*   Updated: 2024/07/18 22:15:37 by jlefonde         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ static void	handle_crowbar_idle_state(t_data *game)
 			game->crowbar.state = ATTACK;
 		else if (game->left_click && (game->coll_wall_h || game->coll_wall_v))
 			game->crowbar.state = ATTACK_HIT;
-		else if (game->key.one || game->key.two)
+		else if (game->key.two)
 			game->crowbar.state = HOLSTER;
 	}
 	else if (game->key.one)
