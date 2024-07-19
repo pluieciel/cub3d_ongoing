@@ -6,7 +6,7 @@
 /*   By: jlefonde <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/18 15:08:51 by jlefonde          #+#    #+#             */
-/*   Updated: 2024/07/18 15:13:44 by jlefonde         ###   ########.fr       */
+/*   Updated: 2024/07/20 00:02:59 by jlefonde         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,10 +39,13 @@ t_image	*get_hud_image(t_data *game, char *name)
 
 unsigned int	get_image_color(t_image *img, int row, int col)
 {
-	return (((unsigned int *)img->addr)[row * img->w + col]);
+    if (row >= 0 && row <= img->h && col >= 0 && col <= img->w)
+        return (((unsigned int *)img->addr)[row * img->w + col]);
+    return (0);
 }
 
 void	set_image_color(t_image *img, int row, int col, unsigned int color)
 {
-	((unsigned int *)img->addr)[row * img->w + col] = color;
+	if (row >= 0 && row <= img->h && col >= 0 && col <= img->w)		
+		((unsigned int *)img->addr)[row * img->w + col] = color;
 }
