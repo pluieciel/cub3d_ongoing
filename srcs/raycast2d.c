@@ -6,13 +6,13 @@
 /*   By: jlefonde <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/18 15:09:45 by jlefonde          #+#    #+#             */
-/*   Updated: 2024/07/18 15:09:46 by jlefonde         ###   ########.fr       */
+/*   Updated: 2024/07/19 23:17:31 by jlefonde         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
 
-float	raycast_h2(t_data *g, float x, float y, int type)
+float	raycast_h2(t_data *g, float x, float y, bool type)
 {
 	int		range;
 
@@ -36,7 +36,7 @@ float	raycast_h2(t_data *g, float x, float y, int type)
 	return ((RAYCAST_RANGE + 1.0) * B_SIZE);
 }
 
-float	raycast_h(t_data *g, float x, float y, int type)
+float	raycast_h(t_data *g, float x, float y, bool type)
 {
 	if (y < 0)
 	{
@@ -61,7 +61,7 @@ float	raycast_h(t_data *g, float x, float y, int type)
 	return (raycast_h2(g, x, y, type));
 }
 
-float	raycast_v2(t_data *g, float x, float y, int type)
+float	raycast_v2(t_data *g, float x, float y, bool type)
 {
 	int		range;
 
@@ -85,7 +85,7 @@ float	raycast_v2(t_data *g, float x, float y, int type)
 	return ((RAYCAST_RANGE + 1.0) * B_SIZE);
 }
 
-float	raycast_v(t_data *g, float x, float y, int type)
+float	raycast_v(t_data *g, float x, float y, bool type)
 {
 	if (x < 0)
 	{
@@ -110,7 +110,7 @@ float	raycast_v(t_data *g, float x, float y, int type)
 	return (raycast_v2(g, x, y, type));
 }
 
-void	raycast(t_data *game, float x, float y, int type)
+void	raycast(t_data *game, float x, float y, bool type)
 {
 	game->rc_h.dis = raycast_h(game, x, y, type);
 	game->rc_v.dis = raycast_v(game, x, y, type);

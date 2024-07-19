@@ -6,7 +6,7 @@
 /*   By: jlefonde <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/18 15:08:22 by jlefonde          #+#    #+#             */
-/*   Updated: 2024/07/19 22:56:03 by jlefonde         ###   ########.fr       */
+/*   Updated: 2024/07/19 23:12:17 by jlefonde         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ static void	handle_shotgun_completed(t_data *game)
 
 void	update_shotgun_state(t_data *game)
 {
-	int	*completed;
+	bool	*completed;
 
 	completed = &game->shotgun.completed;
 	*completed = 0;

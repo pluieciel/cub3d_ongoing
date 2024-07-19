@@ -6,7 +6,7 @@
 /*   By: jlefonde <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/18 15:10:20 by jlefonde          #+#    #+#             */
-/*   Updated: 2024/07/19 23:02:30 by jlefonde         ###   ########.fr       */
+/*   Updated: 2024/07/19 23:17:30 by jlefonde         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,7 @@
 # include <string.h>
 # include <sys/time.h>
 # include <unistd.h>
+# include <stdbool.h>
 
 # define WIN_W 1280
 # define WIN_H 720
@@ -78,8 +79,8 @@ typedef enum e_state
 
 typedef struct s_crowbar
 {
-	int				equiped;
-	int				completed;
+	bool			equiped;
+	bool			completed;
 	t_animation		draw;
 	t_animation		attack;
 	t_animation		attack_hit;
@@ -89,8 +90,8 @@ typedef struct s_crowbar
 
 typedef struct s_gun
 {
-	int				equiped;
-	int				completed;
+	bool			equiped;
+	bool			completed;
 	t_animation		draw;
 	t_animation		shoot;
 	t_animation		holster;
@@ -126,21 +127,21 @@ typedef struct s_player
 
 typedef struct s_key
 {
-	int				w;
-	int				a;
-	int				s;
-	int				d;
-	int				e;
-	int				left;
-	int				right;
-	int				up;
-	int				down;
-	int				one;
-	int				two;
-	int				three;
-	int				ctrl;
-	int				shift;
-	int				space;
+	bool			w;
+	bool			a;
+	bool			s;
+	bool			d;
+	bool			e;
+	bool			left;
+	bool			right;
+	bool			up;
+	bool			down;
+	bool			one;
+	bool			two;
+	bool			three;
+	bool			ctrl;
+	bool			shift;
+	bool			space;
 }					t_key;
 
 typedef struct s_image
@@ -164,7 +165,7 @@ typedef struct s_door
 {
 	int				x;
 	int				y;
-	int				closed;
+	bool			closed;
 	struct s_door	*next;
 }					t_door;
 
@@ -193,10 +194,10 @@ typedef struct s_data
 	int				coll_wall_v;
 	int				coll_door_h;
 	int				coll_door_v;
-	int				mouse_centered;
-	int				left_click;
 	int				dis_p_s;
 	unsigned int	hud_color;
+	bool			mouse_centered;
+	bool			left_click;
 	t_player		player;
 	t_key			key;
 	t_gc			*gc;
@@ -248,9 +249,9 @@ __uint64_t			get_timestamp_ms(void);
 int					render(t_data *game);
 void				parse_elements(t_data *game, char *filename);
 float				distance(float x1, float y1, float x2, float y2);
-float				raycast_h(t_data *game, float x, float y, int type);
-float				raycast_v(t_data *game, float x, float y, int type);
-void				raycast(t_data *game, float x, float y, int type);
+float				raycast_h(t_data *game, float x, float y, bool type);
+float				raycast_v(t_data *game, float x, float y, bool type);
+void				raycast(t_data *game, float x, float y, bool type);
 float				raycast_v_3d(t_raycast *r);
 void				raycast_3d(t_raycast *ray);
 void				update_crowbar_state(t_data *game);

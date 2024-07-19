@@ -6,13 +6,13 @@
 /*   By: jlefonde <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/18 15:08:32 by jlefonde          #+#    #+#             */
-/*   Updated: 2024/07/19 23:07:38 by jlefonde         ###   ########.fr       */
+/*   Updated: 2024/07/19 23:09:55 by jlefonde         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
 
-static void	set_select_weapon_keys(t_data *game, int one, int two, int three)
+static void	set_weapon_keys(t_data *game, int one, int two, int three)
 {
 	game->key.one = one;
 	game->key.two = two;
@@ -26,11 +26,11 @@ void	handle_special_keys(int key, t_data *game)
 	else if (key == XK_KP_Subtract && game->dis_p_s > 400)
 		game->dis_p_s -= 300;
 	else if (key == XK_1)
-		set_select_weapon_keys(game, 1, 0, 0);
+		set_weapon_keys(game, 1, 0, 0);
 	else if (key == XK_2)
-		set_select_weapon_keys(game, 0, 1, 0);
+		set_weapon_keys(game, 0, 1, 0);
 	else if (key == XK_3)
-		set_select_weapon_keys(game, 0, 0, 1);
+		set_weapon_keys(game, 0, 0, 1);
 	else if (key == XK_Control_L && !game->key.shift)
 		game->key.ctrl = 1;
 	else if (key == XK_Shift_L && !game->key.ctrl && !game->key.space)

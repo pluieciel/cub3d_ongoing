@@ -6,7 +6,7 @@
 /*   By: jlefonde <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/18 15:07:56 by jlefonde          #+#    #+#             */
-/*   Updated: 2024/07/19 22:18:25 by jlefonde         ###   ########.fr       */
+/*   Updated: 2024/07/19 23:12:17 by jlefonde         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ static void	handle_crowbar_completed(t_data *game)
 
 void	update_crowbar_state(t_data *game)
 {
-	int	*completed;
+	bool	*completed;
 
 	completed = &game->crowbar.completed;
 	*completed = 0;
