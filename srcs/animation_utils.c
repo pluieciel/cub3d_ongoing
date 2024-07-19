@@ -6,11 +6,40 @@
 /*   By: jlefonde <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/18 15:07:36 by jlefonde          #+#    #+#             */
-/*   Updated: 2024/07/19 22:14:42 by jlefonde         ###   ########.fr       */
+/*   Updated: 2024/07/19 23:07:25 by jlefonde         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
+
+static void	destroy_animation(t_data *game, t_animation *anim)
+{
+	t_image	*img;
+
+	while (anim->frames)
+	{
+		img = (t_image *)anim->frames->content;
+		if (img)
+			mlx_destroy_image(game->mlx_ptr, img->ptr);
+		anim->frames = anim->frames->next;
+		if (anim->frames == anim->head)
+			break ;
+	}
+}
+
+void	destroy_animations(t_data *game)
+{
+	destroy_animation(game, &game->crowbar.draw);
+	destroy_animation(game, &game->crowbar.holster);
+	destroy_animation(game, &game->crowbar.attack);
+	destroy_animation(game, &game->crowbar.attack_hit);
+	destroy_animation(game, &game->handgun.draw);
+	destroy_animation(game, &game->handgun.holster);
+	destroy_animation(game, &game->handgun.shoot);
+	destroy_animation(game, &game->shotgun.draw);
+	destroy_animation(game, &game->shotgun.holster);
+	destroy_animation(game, &game->shotgun.shoot);
+}
 
 int	handle_animation_state(t_data *game, struct s_animation *animation,
 		__uint64_t delay)

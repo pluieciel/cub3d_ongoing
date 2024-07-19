@@ -6,26 +6,11 @@
 /*   By: jlefonde <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/18 15:10:07 by jlefonde          #+#    #+#             */
-/*   Updated: 2024/07/19 22:21:46 by jlefonde         ###   ########.fr       */
+/*   Updated: 2024/07/19 23:01:20 by jlefonde         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
-
-void	destroy_animation(t_data *game, t_animation *anim)
-{
-	t_image	*img;
-
-	while (anim->frames)
-	{
-		img = (t_image *)anim->frames->content;
-		if (img)
-			mlx_destroy_image(game->mlx_ptr, img->ptr);
-		anim->frames = anim->frames->next;
-		if (anim->frames == anim->head)
-			break ;
-	}
-}
 
 void	destroy_imgs(t_data *game)
 {
@@ -40,16 +25,7 @@ void	destroy_imgs(t_data *game)
 	mlx_destroy_image(game->mlx_ptr, game->img_wall_we.ptr);
 	mlx_destroy_image(game->mlx_ptr, game->img_floor.ptr);
 	mlx_destroy_image(game->mlx_ptr, game->img_door.ptr);
-	destroy_animation(game, &game->crowbar.draw);
-	destroy_animation(game, &game->crowbar.holster);
-	destroy_animation(game, &game->crowbar.attack);
-	destroy_animation(game, &game->crowbar.attack_hit);
-	destroy_animation(game, &game->handgun.draw);
-	destroy_animation(game, &game->handgun.holster);
-	destroy_animation(game, &game->handgun.shoot);
-	destroy_animation(game, &game->shotgun.draw);
-	destroy_animation(game, &game->shotgun.holster);
-	destroy_animation(game, &game->shotgun.shoot);
+	destroy_animations(game);
 	while (game->hud_elem)
 	{
 		hud = (t_hud *)game->hud_elem->content;

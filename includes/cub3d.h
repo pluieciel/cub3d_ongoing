@@ -6,7 +6,7 @@
 /*   By: jlefonde <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/18 15:10:20 by jlefonde          #+#    #+#             */
-/*   Updated: 2024/07/19 22:54:13 by jlefonde         ###   ########.fr       */
+/*   Updated: 2024/07/19 23:02:30 by jlefonde         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -304,5 +304,6 @@ int		render_hud_image(t_data *game, char *name, int x, int y);
 void	set_dir(t_data *game, char dir);
 void	init_shotgun(t_data *game);
 void	update_shotgun_state(t_data *game);
+void	destroy_animations(t_data *game);
 
 #endif
