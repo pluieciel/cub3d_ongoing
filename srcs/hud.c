@@ -6,7 +6,7 @@
 /*   By: jlefonde <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/19 19:05:43 by jlefonde          #+#    #+#             */
-/*   Updated: 2024/07/19 20:13:17 by jlefonde         ###   ########.fr       */
+/*   Updated: 2024/07/19 20:17:06 by jlefonde         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,8 +18,7 @@ static void draw_handgun_category(t_data *game)
 	
 	if (game->key.two)
 	{
-		x = 15;
-    	x = render_hud_image(game, "hud_bucket1.xpm", x, 35) + 5;
+    	x = render_hud_image(game, "hud_bucket1.xpm", 15, 35) + 5;
     	x = render_hud_image(game, "hud_bucket2.xpm", x, 35) + 178;
     	x = render_hud_image(game, "hud_bucket3.xpm", x, 35) + 5;
     	x = render_hud_image(game, "hud_bucket4.xpm", x, 35) + 5;
@@ -37,8 +36,7 @@ static void draw_crowbar_category(t_data *game)
 	
 	if (game->key.one)
 	{
-		x = 15;
-    	x = render_hud_image(game, "hud_bucket1.xpm", x, 35) + 178;
+    	x = render_hud_image(game, "hud_bucket1.xpm", 15, 35) + 178;
     	x = render_hud_image(game, "hud_bucket2.xpm", x, 35) + 5;
     	x = render_hud_image(game, "hud_bucket3.xpm", x, 35) + 5;
     	x = render_hud_image(game, "hud_bucket4.xpm", x, 35) + 5;
@@ -54,8 +52,7 @@ void	draw_hud(t_data *game)
 {
 	int	x;
 
-    x = 20;
-    x = render_hud_image(game, "hud_cross.xpm", x, WIN_H - 20) + 10;
+    x = render_hud_image(game, "hud_cross.xpm", 20, WIN_H - 20) + 10;
     x = render_hud_image(game, "hud_number_1.xpm", x, WIN_H - 20) + 10;
     x = render_hud_image(game, "hud_number_0.xpm", x, WIN_H - 20) + 7;
     x = render_hud_image(game, "hud_number_0.xpm", x, WIN_H - 20) + 20;
