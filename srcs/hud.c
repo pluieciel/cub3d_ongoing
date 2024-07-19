@@ -6,7 +6,7 @@
 /*   By: jlefonde <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/19 19:05:43 by jlefonde          #+#    #+#             */
-/*   Updated: 2024/07/19 19:06:09 by jlefonde         ###   ########.fr       */
+/*   Updated: 2024/07/19 20:13:17 by jlefonde         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,6 +64,9 @@ void	draw_hud(t_data *game)
     x = render_hud_image(game, "hud_number_1.xpm", x, WIN_H - 20) + 10;
     x = render_hud_image(game, "hud_number_0.xpm", x, WIN_H - 20) + 7;
     x = render_hud_image(game, "hud_number_0.xpm", x, WIN_H - 20);
+	if (game->handgun.state != NONE)
+    	render_hud_image(game, "hud_crosshair.xpm", WIN_W / 2, WIN_H / 2);
+	render_hud_image(game, "hud_flash_full.xpm", WIN_W - 55, 50);
 	draw_handgun_category(game);
 	draw_crowbar_category(game);
     draw_minimap(game);
