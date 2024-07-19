@@ -6,7 +6,7 @@
 /*   By: jlefonde <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/18 15:07:36 by jlefonde          #+#    #+#             */
-/*   Updated: 2024/07/18 15:07:37 by jlefonde         ###   ########.fr       */
+/*   Updated: 2024/07/19 22:14:42 by jlefonde         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,4 +35,6 @@ void	update_animation(t_data *game)
 		update_crowbar_state(game);
 	else if (game->handgun.state != NONE)
 		update_handgun_state(game);
+	else if (game->shotgun.state != NONE)
+		update_shotgun_state(game);
 }

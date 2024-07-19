@@ -6,7 +6,7 @@
 /*   By: jlefonde <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/18 15:08:22 by jlefonde          #+#    #+#             */
-/*   Updated: 2024/07/18 22:16:23 by jlefonde         ###   ########.fr       */
+/*   Updated: 2024/07/19 22:55:53 by jlefonde         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ static void	handle_handgun_idle_state(t_data *game)
 		check_collision(game, game->player.dir_x, game->player.dir_y, COLL_DIS);
 		if (game->left_click)
 			game->handgun.state = SHOOT;
-		else if (game->key.one)
+		else if (game->key.one || game->key.three)
 			game->handgun.state = HOLSTER;
 	}
 	else if (game->key.two)
@@ -34,11 +34,17 @@ static void	handle_handgun_completed(t_data *game)
 		game->handgun.state = NONE;
 		game->crowbar.state = DRAW;
 	}
+	else if (game->key.three)
+	{
+		game->handgun.state = NONE;
+		game->shotgun.state = DRAW;
+	}
 	if (game->handgun.state != NONE)
 	{
 		game->handgun.state = IDLE;
-		game->key.two = 0;
 		game->key.one = 0;
+		game->key.two = 0;
+		game->key.three = 0;
 	}
 }
 

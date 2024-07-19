@@ -6,7 +6,7 @@
 /*   By: jlefonde <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/18 15:08:32 by jlefonde          #+#    #+#             */
-/*   Updated: 2024/07/18 15:08:33 by jlefonde         ###   ########.fr       */
+/*   Updated: 2024/07/19 22:20:52 by jlefonde         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,11 +22,19 @@ void	handle_special_keys(int key, t_data *game)
 	{
 		game->key.one = 1;
 		game->key.two = 0;
+		game->key.three = 0;
 	}
 	else if (key == XK_2)
 	{
 		game->key.one = 0;
 		game->key.two = 1;
+		game->key.three = 0;
+	}
+	else if (key == XK_3)
+	{
+		game->key.one = 0;
+		game->key.two = 0;
+		game->key.three = 1;
 	}
 	else if (key == XK_Control_L && !game->key.shift)
 		game->key.ctrl = 1;

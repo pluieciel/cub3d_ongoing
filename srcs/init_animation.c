@@ -6,7 +6,7 @@
 /*   By: jlefonde <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/18 15:08:54 by jlefonde          #+#    #+#             */
-/*   Updated: 2024/07/18 15:08:54 by jlefonde         ###   ########.fr       */
+/*   Updated: 2024/07/19 22:05:38 by jlefonde         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,4 +69,20 @@ void	init_handgun(t_data *game)
 	init_animation(game, &game->handgun.draw, "handgun/draw", 15);
 	init_animation(game, &game->handgun.shoot, "handgun/shoot", 14);
 	init_animation(game, &game->handgun.holster, "handgun/holster", 15);
+}
+
+void	init_shotgun(t_data *game)
+{
+	game->shotgun.draw.frames = NULL;
+	game->shotgun.draw.head = NULL;
+	game->shotgun.shoot.frames = NULL;
+	game->shotgun.shoot.head = NULL;
+	game->shotgun.holster.frames = NULL;
+	game->shotgun.holster.head = NULL;
+	game->shotgun.state = NONE;
+	game->shotgun.equiped = 0;
+	game->shotgun.completed = 0;
+	init_animation(game, &game->shotgun.draw, "shotgun/draw", 12);
+	init_animation(game, &game->shotgun.shoot, "shotgun/shoot", 20);
+	init_animation(game, &game->shotgun.holster, "shotgun/holster", 10);
 }

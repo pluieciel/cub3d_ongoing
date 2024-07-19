@@ -6,7 +6,7 @@
 /*   By: jlefonde <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/18 15:10:07 by jlefonde          #+#    #+#             */
-/*   Updated: 2024/07/18 15:10:08 by jlefonde         ###   ########.fr       */
+/*   Updated: 2024/07/19 22:21:46 by jlefonde         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,9 @@ void	destroy_imgs(t_data *game)
 	destroy_animation(game, &game->handgun.draw);
 	destroy_animation(game, &game->handgun.holster);
 	destroy_animation(game, &game->handgun.shoot);
+	destroy_animation(game, &game->shotgun.draw);
+	destroy_animation(game, &game->shotgun.holster);
+	destroy_animation(game, &game->shotgun.shoot);
 	while (game->hud_elem)
 	{
 		hud = (t_hud *)game->hud_elem->content;

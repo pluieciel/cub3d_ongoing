@@ -6,7 +6,7 @@
 /*   By: jlefonde <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/18 15:09:01 by jlefonde          #+#    #+#             */
-/*   Updated: 2024/07/18 15:09:02 by jlefonde         ###   ########.fr       */
+/*   Updated: 2024/07/19 22:15:35 by jlefonde         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,7 @@ static void	init_keys(t_data *game)
 	game->key.down = 0;
 	game->key.one = 0;
 	game->key.two = 0;
+	game->key.three = 0;
 	game->key.ctrl = 0;
 	game->key.shift = 0;
 	game->key.space = 0;

@@ -6,7 +6,7 @@
 /*   By: jlefonde <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/18 15:10:20 by jlefonde          #+#    #+#             */
-/*   Updated: 2024/07/19 17:42:19 by jlefonde         ###   ########.fr       */
+/*   Updated: 2024/07/19 22:54:13 by jlefonde         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,7 +87,7 @@ typedef struct s_crowbar
 	t_state			state;
 }					t_crowbar;
 
-typedef struct s_handgun
+typedef struct s_gun
 {
 	int				equiped;
 	int				completed;
@@ -95,7 +95,7 @@ typedef struct s_handgun
 	t_animation		shoot;
 	t_animation		holster;
 	t_state			state;
-}					t_handgun;
+}					t_gun;
 
 typedef struct s_point3d
 {
@@ -137,6 +137,7 @@ typedef struct s_key
 	int				down;
 	int				one;
 	int				two;
+	int				three;
 	int				ctrl;
 	int				shift;
 	int				space;
@@ -213,7 +214,8 @@ typedef struct s_data
 	t_res_rc		*rc;
 	t_door			*doors;
 	t_crowbar		crowbar;
-	t_handgun		handgun;
+	t_gun			handgun;
+	t_gun			shotgun;
 	__uint64_t		time;
 	__uint64_t		animation_time;
 	__uint64_t		timestep;
@@ -300,5 +302,7 @@ void set_image(t_data *game, t_image **img, char *path);
 t_image	*get_hud_image(t_data *game, char *name);
 int		render_hud_image(t_data *game, char *name, int x, int y);
 void	set_dir(t_data *game, char dir);
+void	init_shotgun(t_data *game);
+void	update_shotgun_state(t_data *game);
 
 #endif
