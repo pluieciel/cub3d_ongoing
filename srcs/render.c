@@ -6,7 +6,7 @@
 /*   By: jlefonde <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/18 15:09:55 by jlefonde          #+#    #+#             */
-/*   Updated: 2024/07/18 17:07:13 by jlefonde         ###   ########.fr       */
+/*   Updated: 2024/07/19 17:42:02 by jlefonde         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,16 +22,17 @@ static void update_fps_counter(t_data *game, u_int64_t current_time, u_int64_t l
 	gc_free_ptr(&game->gc, fps);
 }
 
-void	render_hud_image(t_data *game, char *name, int *x, int y)
+int	render_hud_image(t_data *game, char *name, int x, int y)
 {
 	t_image	*img;
 
 	img = get_hud_image(game, name);
 	if (img)
 	{
-		render_image(game, img, WIN_W - img->w - *x, WIN_H - img->h - y);
-		*x += img->w;
+		render_image(game, img, x, y - img->h);
+		return (x + img->w);
 	}
+	return (x);
 }
 
 void	render_image(t_data *game, t_image *img, int x, int y)

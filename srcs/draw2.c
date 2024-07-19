@@ -6,7 +6,7 @@
 /*   By: jlefonde <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/18 15:08:18 by jlefonde          #+#    #+#             */
-/*   Updated: 2024/07/18 17:30:46 by jlefonde         ###   ########.fr       */
+/*   Updated: 2024/07/19 19:05:54 by jlefonde         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -140,29 +140,4 @@ void	draw_textures(t_data *g)
 	i = -1;
 	while (++i < NUM_THREADS)
 		pthread_join(ray[i].thread, NULL);
-}
-
-void	draw_hud(t_data *game)
-{
-	int	x;
-
-	x = WIN_W - 40;
-	render_hud_image(game, "hud_cross.xpm", &x, 20);
-	x -= 45;
-	render_hud_image(game, "hud_number_1.xpm", &x, 20);
-	x -= 30;
-	render_hud_image(game, "hud_number_0.xpm", &x, 20);
-	x -= 35;
-	render_hud_image(game, "hud_number_0.xpm", &x, 20);
-	x -= 35;
-	render_hud_image(game, "hud_divider.xpm", &x, 20);
-	x -= 50;
-	render_hud_image(game, "hud_suit_full.xpm", &x, 15);
-	x -= 50;
-	render_hud_image(game, "hud_number_1.xpm", &x, 20);
-	x -= 30;
-	render_hud_image(game, "hud_number_0.xpm", &x, 20);
-	x -= 35;
-	render_hud_image(game, "hud_number_0.xpm", &x, 20);
-	draw_minimap(game);
 }
