@@ -1,52 +1,54 @@
-#include "cub3D.h"
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   rotation.c                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jlefonde <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/07/18 15:10:00 by jlefonde          #+#    #+#             */
+/*   Updated: 2024/07/18 15:59:48 by jlefonde         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
-t_point3D   *ro_on_z_to_xz(t_point3D p)
+#include "cub3d.h"
+
+static float	dot(t_point3d u, t_point3d v)
 {
-    float x = p.x;
-    float y = p.y;
-    float z = p.z;
-    float a = p.angle;
-    t_point3D *newp = (t_point3D *)malloc(sizeof(t_point3D));
-    newp->x = cos(a) * x + sin(a) * y;
-    newp->y = -sin(a) * x + cos(a) * y;
-    newp->z = z;
-    newp->angle = a;
-    return newp;
+	return (u.x * v.x + u.y * v.y + u.z * v.z);
 }
 
-t_point3D	*ro_on_y(t_point3D p, float angle_z)
+void	get_vector_right(t_data *g, t_point3d *v_right)
 {
-    float x = p.x;
-    float y = p.y;
-    float z = p.z;
-    t_point3D *newp = (t_point3D *)malloc(sizeof(t_point3D));
-    newp->x = x * cos(angle_z) - z * sin(angle_z);
-    newp->y = y;
-    newp->z = x * sin(angle_z) + z * cos(angle_z);
-    newp->angle = p.angle;
-    return newp;
+	v_right->x = -g->player.dir_y;
+	v_right->y = g->player.dir_x;
+	v_right->z = 0;
 }
 
-t_point3D	*ro_back_on_z(t_point3D p)
+void	get_vector_down(t_data *g, t_point3d *v_right, t_point3d *v_down)
 {
-    float x = p.x;
-    float y = p.y;
-    float z = p.z;
-    float a = p.angle;
-    t_point3D *newp = (t_point3D *)malloc(sizeof(t_point3D));
-    newp->x = cos(a) * x - sin(a) * y;
-    newp->y = sin(a) * x + cos(a) * y;
-    newp->z = z;
-    newp->angle = a;
-    return newp;
+	v_down->x = v_right->y * g->player.dir3d.z - v_right->z * g->player.dir3d.y;
+	v_down->y = v_right->z * g->player.dir3d.x - v_right->x * g->player.dir3d.z;
+	v_down->z = v_right->x * g->player.dir3d.y - v_right->y * g->player.dir3d.x;
 }
 
-t_point3D	*cross(t_point3D p1, t_point3D p2)
+void	rotate_u(t_point3d *todo, t_point3d u, t_point3d v, float angle)
 {
-    t_point3D *newp = (t_point3D *)malloc(sizeof(t_point3D));
-    newp->x = p1.y * p2.z - p1.z * p2.y;
-    newp->y = p1.z * p2.x - p1.x * p2.z;
-    newp->z = p1.x * p2.y - p1.y * p2.x;
-    newp->angle = 0;
-    return newp;
+	double		k[4];
+	double		len;
+	t_point3d	old;
+
+	old.x = todo->x;
+	old.y = todo->y;
+	old.z = todo->z;
+	k[0] = dot(old, u);
+	k[1] = dot(old, v);
+	k[2] = k[0] * cos(angle) - k[1] * sin(angle);
+	k[3] = k[0] * sin(angle) + k[1] * cos(angle);
+	todo->x = k[2] * u.x + k[3] * v.x;
+	todo->y = k[2] * u.y + k[3] * v.y;
+	todo->z = k[2] * u.z + k[3] * v.z;
+	len = sqrt(todo->x * todo->x + todo->y * todo->y + todo->z * todo->z);
+	todo->x /= len;
+	todo->y /= len;
+	todo->z /= len;
 }

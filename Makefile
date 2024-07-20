@@ -4,13 +4,46 @@ SOURCES_DIR = srcs
 HEADERS_DIR = includes
 OBJECTS_DIR = objs
 
-SOURCES = check_map.c  hook.c  init.c  main.c  parse_element.c parse_map.c \
-render.c  time.c raycast.c ft_bresenham.c rotation.c
+SOURCES = animation_utils.c \
+			check_map.c \
+			collision.c \
+			color.c \
+			crowbar_animation.c \
+			door.c \
+			draw2.c \
+			draw.c \
+			draw_utils.c \
+			handgun_animation.c \
+			hook.c \
+			hook_key.c \
+			hud.c \
+			image.c \
+			init_animation.c \
+			init.c \
+			init_hud.c \
+			main.c \
+			minimap.c \
+			parse_elements.c \
+			parse_map2.c \
+			parse_map.c \
+			player.c \
+			player_move.c \
+			player_rotate.c \
+			raycast_2d_h.c \
+			raycast_2d_v.c \
+			raycast_3d_h.c \
+			raycast_3d_v.c \
+			raycast.c \
+			render.c \
+			rotation.c \
+			shotgun_animation.c \
+			time.c \
+			utils.c
 
 OBJECTS = $(addprefix $(OBJECTS_DIR)/, $(SOURCES:.c=.o))
 
-CFLAGS = -Wall -Wextra -Werror -I$(HEADERS_DIR) -g
-LDFLAGS = -L./libft_gc -L./minilibx -lft_gc -lmlx_Linux -lXext -lX11 -lm -lpthread
+CFLAGS = -Wall -Wextra -Werror -I$(HEADERS_DIR) -g -Ofast -lpthread
+LDFLAGS = -L./libft_gc -L./minilibx -lft_gc -lmlx_Linux -lXext -lX11 -lm
 AR = ar -rcs
 
 $(OBJECTS_DIR)/%.o: $(SOURCES_DIR)/%.c

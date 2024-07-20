@@ -1,59 +1,92 @@
-#include "cub3D.h"
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   parse_map.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jlefonde <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/07/18 15:09:24 by jlefonde          #+#    #+#             */
+/*   Updated: 2024/07/20 20:25:59 by jlefonde         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
-void	get_init_pos(t_data *game, char dir, int i, int j)
+#include "cub3d.h"
+
+static void	get_init_pos(t_data *game, char dir, int i, int j)
 {
-	if (game->player.dir[0] != 0 || game->player.dir[1] != 0)
+	float	olddirx;
+	float	olddiry;
+	float	olddirx_3d;
+	float	olddiry_3d;
+
+	if (game->player.dir_x != 0 || game->player.dir_y != 0)
 		exit(gc_free(game->gc, "Error: multiple player position\n", 2));
 	game->map[i][j] = 0;
-	game->player.pos[0] = j * B_SIZE + B_SIZE / 2;
-	game->player.pos[1] = i * B_SIZE + B_SIZE / 2;
-	if (dir == 'N')
-	{
-		game->player.dir[1] = -1;
-		game->player.dir3D.y = -1;
-		game->player.dir3D.angle = -M_PI / 2;
-	}
-	else if (dir == 'E')
-	{
-		game->player.dir[0] = 1;
-		game->player.dir3D.x = 1;
-	}
-	else if (dir == 'S')
-	{
-		game->player.dir[1] = 1;
-		game->player.dir3D.y = 1;
-		game->player.dir3D.angle = M_PI / 2;
-	}
-	else if (dir == 'W')
-	{
-		game->player.dir[0] = -1;
-		game->player.dir3D.x = -1;
-		game->player.dir3D.angle = M_PI;
-	}
+	game->player.x = j * B_SIZE + B_SIZE / 2;
+	game->player.y = i * B_SIZE + B_SIZE / 2;
+	set_dir(game, dir);
+	olddirx = game->player.dir_x;
+	olddiry = game->player.dir_y;
+	olddirx_3d = game->player.dir3d.x;
+	olddiry_3d = game->player.dir3d.y;
+	game->player.dir_x = olddirx * cos(-ROT_SPEED) - olddiry * sin(-ROT_SPEED);
+	game->player.dir_y = olddirx * sin(-ROT_SPEED) + olddiry * cos(-ROT_SPEED);
+	game->player.dir3d.x = olddirx_3d * cos(-ROT_SPEED) - olddiry_3d
+		* sin(-ROT_SPEED);
+	game->player.dir3d.y = olddirx_3d * sin(-ROT_SPEED) + olddiry_3d
+		* cos(-ROT_SPEED);
+	get_vector_right(game, &game->player.v_right);
+	get_vector_down(game, &game->player.v_right, &game->player.v_down);
 }
 
-void	parse_map(t_data *game, char *filename)
+static void	handle_map_char(t_data *game, char *line, int i, int j)
 {
-	int		fd;
-	char	*line;
-	int		i;
-	int		j;
+	if (line[j] == '1')
+		game->map[i][j] = 1;
+	else if (line[j] == '2')
+		game->map[i][j] = 2;
+	else if (line[j] == '0')
+		game->map[i][j] = 0;
+	else if (line[j] == 'N' || line[j] == 'S' || line[j] == 'W'
+		|| line[j] == 'E')
+		get_init_pos(game, line[j], i, j);
+	else if (line[j] == ' ' || line[j] == '\t' || line[j] == '\n')
+		;
+	else
+		exit(gc_free(game->gc, "Error: invalid char in map\n", 2));
+}
 
-	parse_element(game, filename);
-	fd = open(filename, O_RDONLY);
-	if (fd < 0)
-		exit(gc_free(game->gc, "Error: invalid file\n", 2));
-	for (int k = 0; k < game->map_index; k++)
+static void	fill_map(t_data *game, int fd, char *line)
+{
+	int	i;
+	int	j;
+
+	i = 0;
+	while (line)
 	{
+		j = 0;
+		while (line[j])
+		{
+			handle_map_char(game, line, i, j);
+			j++;
+		}
+		i++;
 		line = get_next_line(fd);
 		game->gc = gc_insert(game->gc, line);
 	}
+}
+
+static void	init_map(t_data *game, int fd, char *line)
+{
+	int		i;
+	int		j;
+
 	line = get_next_line(fd);
 	game->gc = gc_insert(game->gc, line);
 	game->map = gc_malloc(sizeof(float *) * game->map_h, &game->gc);
 	game->visited = gc_malloc(sizeof(int *) * game->map_h, &game->gc);
 	i = -1;
-	while (++i < game->map_h)
+	while (++(i) < game->map_h)
 	{
 		game->map[i] = gc_malloc(sizeof(float) * game->map_w, &game->gc);
 		game->visited[i] = gc_malloc(sizeof(int) * game->map_w, &game->gc);
@@ -64,29 +97,25 @@ void	parse_map(t_data *game, char *filename)
 			game->visited[i][j] = 0;
 		}
 	}
-	i = 0;
-	while (line)
+	fill_map(game, fd, line);
+	close(fd);
+}
+
+void	parse_map(t_data *game, char *filename)
+{
+	int		fd;
+	char	*line;
+	int		i;
+
+	parse_elements(game, filename);
+	fd = open(filename, O_RDONLY);
+	if (fd < 0)
+		exit(gc_free(game->gc, "Error: invalid file\n", 2));
+	i = -1;
+	while (++i < game->map_index)
 	{
-		j = 0;
-		while (line[j])
-		{
-			if (line[j] == '1')
-				game->map[i][j] = 1;
-			else if (line[j] == '2')
-				game->map[i][j] = 2;
-			else if (line[j] == '0')
-				game->map[i][j] = 0;
-			else if (line[j] == 'N' || line[j] == 'S' || line[j] == 'W'
-				|| line[j] == 'E')
-				get_init_pos(game, line[j], i, j);
-			else if (line[j] == ' ' || line[j] == '\t' || line[j] == '\n')
-				;
-			else
-				exit(gc_free(game->gc, "Error: invalid char in map\n", 2));
-			j++;
-		}
-		i++;
 		line = get_next_line(fd);
 		game->gc = gc_insert(game->gc, line);
 	}
+	init_map(game, fd, line);
 }

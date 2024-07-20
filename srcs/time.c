@@ -3,21 +3,19 @@
 /*                                                        :::      ::::::::   */
 /*   time.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yuzhao <yuzhao@student.42.fr>              +#+  +:+       +#+        */
+/*   By: jlefonde <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/04/19 12:48:29 by yuzhao            #+#    #+#             */
-/*   Updated: 2024/06/25 11:24:50 by yuzhao           ###   ########.fr       */
+/*   Created: 2024/07/18 15:10:04 by jlefonde          #+#    #+#             */
+/*   Updated: 2024/07/18 15:10:05 by jlefonde         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "cub3D.h"
+#include "cub3d.h"
 
-long long	millitimestamp(void)
+__uint64_t	get_timestamp_ms(void)
 {
-	struct timeval	timeval;
-	long long		microtime;
+	struct timeval	tv;
 
-	gettimeofday(&timeval, NULL);
-	microtime = timeval.tv_sec * 1000LL + timeval.tv_usec / 1000;
-	return (microtime);
+	gettimeofday(&tv, NULL);
+	return (tv.tv_sec * 1000 + tv.tv_usec / 1000);
 }
