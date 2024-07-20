@@ -6,7 +6,7 @@
 /*   By: jlefonde <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/18 15:10:20 by jlefonde          #+#    #+#             */
-/*   Updated: 2024/07/20 11:31:19 by jlefonde         ###   ########.fr       */
+/*   Updated: 2024/07/20 17:08:16 by jlefonde         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -249,9 +249,9 @@ __uint64_t			get_timestamp_ms(void);
 int					render(t_data *game);
 void				parse_elements(t_data *game, char *filename);
 float				distance(float x1, float y1, float x2, float y2);
-float				raycast_h(t_data *game, float x, float y, bool type);
-float				raycast_v(t_data *game, float x, float y, bool type);
-void				raycast(t_data *game, float x, float y, bool type);
+float				raycast_2d_h(t_data *game, float x, float y, bool type);
+float				raycast_2d_v(t_data *game, float x, float y, bool type);
+void				raycast_2d(t_data *game, float x, float y, bool type);
 float				raycast_v_3d(t_raycast *r);
 void				raycast_3d(t_raycast *ray);
 void				update_crowbar_state(t_data *game);
@@ -306,5 +306,8 @@ void	set_dir(t_data *game, char dir);
 void	init_shotgun(t_data *game);
 void	update_shotgun_state(t_data *game);
 void	destroy_animations(t_data *game);
+bool is_collider(t_data *g, int x, int y, bool type);
+float	raycast_2d_h(t_data *g, float x, float y, bool type);
+float	raycast_2d_v(t_data *g, float x, float y, bool type);
 
 #endif
