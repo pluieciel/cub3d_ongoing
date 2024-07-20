@@ -6,18 +6,20 @@
 /*   By: jlefonde <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/18 15:08:51 by jlefonde          #+#    #+#             */
-/*   Updated: 2024/07/20 00:03:29 by jlefonde         ###   ########.fr       */
+/*   Updated: 2024/07/20 10:20:15 by jlefonde         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
 
-void	set_image(t_data *game, t_image **img, char *path)
+void	set_image(t_data *game, t_image *img, char *path)
 {
-	(*img)->ptr = mlx_xpm_file_to_image(game->mlx_ptr, path, &(*img)->w,
-			&(*img)->h);
-	(*img)->addr = mlx_get_data_addr((*img)->ptr, &(*img)->bpp,
-			&(*img)->line_len, &(*img)->endian);
+	img->w = 0;
+    img->h = 0;
+	img->ptr = mlx_xpm_file_to_image(game->mlx_ptr, path, &img->w,
+			&img->h);
+	img->addr = mlx_get_data_addr(img->ptr, &img->bpp,
+			&img->line_len, &img->endian);
 }
 
 t_image	*get_hud_image(t_data *game, char *name)

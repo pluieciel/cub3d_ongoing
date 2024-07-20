@@ -6,7 +6,7 @@
 /*   By: jlefonde <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/18 15:08:54 by jlefonde          #+#    #+#             */
-/*   Updated: 2024/07/20 09:34:14 by jlefonde         ###   ########.fr       */
+/*   Updated: 2024/07/20 10:23:10 by jlefonde         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,12 +29,7 @@ static void	init_animation(t_data *game, struct s_animation *animation,
             exit(gc_free(game->gc, "Error: invalid file\n", 2));
         close(fd);
         img = gc_malloc(sizeof(t_image), &game->gc);
-        img->w = 0;
-        img->h = 0;
-        img->ptr = NULL;
-        img->addr = NULL;
-        img->ptr = mlx_xpm_file_to_image(game->mlx_ptr, path, &img->w, &img->h);
-        img->addr = mlx_get_data_addr(img->ptr, &img->bpp, &img->line_len, &img->endian);
+        set_image(game, img, path);
         ft_lstadd_back(&animation->frames, ft_lstnew_gc(img, &game->gc));
         i++;
     }

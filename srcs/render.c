@@ -6,20 +6,20 @@
 /*   By: jlefonde <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/18 15:09:55 by jlefonde          #+#    #+#             */
-/*   Updated: 2024/07/19 17:42:02 by jlefonde         ###   ########.fr       */
+/*   Updated: 2024/07/20 10:38:26 by jlefonde         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
 
-static void update_fps_counter(t_data *game, u_int64_t current_time, u_int64_t last_time)
+static void	update_fps_counter(t_data *game, u_int64_t current_time, u_int64_t last_time)
 {
-	char *fps;
+	char	fps_counter[16];
+	int		fps;
 	
-	fps = ft_itoa_gc((int)(round(1000.0 / (current_time - last_time))), &game->gc);
-    mlx_string_put(game->mlx_ptr, game->win_ptr, WIN_W - 45, 20, game->hud_color, fps);
-    mlx_string_put(game->mlx_ptr, game->win_ptr, WIN_W - 35, 20, game->hud_color, " FPS");
-	gc_free_ptr(&game->gc, fps);
+	fps = (int)(round(1000.0 / (current_time - last_time)));
+	snprintf(fps_counter, sizeof(fps_counter), "%d FPS", fps);
+	mlx_string_put(game->mlx_ptr, game->win_ptr, WIN_W - 50, 20, game->hud_color, fps_counter);
 }
 
 int	render_hud_image(t_data *game, char *name, int x, int y)
