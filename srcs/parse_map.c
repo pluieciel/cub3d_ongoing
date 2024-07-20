@@ -6,7 +6,7 @@
 /*   By: jlefonde <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/18 15:09:24 by jlefonde          #+#    #+#             */
-/*   Updated: 2024/07/18 15:53:53 by jlefonde         ###   ########.fr       */
+/*   Updated: 2024/07/20 20:25:59 by jlefonde         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,6 +98,7 @@ static void	init_map(t_data *game, int fd, char *line)
 		}
 	}
 	fill_map(game, fd, line);
+	close(fd);
 }
 
 void	parse_map(t_data *game, char *filename)
