@@ -6,7 +6,7 @@
 /*   By: jlefonde <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/18 15:09:55 by jlefonde          #+#    #+#             */
-/*   Updated: 2024/07/20 11:00:03 by jlefonde         ###   ########.fr       */
+/*   Updated: 2024/07/20 11:45:19 by jlefonde         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,10 +94,9 @@ void	*render_section(void *arg)
 
 int	render(t_data *game)
 {
-	__uint64_t	last_time;
-	__uint64_t	current_time;
+	static __uint64_t	last_time = 0;
+	__uint64_t			current_time;
 
-	last_time = 0;
 	current_time = get_timestamp_ms();
 	if (game->win_ptr != NULL && (current_time - game->time) > 1000 / FPS)
 	{
