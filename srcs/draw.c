@@ -6,7 +6,7 @@
 /*   By: jlefonde <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/18 15:08:11 by jlefonde          #+#    #+#             */
-/*   Updated: 2024/07/18 21:08:59 by jlefonde         ###   ########.fr       */
+/*   Updated: 2024/07/20 11:33:40 by jlefonde         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,7 +91,7 @@ static void	draw_door(t_raycast *ray, int row, int col)
 			draw_door_v(ray, col, row);
 		else if (ray->num_doors_v < 0)
 			draw_door_h(ray, col, row);
-		else if (ray->doors_h[ray->num_doors_h][3] < ray->doors_v[ray->num_doors_v][3])
+		else if (ray->doors_h[ray->num_doors_h].dis < ray->doors_v[ray->num_doors_v].dis)
 			draw_door_v(ray, col, row);
 		else
 			draw_door_h(ray, col, row);

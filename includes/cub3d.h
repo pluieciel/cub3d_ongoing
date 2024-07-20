@@ -6,7 +6,7 @@
 /*   By: jlefonde <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/18 15:10:20 by jlefonde          #+#    #+#             */
-/*   Updated: 2024/07/20 11:22:47 by jlefonde         ###   ########.fr       */
+/*   Updated: 2024/07/20 11:31:19 by jlefonde         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -228,8 +228,8 @@ typedef struct s_raycast
 	int				col_end;
 	int				num_doors_h;
 	int				num_doors_v;
-	float			doors_h[20][7];
-	float			doors_v[20][7];
+	t_res_rc		doors_h[20];
+	t_res_rc		doors_v[20];
 	float			nearest_wall_dis;
 	t_data			*g;
 	t_point3d		p;

@@ -6,7 +6,7 @@
 /*   By: jlefonde <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/18 15:08:18 by jlefonde          #+#    #+#             */
-/*   Updated: 2024/07/19 19:05:54 by jlefonde         ###   ########.fr       */
+/*   Updated: 2024/07/20 11:34:01 by jlefonde         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,20 +20,20 @@ void	draw_door_h(t_raycast *ray, int col, int row)
 	float			shadow;
 	float			offset;
 
-	if (ray->doors_h[ray->num_doors_h][3] < ray->nearest_wall_dis)
+	if (ray->doors_h[ray->num_doors_h].dis < ray->nearest_wall_dis)
 	{
-		shadow = 1.0 - (fmin(ray->doors_h[ray->num_doors_h][3], 8 * B_SIZE) / (8
+		shadow = 1.0 - (fmin(ray->doors_h[ray->num_doors_h].dis, 8 * B_SIZE) / (8
 					* B_SIZE));
-		if (ray->doors_h[ray->num_doors_h][4] == 1)
-			c = round(fmod(ray->doors_h[ray->num_doors_h][0], B_SIZE) / B_SIZE
+		if (ray->doors_h[ray->num_doors_h].dir == 1)
+			c = round(fmod(ray->doors_h[ray->num_doors_h].x, B_SIZE) / B_SIZE
 					* ray->g->img_door.w);
 		else
-			c = round((1 - fmod(ray->doors_h[ray->num_doors_h][0], B_SIZE)
+			c = round((1 - fmod(ray->doors_h[ray->num_doors_h].x, B_SIZE)
 						/ B_SIZE) * ray->g->img_door.w);
-		r = round((1 - fmod(ray->doors_h[ray->num_doors_h][2] + 32
+		r = round((1 - fmod(ray->doors_h[ray->num_doors_h].z + 32
 						+ ray->g->player.z, B_SIZE) / B_SIZE)
 				* ray->g->img_door.h);
-		offset = (ray->g->map[(int)ray->doors_h[ray->num_doors_h][6]][(int)ray->doors_h[ray->num_doors_h][5]]
+		offset = (ray->g->map[(int)ray->doors_h[ray->num_doors_h].map_y][(int)ray->doors_h[ray->num_doors_h].map_x]
 				- 2) * ray->g->img_door.w;
 		if ((int)c < ray->g->img_door.w / 2 && (int)c
 			+ (int)offset < ray->g->img_door.w / 2)
@@ -72,20 +72,20 @@ void	draw_door_v(t_raycast *ray, int col, int row)
 	float			offset;
 	t_color			color;
 
-	if (ray->doors_v[ray->num_doors_v][3] < ray->nearest_wall_dis)
+	if (ray->doors_v[ray->num_doors_v].dis < ray->nearest_wall_dis)
 	{
-		shadow = 1.0 - (fmin(ray->doors_v[ray->num_doors_v][3], 8 * B_SIZE) / (8
+		shadow = 1.0 - (fmin(ray->doors_v[ray->num_doors_v].dis, 8 * B_SIZE) / (8
 					* B_SIZE));
-		if (ray->doors_v[ray->num_doors_v][4] == 1)
-			c = round(fmod(ray->doors_v[ray->num_doors_v][1], B_SIZE) / B_SIZE
+		if (ray->doors_v[ray->num_doors_v].dir == 1)
+			c = round(fmod(ray->doors_v[ray->num_doors_v].y, B_SIZE) / B_SIZE
 					* ray->g->img_door.w);
 		else
-			c = round((1 - fmod(ray->doors_v[ray->num_doors_v][1], B_SIZE)
+			c = round((1 - fmod(ray->doors_v[ray->num_doors_v].y, B_SIZE)
 						/ B_SIZE) * ray->g->img_door.w);
-		r = round((1 - fmod(ray->doors_v[ray->num_doors_v][2] + 32
+		r = round((1 - fmod(ray->doors_v[ray->num_doors_v].z + 32
 						+ ray->g->player.z, B_SIZE) / B_SIZE)
 				* ray->g->img_door.h);
-		offset = (ray->g->map[(int)ray->doors_v[ray->num_doors_v][6]][(int)ray->doors_v[ray->num_doors_v][5]]
+		offset = (ray->g->map[(int)ray->doors_v[ray->num_doors_v].map_y][(int)ray->doors_v[ray->num_doors_v].map_x]
 				- 2) * ray->g->img_door.w;
 		if ((int)c < ray->g->img_door.w / 2 && (int)c
 			+ (int)offset < ray->g->img_door.w / 2)

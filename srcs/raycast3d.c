@@ -6,7 +6,7 @@
 /*   By: jlefonde <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/18 15:09:50 by jlefonde          #+#    #+#             */
-/*   Updated: 2024/07/18 15:09:50 by jlefonde         ###   ########.fr       */
+/*   Updated: 2024/07/20 11:36:24 by jlefonde         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,14 +15,14 @@
 void	add_door_h(t_raycast *r)
 {
 	r->num_doors_h++;
-	r->doors_h[r->num_doors_h][0] = r->rc_h.x;
-	r->doors_h[r->num_doors_h][1] = r->rc_h.y;
-	r->doors_h[r->num_doors_h][2] = r->rc_h.z;
-	r->doors_h[r->num_doors_h][3] = distance(r->rc_h.x, r->rc_h.y,
+	r->doors_h[r->num_doors_h].x = r->rc_h.x;
+	r->doors_h[r->num_doors_h].y = r->rc_h.y;
+	r->doors_h[r->num_doors_h].z = r->rc_h.z;
+	r->doors_h[r->num_doors_h].dis = distance(r->rc_h.x, r->rc_h.y,
 			r->g->player.x, r->g->player.y);
-	r->doors_h[r->num_doors_h][4] = r->rc_h.dir;
-	r->doors_h[r->num_doors_h][5] = r->rc_h.map_x;
-	r->doors_h[r->num_doors_h][6] = r->rc_h.map_y;
+	r->doors_h[r->num_doors_h].dir = r->rc_h.dir;
+	r->doors_h[r->num_doors_h].map_x = r->rc_h.map_x;
+	r->doors_h[r->num_doors_h].map_y = r->rc_h.map_y;
 }
 
 float	raycast_h_3d2(t_raycast *r)
