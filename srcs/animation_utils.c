@@ -6,25 +6,28 @@
 /*   By: jlefonde <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/18 15:07:36 by jlefonde          #+#    #+#             */
-/*   Updated: 2024/07/20 00:02:41 by jlefonde         ###   ########.fr       */
+/*   Updated: 2024/07/20 09:30:28 by jlefonde         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
 
-static void	destroy_animation(t_data *game, t_animation *anim)
+static void destroy_animation(t_data *game, struct s_animation *animation) 
 {
-	t_image	*img;
+    t_list *current;
+    t_list *next;
+    t_image *img;
 
-	while (anim->frames)
-	{
-		img = (t_image *)anim->frames->content;
-		if (img)
-			mlx_destroy_image(game->mlx_ptr, img->ptr);
-		anim->frames = anim->frames->next;
-		if (anim->frames == anim->head)
-			break ;
-	}
+    current = animation->frames;
+    if (current) {
+        do {
+            img = (t_image *)current->content;
+            if (img->ptr)
+                mlx_destroy_image(game->mlx_ptr, img->ptr);
+            next = current->next;
+            current = next;
+        } while (current != animation->frames);
+    }
 }
 
 void	destroy_animations(t_data *game)

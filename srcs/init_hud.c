@@ -6,7 +6,7 @@
 /*   By: jlefonde <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/18 15:08:58 by jlefonde          #+#    #+#             */
-/*   Updated: 2024/07/18 15:08:59 by jlefonde         ###   ########.fr       */
+/*   Updated: 2024/07/20 09:16:18 by jlefonde         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,10 +56,16 @@ void	init_hud(t_data *game)
 		if (ft_strcmp(dp->d_name, ".") && ft_strcmp(dp->d_name, ".."))
 		{
 			elem = gc_malloc(sizeof(t_hud), &game->gc);
+			elem->img = gc_malloc(sizeof(t_image), &game->gc);
 			snprintf(elem->name, sizeof(elem->name), "%s", dp->d_name);
 			snprintf(path, sizeof(path), "resources/hud/%s", elem->name);
 			check_file(game, path, ".xpm");
-			set_image(game, &elem->img, path);
+			elem->img->w = 0;
+			elem->img->h = 0;
+			elem->img->ptr = NULL;
+			elem->img->addr = NULL;
+			elem->img->ptr = mlx_xpm_file_to_image(game->mlx_ptr, path, &elem->img->w, &elem->img->h);
+			elem->img->addr = mlx_get_data_addr(elem->img->ptr, &elem->img->bpp, &elem->img->line_len, &elem->img->endian);
 			apply_color_shading(game, elem->img);
 			ft_lstadd_back(&game->hud_elem, ft_lstnew_gc(elem, &game->gc));
 		}
