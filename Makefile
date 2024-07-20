@@ -5,8 +5,8 @@ HEADERS_DIR = includes
 OBJECTS_DIR = objs
 
 SOURCES = animation_utils.c image.c door.c draw_utils.c hook_key.c init.c minimap.c player.c raycast_2d_v.c raycast_2d_h.c render.c utils.c \
-check_map.c color.c draw2.c handgun_animation.c init_hud.c parse_elements.c player_move.c raycast3d2.c rotation.c \
-collision.c crowbar_animation.c draw.c hook.c init_animation.c main.c parse_map.c parse_map2.c player_rotate.c raycast3d.c time.c hud.c shotgun_animation.c raycast.c
+check_map.c color.c draw2.c handgun_animation.c init_hud.c parse_elements.c player_move.c rotation.c \
+collision.c crowbar_animation.c draw.c hook.c init_animation.c main.c parse_map.c parse_map2.c player_rotate.c raycast_3d_h.c raycast_3d_v.c time.c hud.c shotgun_animation.c raycast.c
 
 OBJECTS = $(addprefix $(OBJECTS_DIR)/, $(SOURCES:.c=.o))
 

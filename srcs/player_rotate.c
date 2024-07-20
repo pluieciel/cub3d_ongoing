@@ -6,7 +6,7 @@
 /*   By: jlefonde <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/18 15:09:32 by jlefonde          #+#    #+#             */
-/*   Updated: 2024/07/18 15:09:33 by jlefonde         ###   ########.fr       */
+/*   Updated: 2024/07/20 18:40:14 by jlefonde         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,25 +32,17 @@ void	rotate_player(t_data *game, float dir_x, float dir_y, t_point3d *dir3d)
 {
 	if (game->key.left)
 	{
-		game->player.dir_x = dir_x * cos(-ROT_SPEED) - dir_y
-			* sin(-ROT_SPEED);
-		game->player.dir_y = dir_x * sin(-ROT_SPEED) + dir_y
-			* cos(-ROT_SPEED);
-		game->player.dir3d.x = dir3d->x * cos(-ROT_SPEED) - dir3d->y
-			* sin(-ROT_SPEED);
-		game->player.dir3d.y = dir3d->x * sin(-ROT_SPEED) + dir3d->y
-			* cos(-ROT_SPEED);
+		game->player.dir_x = dir_x * cos(-ROT_SPEED) - dir_y * sin(-ROT_SPEED);
+		game->player.dir_y = dir_x * sin(-ROT_SPEED) + dir_y * cos(-ROT_SPEED);
+		game->player.dir3d.x = dir3d->x * cos(-ROT_SPEED) - dir3d->y * sin(-ROT_SPEED);
+		game->player.dir3d.y = dir3d->x * sin(-ROT_SPEED) + dir3d->y * cos(-ROT_SPEED);
 	}
 	else if (game->key.right)
 	{
-		game->player.dir_x = dir_x * cos(ROT_SPEED) - dir_y
-			* sin(ROT_SPEED);
-		game->player.dir_y = dir_x * sin(ROT_SPEED) + dir_y
-			* cos(ROT_SPEED);
-		game->player.dir3d.x = dir3d->x * cos(ROT_SPEED) - dir3d->y
-			* sin(ROT_SPEED);
-		game->player.dir3d.y = dir3d->x * sin(ROT_SPEED) + dir3d->y
-			* cos(ROT_SPEED);
+		game->player.dir_x = dir_x * cos(ROT_SPEED) - dir_y * sin(ROT_SPEED);
+		game->player.dir_y = dir_x * sin(ROT_SPEED) + dir_y * cos(ROT_SPEED);
+		game->player.dir3d.x = dir3d->x * cos(ROT_SPEED) - dir3d->y * sin(ROT_SPEED);
+		game->player.dir3d.y = dir3d->x * sin(ROT_SPEED) + dir3d->y * cos(ROT_SPEED);
 	}
 	get_vector_right(game, &game->player.v_right);
 	get_vector_down(game, &game->player.v_right, &game->player.v_down);

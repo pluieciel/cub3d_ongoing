@@ -12,7 +12,7 @@
 
 #include "cub3d.h"
 
-static float	trace_ray(t_data *g, float x, float y, bool type)
+static float	cast_ray(t_data *g, float x, float y, bool type)
 {
 	int		range;
 
@@ -53,5 +53,5 @@ float	raycast_2d_v(t_data *g, float x, float y, bool type)
 		g->rc_v.dir = 0;
 		return ((RAYCAST_RANGE + 1.0) * B_SIZE);
 	}
-	return (trace_ray(g, x, y, type));
+	return (cast_ray(g, x, y, type));
 }
