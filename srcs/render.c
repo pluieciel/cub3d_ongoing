@@ -6,7 +6,7 @@
 /*   By: jlefonde <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/18 15:09:55 by jlefonde          #+#    #+#             */
-/*   Updated: 2024/07/20 10:38:26 by jlefonde         ###   ########.fr       */
+/*   Updated: 2024/07/20 11:00:03 by jlefonde         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ static void	update_fps_counter(t_data *game, u_int64_t current_time, u_int64_t l
 {
 	char	fps_counter[16];
 	int		fps;
-	
+
 	fps = (int)(round(1000.0 / (current_time - last_time)));
 	snprintf(fps_counter, sizeof(fps_counter), "%d FPS", fps);
 	mlx_string_put(game->mlx_ptr, game->win_ptr, WIN_W - 50, 20, game->hud_color, fps_counter);
@@ -94,22 +94,23 @@ void	*render_section(void *arg)
 
 int	render(t_data *game)
 {
-    static __uint64_t last_time = 0;
-    __uint64_t current_time;
+	__uint64_t	last_time;
+	__uint64_t	current_time;
 
-    current_time = get_timestamp_ms();
-    if (game->win_ptr != NULL && (current_time - game->time) > 1000 / FPS)
-    {
-        game->time = current_time;
-        ft_bzero(game->img.addr, game->img.w * game->img.h * (game->img.bpp / 8));
-        update_doors(game);
-        update_player(game);
-        draw_textures(game);
-        draw_hud(game);
-        update_animation(game);
-        mlx_put_image_to_window(game->mlx_ptr, game->win_ptr, game->img.ptr, 0, 0);
+	last_time = 0;
+	current_time = get_timestamp_ms();
+	if (game->win_ptr != NULL && (current_time - game->time) > 1000 / FPS)
+	{
+		game->time = current_time;
+		ft_bzero(game->img.addr, game->img.w * game->img.h * (game->img.bpp / 8));
+		update_doors(game);
+		update_player(game);
+		draw_textures(game);
+		draw_hud(game);
+		update_animation(game);
+		mlx_put_image_to_window(game->mlx_ptr, game->win_ptr, game->img.ptr, 0, 0);
 		update_fps_counter(game, current_time, last_time);
-        last_time = current_time;
-    }
-    return (0);
+		last_time = current_time;
+	}
+	return (0);
 }

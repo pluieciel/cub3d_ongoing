@@ -6,28 +6,30 @@
 /*   By: jlefonde <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/18 15:07:36 by jlefonde          #+#    #+#             */
-/*   Updated: 2024/07/20 09:30:28 by jlefonde         ###   ########.fr       */
+/*   Updated: 2024/07/20 11:22:18 by jlefonde         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
 
-static void destroy_animation(t_data *game, struct s_animation *animation) 
+static void	destroy_animation(t_data *game, t_animation *animation)
 {
-    t_list *current;
-    t_list *next;
-    t_image *img;
+	t_list	*current;
+	t_image	*img;
 
-    current = animation->frames;
-    if (current) {
-        do {
-            img = (t_image *)current->content;
-            if (img->ptr)
-                mlx_destroy_image(game->mlx_ptr, img->ptr);
-            next = current->next;
-            current = next;
-        } while (current != animation->frames);
-    }
+	if (animation->frames)
+	{
+		current = animation->frames;
+		while (1)
+		{
+			img = (t_image *)current->content;
+			if (img->ptr)
+				mlx_destroy_image(game->mlx_ptr, img->ptr);
+			current = current->next;
+			if (current == animation->frames)
+				break ;
+		}
+	}
 }
 
 void	destroy_animations(t_data *game)
@@ -44,7 +46,7 @@ void	destroy_animations(t_data *game)
 	destroy_animation(game, &game->shotgun.shoot);
 }
 
-int	handle_animation_state(t_data *game, struct s_animation *animation,
+int	handle_animation_state(t_data *game, t_animation *animation,
 		__uint64_t delay)
 {
 	render_image(game, (t_image *)(*animation).frames->content, 0, 0);

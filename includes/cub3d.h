@@ -6,7 +6,7 @@
 /*   By: jlefonde <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/18 15:10:20 by jlefonde          #+#    #+#             */
-/*   Updated: 2024/07/20 10:33:16 by jlefonde         ###   ########.fr       */
+/*   Updated: 2024/07/20 11:22:47 by jlefonde         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -266,8 +266,8 @@ void				get_vector_down(t_data *g, t_point3d *v_right,
 						t_point3d *v_down);
 void				rotate_u(t_point3d *todo, t_point3d u, t_point3d v,
 						float angle);
-int					handle_animation_state(t_data *game,
-						struct s_animation *animation, __uint64_t delay);
+int					handle_animation_state(t_data *game, t_animation *animation,
+						__uint64_t delay);
 int					handle_key_press(int key, t_data *game);
 int					handle_key_release(int key, t_data *game);
 void				destroy_imgs(t_data *game);
