@@ -6,7 +6,7 @@
 /*   By: jlefonde <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/18 15:10:20 by jlefonde          #+#    #+#             */
-/*   Updated: 2024/07/20 18:35:45 by jlefonde         ###   ########.fr       */
+/*   Updated: 2024/07/20 19:30:16 by jlefonde         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@
 # define ELEM_N 8
 # define COLL_DIS 20
 # define OPEN_DIS 80
-# define SPEED 3
+# define SPEED 2
 # define M_PI 3.14159265358979323846
 # define NUM_THREADS 16
 # define TRANSPARENT_COLOR 0xFF000000
@@ -241,77 +241,67 @@ typedef struct s_raycast
 	pthread_t		thread;
 }					t_raycast;
 
-void				init(t_data *game);
-void				parse_map(t_data *game, char *filename);
-void				hook(t_data *game);
-int					isvalid_map(t_data *game);
-__uint64_t			get_timestamp_ms(void);
-int					render(t_data *game);
-void				parse_elements(t_data *game, char *filename);
-float				distance(float x1, float y1, float x2, float y2);
-float				raycast_2d_h(t_data *game, float x, float y, bool type);
-float				raycast_2d_v(t_data *game, float x, float y, bool type);
-void				raycast_2d(t_data *game, float x, float y, bool type);
-float				raycast_3d_v(t_raycast *r);
-void				raycast_3d(t_raycast *ray);
-void				update_crowbar_state(t_data *game);
-void				update_handgun_state(t_data *game);
-void				check_collision(t_data *game, float dir_x, float dir_y,
-						int coll_dis);
-void				render_image(t_data *game, t_image *img, int x, int y);
-void				init_crowbar(t_data *game);
-void				init_handgun(t_data *game);
-void				get_vector_right(t_data *g, t_point3d *v_right);
-void				get_vector_down(t_data *g, t_point3d *v_right,
-						t_point3d *v_down);
-void				rotate_u(t_point3d *todo, t_point3d u, t_point3d v,
-						float angle);
-int					handle_animation_state(t_data *game, t_animation *animation,
-						__uint64_t delay);
-int					handle_key_press(int key, t_data *game);
-int					handle_key_release(int key, t_data *game);
-void				destroy_imgs(t_data *game);
-int					close_window(t_data *game);
-unsigned int		rgb_to_int(t_color c);
-t_color				int_to_rgb(unsigned int color);
-void				shade_color(t_color *c, float shading);
-t_color				*mix_color(t_color *c1, t_color c2, int base, int blend);
-void				set_rgb(unsigned int r, unsigned int g, unsigned int b,
-						t_color *c);
-void				update_animation(t_data *game);
-void				draw_minimap(t_data *game);
-void				check_file(t_data *game, char *path, char *ext);
-void				init_hud(t_data *game);
-void				set_image_color(t_image *img, int row, int col, unsigned int color);
-unsigned int get_image_color(t_image *img, int row, int col);
-void	move_player(t_data *game, float dir_x, float dir_y);
-void	check_collision(t_data *game, float dir_x, float dir_y, int coll_dis);
-void	check_collisions(t_data *game, float dir_x, float dir_y, float scale);
-void	update_doors(t_data *game);
-void draw_hud(t_data *game);
-void	draw_pixel(t_raycast *ray, int col, int row);
-t_color get_wall_color(t_raycast *ray, t_image *img, float pos);
-void set_image_color(t_image *img, int row, int col, unsigned int color);
-unsigned int get_image_color(t_image *img, int row, int col);
-void	draw_door_h(t_raycast *ray, int col, int row);
-void	draw_door_v(t_raycast *ray, int col, int row);
-void	*render_section(void *arg);
-void	draw_textures(t_data *g);
-void	rotate_player(t_data *game, float dir_x, float dir_y, t_point3d *dir3d);
-void update_player(t_data *game);
-void set_image(t_data *game, t_image *img, char *path);
-t_image	*get_hud_image(t_data *game, char *name);
-int		render_hud_image(t_data *game, char *name, int x, int y);
-void	set_dir(t_data *game, char dir);
-void	init_shotgun(t_data *game);
-void	update_shotgun_state(t_data *game);
-void	destroy_animations(t_data *game);
-bool is_collider(t_data *g, int x, int y, bool type);
-float	raycast_2d_h(t_data *g, float x, float y, bool type);
-float	raycast_2d_v(t_data *g, float x, float y, bool type);
-float	raycast_3d_h(t_raycast *r);
-float	raycast_3d_v(t_raycast *r);
-void	reset_ray(t_raycast *ray, t_res_rc *rc);
-void	add_door(t_raycast *ray, t_res_rc *rc, t_res_rc *doors, int *num_doors);
+bool			is_collider(t_data *game, int x, int y, bool type);
+float			distance(float x1, float y1, float x2, float y2);
+float			raycast_2d_h(t_data *g, float x, float y, bool type);
+float			raycast_2d_v(t_data *g, float x, float y, bool type);
+float			raycast_3d_h(t_raycast *r);
+float			raycast_3d_v(t_raycast *r);
+int				close_window(t_data *game);
+int				handle_animation_state(t_data *game, t_animation *animation, __uint64_t delay);
+int				handle_key_press(int key, t_data *game);
+int				handle_key_release(int key, t_data *game);
+int				isvalid_map(t_data *game);
+int				render_hud_image(t_data *game, char *name, int x, int y);
+int				render(t_data *game);
+t_color			get_wall_color(t_raycast *ray, t_image *img, float pos);
+t_color			int_to_rgb(unsigned int color);
+t_color			*mix_color(t_color *c1, t_color c2, int base, int blend);
+t_image			*get_hud_image(t_data *game, char *name);
+__uint64_t		get_timestamp_ms(void);
+unsigned int	get_image_color(t_image *img, int row, int col);
+unsigned int	rgb_to_int(t_color c);
+void			add_door(t_raycast *ray, t_res_rc *rc, t_res_rc *doors, int *num_doors);
+void			check_collisions(t_data *game, float dir_x, float dir_y, float scale);
+void			check_collision(t_data *game, float dir_x, float dir_y, int coll_dis);
+void			check_file(t_data *game, char *path, char *ext);
+void			destroy_animations(t_data *game);
+void			destroy_imgs(t_data *game);
+void			draw_door_h(t_raycast *ray, int col, int row);
+void			draw_door_v(t_raycast *ray, int col, int row);
+void			draw_hud(t_data *game);
+void			draw_minimap(t_data *game);
+void			draw_pixel(t_raycast *ray, int col, int row);
+void			draw_textures(t_data *g);
+void			get_vector_down(t_data *g, t_point3d *v_right, t_point3d *v_down);
+void			get_vector_right(t_data *g, t_point3d *v_right);
+void			handle_special_keys(int key, t_data *game);
+void			hook(t_data *game);
+void			init_crowbar(t_data *game);
+void			init_handgun(t_data *game);
+void			init_hud(t_data *game);
+void			init_shotgun(t_data *game);
+void			init(t_data *game);
+void			move_player(t_data *game, float dir_x, float dir_y);
+void			parse_elements(t_data *game, char *filename);
+void			parse_map(t_data *game, char *filename);
+void			raycast_2d(t_data *game, float x, float y, bool type);
+void			raycast_3d(t_raycast *ray);
+void			render_image(t_data *game, t_image *img, int x, int y);
+void			*render_section(void *arg);
+void			reset_ray(t_raycast *ray, t_res_rc *rc);
+void			rotate_player(t_data *game, float dir_x, float dir_y, t_point3d *dir3d);
+void			rotate_u(t_point3d *todo, t_point3d u, t_point3d v, float angle);
+void			set_dir(t_data *game, char dir);
+void			set_image_color(t_image *img, int row, int col, unsigned int color);
+void			set_image(t_data *game, t_image *img, char *path);
+void			set_rgb(unsigned int r, unsigned int g, unsigned int b, t_color *c);
+void			shade_color(t_color *c, float shading);
+void			update_animation(t_data *game);
+void			update_crowbar_state(t_data *game);
+void			update_doors(t_data *game);
+void			update_handgun_state(t_data *game);
+void			update_player(t_data *game);
+void			update_shotgun_state(t_data *game);
 
 #endif

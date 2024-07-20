@@ -42,7 +42,7 @@ SOURCES = animation_utils.c \
 
 OBJECTS = $(addprefix $(OBJECTS_DIR)/, $(SOURCES:.c=.o))
 
-CFLAGS = -Wall -Wextra -Werror -I$(HEADERS_DIR) -g -Ofast  -lpthread
+CFLAGS = -Wall -Wextra -Werror -I$(HEADERS_DIR) -g -Ofast -lpthread
 LDFLAGS = -L./libft_gc -L./minilibx -lft_gc -lmlx_Linux -lXext -lX11 -lm
 AR = ar -rcs
 
