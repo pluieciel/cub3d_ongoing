@@ -6,37 +6,26 @@
 /*   By: jlefonde <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/18 15:10:07 by jlefonde          #+#    #+#             */
-/*   Updated: 2024/07/19 23:01:20 by jlefonde         ###   ########.fr       */
+/*   Updated: 2024/07/21 13:51:35 by jlefonde         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
 
-void	destroy_imgs(t_data *game)
+void	exit_on_error(t_data *game, char *error_msg)
 {
-	t_hud	*hud;
-
-	if (game->img.ptr)
-		mlx_destroy_image(game->mlx_ptr, game->img.ptr);
-	mlx_destroy_image(game->mlx_ptr, game->img_sky.ptr);
-	mlx_destroy_image(game->mlx_ptr, game->img_wall_no.ptr);
-	mlx_destroy_image(game->mlx_ptr, game->img_wall_so.ptr);
-	mlx_destroy_image(game->mlx_ptr, game->img_wall_ea.ptr);
-	mlx_destroy_image(game->mlx_ptr, game->img_wall_we.ptr);
-	mlx_destroy_image(game->mlx_ptr, game->img_floor.ptr);
-	mlx_destroy_image(game->mlx_ptr, game->img_door.ptr);
+	destroy_images(game);
 	destroy_animations(game);
-	while (game->hud_elem)
-	{
-		hud = (t_hud *)game->hud_elem->content;
-		mlx_destroy_image(game->mlx_ptr, hud->img->ptr);
-		game->hud_elem = game->hud_elem->next;
-	}
+	destroy_hud(game);
+	mlx_destroy_display(game->mlx_ptr);
+	exit(gc_free(game->gc, error_msg, 2));
 }
 
 int	close_window(t_data *game)
 {
-	destroy_imgs(game);
+	destroy_images(game);
+	destroy_animations(game);
+	destroy_hud(game);
 	mlx_destroy_window(game->mlx_ptr, game->win_ptr);
 	mlx_destroy_display(game->mlx_ptr);
 	gc_free(game->gc, "", 1);
@@ -48,10 +37,10 @@ void	check_file(t_data *game, char *path, char *ext)
 	int	fd;
 
 	if (ft_isvalid_extension(path, ext) != 0)
-		exit(gc_free(game->gc, "Error: invalid file extension\n", 2));
+		exit_on_error(game, "Error: invalid file extension\n");
 	fd = open(path, O_RDONLY);
 	if (fd < 0)
-		exit(gc_free(game->gc, "Error: invalid file\n", 2));
+		exit_on_error(game, "Error: invalid file\n");
 	close(fd);
 }
 

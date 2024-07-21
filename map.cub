@@ -7,7 +7,7 @@ D ./resources/textures/door1.xpm
 F ./resources/textures/floor3.xpm
 C ./resources/textures/sky1.xpm
 
-H 255,160,0
+H 255,160,256
 
         1111111111111111111111111
         1000000000110000000000001

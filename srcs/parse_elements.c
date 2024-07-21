@@ -6,7 +6,7 @@
 /*   By: jlefonde <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/18 15:09:20 by jlefonde          #+#    #+#             */
-/*   Updated: 2024/07/18 15:09:21 by jlefonde         ###   ########.fr       */
+/*   Updated: 2024/07/21 13:46:34 by jlefonde         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ static void	load_texture(t_data *game, t_image *img, char *line)
 	char	*path;
 
 	if (img->ptr != NULL)
-		exit(gc_free(game->gc, "Error: duplicated element\n", 2));
+		exit_on_error(game, "Error: duplicated element\n");
 	path = ft_strtrim_gc(line, "\n", &game->gc);
 	check_file(game, path, ".xpm");
 	img->ptr = mlx_xpm_file_to_image(game->mlx_ptr, path, &img->w, &img->h);
@@ -42,12 +42,12 @@ static int	get_color(t_data *game, char *line)
 	{
 		value = ft_atoi(line_split[i]);
 		if (value < 0 || value > 255)
-			exit(gc_free(game->gc, "Error: invalid rgb color\n", 2));
+			exit_on_error(game, "Error: invalid rgb color\n");
 		color |= value << ((2 - i) * 8);
 		i++;
 	}
 	if (i != 3)
-		exit(gc_free(game->gc, "Error: invalid rgb color\n", 2));
+		exit_on_error(game, "Error: invalid rgb color\n");
 	game->elem_n++;
 	gc_free_ptr(&game->gc, line_trim);
 	gc_free_ptr(&game->gc, line_split);
@@ -112,7 +112,7 @@ void	parse_elements(t_data *game, char *filename)
 	i = 0;
 	fd = open(filename, O_RDONLY);
 	if (fd < 0)
-		exit(gc_free(game->gc, "Error: invalid file\n", 2));
+		exit_on_error(game, "Error: invalid file\n");
 	line = get_next_line(fd);
 	game->gc = gc_insert(game->gc, line);
 	while (line)
@@ -126,5 +126,5 @@ void	parse_elements(t_data *game, char *filename)
 	}
 	close(fd);
 	if (game->elem_n != ELEM_N)
-		exit(gc_free(game->gc, "Error: not enough elements\n", 2));
+		exit_on_error(game, "Error: not enough elements\n");
 }

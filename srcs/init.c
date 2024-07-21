@@ -6,7 +6,7 @@
 /*   By: jlefonde <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/18 15:09:01 by jlefonde          #+#    #+#             */
-/*   Updated: 2024/07/19 22:15:35 by jlefonde         ###   ########.fr       */
+/*   Updated: 2024/07/21 13:57:11 by jlefonde         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,4 +108,7 @@ void	init(t_data *game)
 	init_images(game);
 	init_player(game);
 	init_keys(game);
+	init_crowbar(game);
+	init_handgun(game);
+	init_shotgun(game);
 }

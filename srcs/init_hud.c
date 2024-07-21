@@ -6,7 +6,7 @@
 /*   By: jlefonde <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/18 15:08:58 by jlefonde          #+#    #+#             */
-/*   Updated: 2024/07/20 10:23:50 by jlefonde         ###   ########.fr       */
+/*   Updated: 2024/07/21 14:06:12 by jlefonde         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,9 +47,9 @@ void	init_hud(t_data *game)
 	DIR				*hud_dir;
 	struct dirent	*dp;
 
-	hud_dir = opendir("resources/hud");
+	hud_dir = opendir(HUD_DIR);
 	if (!hud_dir)
-		exit(gc_free(game->gc, "Error\n Cannot open resources/hud", 2));
+		exit_on_error(game, "Error\n Cannot open hud resources\n");
 	dp = readdir(hud_dir);
 	while (dp)
 	{
@@ -57,7 +57,7 @@ void	init_hud(t_data *game)
 		{
 			elem = gc_malloc(sizeof(t_hud), &game->gc);
 			snprintf(elem->name, sizeof(elem->name), "%s", dp->d_name);
-			snprintf(path, sizeof(path), "resources/hud/%s", elem->name);
+			snprintf(path, sizeof(path), "%s/%s", HUD_DIR, elem->name);
 			check_file(game, path, ".xpm");
 			elem->img = gc_malloc(sizeof(t_image), &game->gc);
 			set_image(game, elem->img, path);

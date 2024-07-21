@@ -6,7 +6,7 @@
 /*   By: jlefonde <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/18 15:10:20 by jlefonde          #+#    #+#             */
-/*   Updated: 2024/07/20 19:30:16 by jlefonde         ###   ########.fr       */
+/*   Updated: 2024/07/21 14:05:40 by jlefonde         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,7 @@
 # define MOUSE_THRESHOLD 4
 # define GRAVITY 1500
 # define JUMP_VELOCITY 250
+# define HUD_DIR "resources/hud"
 
 typedef struct s_color
 {
@@ -266,17 +267,20 @@ void			check_collisions(t_data *game, float dir_x, float dir_y, float scale);
 void			check_collision(t_data *game, float dir_x, float dir_y, int coll_dis);
 void			check_file(t_data *game, char *path, char *ext);
 void			destroy_animations(t_data *game);
-void			destroy_imgs(t_data *game);
+void			destroy_hud(t_data *game);
+void			destroy_images(t_data *game);
 void			draw_door_h(t_raycast *ray, int col, int row);
 void			draw_door_v(t_raycast *ray, int col, int row);
 void			draw_hud(t_data *game);
 void			draw_minimap(t_data *game);
 void			draw_pixel(t_raycast *ray, int col, int row);
 void			draw_textures(t_data *g);
+void			exit_on_error(t_data *game, char *error_msg);
 void			get_vector_down(t_data *g, t_point3d *v_right, t_point3d *v_down);
 void			get_vector_right(t_data *g, t_point3d *v_right);
 void			handle_special_keys(int key, t_data *game);
 void			hook(t_data *game);
+void			init_animations(t_data *game);
 void			init_crowbar(t_data *game);
 void			init_handgun(t_data *game);
 void			init_hud(t_data *game);

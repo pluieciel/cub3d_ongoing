@@ -6,7 +6,7 @@
 /*   By: jlefonde <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/19 19:05:43 by jlefonde          #+#    #+#             */
-/*   Updated: 2024/07/20 11:01:39 by jlefonde         ###   ########.fr       */
+/*   Updated: 2024/07/21 14:06:46 by jlefonde         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,4 +91,16 @@ void	draw_hud(t_data *game)
 	draw_handgun_category(game);
 	draw_shotgun_category(game);
 	draw_minimap(game);
+}
+
+void	destroy_hud(t_data *game)
+{
+	t_hud	*hud;
+
+	while (game->hud_elem)
+	{
+		hud = (t_hud *)game->hud_elem->content;
+		mlx_destroy_image(game->mlx_ptr, hud->img->ptr);
+		game->hud_elem = game->hud_elem->next;
+	}
 }

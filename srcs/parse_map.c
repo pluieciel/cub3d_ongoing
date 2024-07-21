@@ -6,7 +6,7 @@
 /*   By: jlefonde <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/18 15:09:24 by jlefonde          #+#    #+#             */
-/*   Updated: 2024/07/20 20:25:59 by jlefonde         ###   ########.fr       */
+/*   Updated: 2024/07/21 13:46:58 by jlefonde         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ static void	get_init_pos(t_data *game, char dir, int i, int j)
 	float	olddiry_3d;
 
 	if (game->player.dir_x != 0 || game->player.dir_y != 0)
-		exit(gc_free(game->gc, "Error: multiple player position\n", 2));
+		exit_on_error(game, "Error: multiple player position\n");
 	game->map[i][j] = 0;
 	game->player.x = j * B_SIZE + B_SIZE / 2;
 	game->player.y = i * B_SIZE + B_SIZE / 2;
@@ -53,7 +53,7 @@ static void	handle_map_char(t_data *game, char *line, int i, int j)
 	else if (line[j] == ' ' || line[j] == '\t' || line[j] == '\n')
 		;
 	else
-		exit(gc_free(game->gc, "Error: invalid char in map\n", 2));
+		exit_on_error(game, "Error: invalid char in map\n");
 }
 
 static void	fill_map(t_data *game, int fd, char *line)
@@ -110,7 +110,7 @@ void	parse_map(t_data *game, char *filename)
 	parse_elements(game, filename);
 	fd = open(filename, O_RDONLY);
 	if (fd < 0)
-		exit(gc_free(game->gc, "Error: invalid file\n", 2));
+		exit_on_error(game, "Error: invalid file\n");
 	i = -1;
 	while (++i < game->map_index)
 	{

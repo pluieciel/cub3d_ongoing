@@ -6,7 +6,7 @@
 /*   By: jlefonde <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/18 15:08:51 by jlefonde          #+#    #+#             */
-/*   Updated: 2024/07/20 11:02:49 by jlefonde         ###   ########.fr       */
+/*   Updated: 2024/07/21 13:48:58 by jlefonde         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,4 +49,24 @@ void	set_image_color(t_image *img, int row, int col, unsigned int color)
 {
 	if (row >= 0 && row <= img->h && col >= 0 && col <= img->w)
 		((unsigned int *)img->addr)[row * img->w + col] = color;
+}
+
+void	destroy_images(t_data *game)
+{
+	if (game->img.ptr)
+		mlx_destroy_image(game->mlx_ptr, game->img.ptr);
+	if (game->img_sky.ptr)
+		mlx_destroy_image(game->mlx_ptr, game->img_sky.ptr);
+	if (game->img_wall_no.ptr)
+		mlx_destroy_image(game->mlx_ptr, game->img_wall_no.ptr);
+	if (game->img_wall_so.ptr)
+		mlx_destroy_image(game->mlx_ptr, game->img_wall_so.ptr);
+	if (game->img_wall_ea.ptr)
+		mlx_destroy_image(game->mlx_ptr, game->img_wall_ea.ptr);
+	if (game->img_wall_we.ptr)
+		mlx_destroy_image(game->mlx_ptr, game->img_wall_we.ptr);
+	if (game->img_floor.ptr)
+		mlx_destroy_image(game->mlx_ptr, game->img_floor.ptr);
+	if (game->img_door.ptr)
+		mlx_destroy_image(game->mlx_ptr, game->img_door.ptr);
 }

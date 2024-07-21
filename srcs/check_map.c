@@ -6,7 +6,7 @@
 /*   By: jlefonde <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/18 15:07:41 by jlefonde          #+#    #+#             */
-/*   Updated: 2024/07/18 15:07:41 by jlefonde         ###   ########.fr       */
+/*   Updated: 2024/07/21 13:16:16 by jlefonde         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,6 @@ static int	check_pos(t_data *game, int x, int y)
 int	isvalid_map(t_data *game)
 {
 	if (game->player.dir_x == 0 && game->player.dir_y == 0)
-		exit(gc_free(game->gc, "Error: no player position\n", 2));
+		exit_on_error(game, "Error: no player position\n");
 	return (check_pos(game, game->player.x / B_SIZE, game->player.y / B_SIZE));
 }
