@@ -6,11 +6,11 @@
 /*   By: jlefonde <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/18 15:09:24 by jlefonde          #+#    #+#             */
-/*   Updated: 2024/07/21 14:20:15 by jlefonde         ###   ########.fr       */
+/*   Updated: 2024/07/21 17:22:28 by jlefonde         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "cub3d.h"
+#include "../includes/cub3d.h"
 
 static void	get_init_pos(t_data *game, char dir, int i, int j)
 {

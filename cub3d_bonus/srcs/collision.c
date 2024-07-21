@@ -6,11 +6,11 @@
 /*   By: jlefonde <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/18 15:07:45 by jlefonde          #+#    #+#             */
-/*   Updated: 2024/07/20 16:49:37 by jlefonde         ###   ########.fr       */
+/*   Updated: 2024/07/21 17:22:28 by jlefonde         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "cub3d.h"
+#include "../includes/cub3d.h"
 
 void	check_collision(t_data *game, float dir_x, float dir_y, int coll_dis)
 {

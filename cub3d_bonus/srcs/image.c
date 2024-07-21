@@ -6,11 +6,11 @@
 /*   By: jlefonde <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/18 15:08:51 by jlefonde          #+#    #+#             */
-/*   Updated: 2024/07/21 13:48:58 by jlefonde         ###   ########.fr       */
+/*   Updated: 2024/07/21 17:22:28 by jlefonde         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "cub3d.h"
+#include "../includes/cub3d.h"
 
 void	set_image(t_data *game, t_image *img, char *path)
 {

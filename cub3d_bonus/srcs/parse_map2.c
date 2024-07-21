@@ -6,11 +6,11 @@
 /*   By: jlefonde <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/18 15:50:35 by jlefonde          #+#    #+#             */
-/*   Updated: 2024/07/18 15:54:02 by jlefonde         ###   ########.fr       */
+/*   Updated: 2024/07/21 17:22:28 by jlefonde         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "cub3d.h"
+#include "../includes/cub3d.h"
 
 void	set_dir(t_data *game, char dir)
 {

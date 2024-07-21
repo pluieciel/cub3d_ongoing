@@ -6,11 +6,11 @@
 /*   By: jlefonde <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/18 15:07:53 by jlefonde          #+#    #+#             */
-/*   Updated: 2024/07/18 15:07:53 by jlefonde         ###   ########.fr       */
+/*   Updated: 2024/07/21 17:22:28 by jlefonde         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "cub3d.h"
+#include "../includes/cub3d.h"
 
 unsigned int	rgb_to_int(t_color c)
 {

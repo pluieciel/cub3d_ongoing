@@ -6,11 +6,11 @@
 /*   By: jlefonde <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/18 15:08:58 by jlefonde          #+#    #+#             */
-/*   Updated: 2024/07/21 14:06:12 by jlefonde         ###   ########.fr       */
+/*   Updated: 2024/07/21 17:32:38 by jlefonde         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "cub3d.h"
+#include "../includes/cub3d.h"
 
 static void	apply_color_shading(t_data *game, t_image *img)
 {
@@ -42,14 +42,14 @@ static void	apply_color_shading(t_data *game, t_image *img)
 
 void	init_hud(t_data *game)
 {
-	char			path[270];
+	char			path[273];
 	t_hud			*elem;
 	DIR				*hud_dir;
 	struct dirent	*dp;
 
 	hud_dir = opendir(HUD_DIR);
 	if (!hud_dir)
-		exit_on_error(game, "Error\n Cannot open hud resources\n");
+		exit_on_error(game, "Error: cannot open hud resources\n");
 	dp = readdir(hud_dir);
 	while (dp)
 	{

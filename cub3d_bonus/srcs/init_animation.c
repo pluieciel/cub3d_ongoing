@@ -6,11 +6,11 @@
 /*   By: jlefonde <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/18 15:08:54 by jlefonde          #+#    #+#             */
-/*   Updated: 2024/07/21 13:57:42 by jlefonde         ###   ########.fr       */
+/*   Updated: 2024/07/21 17:31:55 by jlefonde         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "cub3d.h"
+#include "../includes/cub3d.h"
 
 static void	init_animation(t_data *game, struct s_animation *animation,
 		char *state, int frames)

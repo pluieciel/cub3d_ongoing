@@ -6,11 +6,11 @@
 /*   By: jlefonde <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/18 15:09:05 by jlefonde          #+#    #+#             */
-/*   Updated: 2024/07/21 14:04:41 by jlefonde         ###   ########.fr       */
+/*   Updated: 2024/07/21 17:31:39 by jlefonde         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "cub3d.h"
+#include "../includes/cub3d.h"
 
 int	main(int ac, char *av[])
 {

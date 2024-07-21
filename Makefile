@@ -1,5 +1,5 @@
-NAME = $(MANDATORY_DIR)/cub3D
-BONUS_NAME = $(BONUS_DIR)/cub3D
+NAME = cub3D
+BONUS_NAME = cub3D_bonus
 
 MANDATORY_DIR = cub3d
 BONUS_DIR = cub3d_bonus
