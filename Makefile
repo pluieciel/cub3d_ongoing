@@ -1,8 +1,8 @@
 NAME = $(MANDATORY_DIR)/cub3D
 BONUS_NAME = $(BONUS_DIR)/cub3D
 
-MANDATORY_DIR = mandatory
-BONUS_DIR = bonus
+MANDATORY_DIR = cub3d
+BONUS_DIR = cub3d_bonus
 
 SOURCES_DIR = srcs
 HEADERS_DIR = includes
