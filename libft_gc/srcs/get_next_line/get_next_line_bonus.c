@@ -62,7 +62,7 @@ static char	*ft_read_buffer(int fd, t_gnl *g, char **p_remainder, t_gc **gc)
 		}
 		old_line = g->line;
 		g->line = ft_strjoin_gnl(old_line, g->buffer, gc);
-		free(old_line);
+		gc_free_ptr(gc, old_line);
 		bytes_read = read(fd, g->buffer, BUFFER_SIZE);
 	}
 	return (g->line);
