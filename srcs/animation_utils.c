@@ -6,7 +6,7 @@
 /*   By: jlefonde <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/18 15:07:36 by jlefonde          #+#    #+#             */
-/*   Updated: 2024/07/20 11:22:18 by jlefonde         ###   ########.fr       */
+/*   Updated: 2024/07/21 15:52:07 by jlefonde         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ static void	destroy_animation(t_data *game, t_animation *animation)
 	if (animation->frames)
 	{
 		current = animation->frames;
-		while (1)
+		while (current)
 		{
 			img = (t_image *)current->content;
 			if (img->ptr)
