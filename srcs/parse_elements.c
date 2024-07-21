@@ -6,7 +6,7 @@
 /*   By: jlefonde <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/18 15:09:20 by jlefonde          #+#    #+#             */
-/*   Updated: 2024/07/21 13:46:34 by jlefonde         ###   ########.fr       */
+/*   Updated: 2024/07/21 14:25:59 by jlefonde         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,14 +83,12 @@ static void	set_map_dimension(t_data *game, char *line, int fd, int *i)
 	if (game->elem_n == ELEM_N && game->map_index == -1)
 	{
 		gc_free_ptr(&game->gc, line);
-		line = get_next_line(fd);
-		game->gc = gc_insert(game->gc, line);
+		line = get_next_line(fd, &game->gc);
 		(*i)++;
 		while (line && line[0] == '\n')
 		{
 			gc_free_ptr(&game->gc, line);
-			line = get_next_line(fd);
-			game->gc = gc_insert(game->gc, line);
+			line = get_next_line(fd, &game->gc);
 			(*i)++;
 		}
 		game->map_index = *i;
@@ -113,15 +111,13 @@ void	parse_elements(t_data *game, char *filename)
 	fd = open(filename, O_RDONLY);
 	if (fd < 0)
 		exit_on_error(game, "Error: invalid file\n");
-	line = get_next_line(fd);
-	game->gc = gc_insert(game->gc, line);
+	line = get_next_line(fd, &game->gc);
 	while (line)
 	{
 		set_elements(game, line);
 		set_map_dimension(game, line, fd, &i);
 		gc_free_ptr(&game->gc, line);
-		line = get_next_line(fd);
-		game->gc = gc_insert(game->gc, line);
+		line = get_next_line(fd, &game->gc);
 		i++;
 	}
 	close(fd);

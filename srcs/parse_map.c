@@ -6,7 +6,7 @@
 /*   By: jlefonde <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/18 15:09:24 by jlefonde          #+#    #+#             */
-/*   Updated: 2024/07/21 13:46:58 by jlefonde         ###   ########.fr       */
+/*   Updated: 2024/07/21 14:20:15 by jlefonde         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,8 +71,7 @@ static void	fill_map(t_data *game, int fd, char *line)
 			j++;
 		}
 		i++;
-		line = get_next_line(fd);
-		game->gc = gc_insert(game->gc, line);
+		line = get_next_line(fd, &game->gc);
 	}
 }
 
@@ -81,8 +80,7 @@ static void	init_map(t_data *game, int fd, char *line)
 	int		i;
 	int		j;
 
-	line = get_next_line(fd);
-	game->gc = gc_insert(game->gc, line);
+	line = get_next_line(fd, &game->gc);
 	game->map = gc_malloc(sizeof(float *) * game->map_h, &game->gc);
 	game->visited = gc_malloc(sizeof(int *) * game->map_h, &game->gc);
 	i = -1;
@@ -113,9 +111,6 @@ void	parse_map(t_data *game, char *filename)
 		exit_on_error(game, "Error: invalid file\n");
 	i = -1;
 	while (++i < game->map_index)
-	{
-		line = get_next_line(fd);
-		game->gc = gc_insert(game->gc, line);
-	}
+		line = get_next_line(fd, &game->gc);
 	init_map(game, fd, line);
 }
