@@ -39,33 +39,33 @@ static void	ft_free_multiple(t_gc **gc, int count, ...)
  * @param line Pointer to store the read data.
  * @return The read data.
  */
-static char	*ft_read_buffer(int fd, char *buffer, char **p_remainder, char *line, t_gc **gc)
+static char	*ft_read_buffer(int fd, t_gnl *g, char **p_remainder, t_gc **gc)
 {
 	int		bytes_read;
 	char	*temp;
 	char	*temp_line;
 	char	*old_line;
 
-	bytes_read = read(fd, buffer, BUFFER_SIZE);
+	bytes_read = read(fd, g->buffer, BUFFER_SIZE);
 	while (bytes_read > 0)
 	{
-		buffer[bytes_read] = '\0';
-		temp = ft_strchr(buffer, '\n');
+		g->buffer[bytes_read] = '\0';
+		temp = ft_strchr(g->buffer, '\n');
 		if (temp != NULL)
 		{
 			*p_remainder = ft_substr_gnl(temp, 1, ft_strlen(temp), gc);
-			temp_line = ft_substr_gnl(buffer, 0, temp - buffer + 1, gc);
-			old_line = line;
-			line = ft_strjoin_gnl(old_line, temp_line, gc);
+			temp_line = ft_substr_gnl(g->buffer, 0, temp - g->buffer + 1, gc);
+			old_line = g->line;
+			g->line = ft_strjoin_gnl(old_line, temp_line, gc);
 			ft_free_multiple(gc, 2, old_line, temp_line);
-			return (line);
+			return (g->line);
 		}
-		old_line = line;
-		line = ft_strjoin_gnl(old_line, buffer, gc);
+		old_line = g->line;
+		g->line = ft_strjoin_gnl(old_line, g->buffer, gc);
 		free(old_line);
-		bytes_read = read(fd, buffer, BUFFER_SIZE);
+		bytes_read = read(fd, g->buffer, BUFFER_SIZE);
 	}
-	return (line);
+	return (g->line);
 }
 
 /**
@@ -77,15 +77,16 @@ static char	*ft_read_buffer(int fd, char *buffer, char **p_remainder, char *line
  * @param line Pointer to store the read line.
  * @return The read line.
  */
-static char	*ft_read_remainder(char *temp, char *buffer, char **p_remainder, char *line, t_gc **gc)
+static char	*ft_read_remainder(char *temp, t_gnl *gnl, char **p_remainder,
+	t_gc **gc)
 {
 	char	*new_remainder;
 
-	line = ft_substr_gnl(*p_remainder, 0, temp - *p_remainder + 1, gc);
+	gnl->line = ft_substr_gnl(*p_remainder, 0, temp - *p_remainder + 1, gc);
 	new_remainder = ft_substr_gnl(temp, 1, ft_strlen(temp), gc);
-	ft_free_multiple(gc, 2, *p_remainder, buffer);
+	ft_free_multiple(gc, 2, *p_remainder, gnl->buffer);
 	*p_remainder = new_remainder;
-	return (line);
+	return (gnl->line);
 }
 
 /**
@@ -97,27 +98,26 @@ static char	*ft_read_remainder(char *temp, char *buffer, char **p_remainder, cha
 char	*get_next_line(int fd, t_gc **gc)
 {
 	static char	*remainder = NULL;
-	char		*line;
-	char		*buffer;
 	char		*temp;
+	t_gnl		gnl;
 
-	line = NULL;
-	buffer = gc_malloc((BUFFER_SIZE + 1) * sizeof(char), gc);
-	if (buffer == NULL || fd < 0 || BUFFER_SIZE <= 0)
+	gnl.line = NULL;
+	gnl.buffer = gc_malloc((BUFFER_SIZE + 1) * sizeof(char), gc);
+	if (gnl.buffer == NULL || fd < 0 || BUFFER_SIZE <= 0)
 	{
-		gc_free_ptr(gc, buffer);
+		gc_free_ptr(gc, gnl.buffer);
 		return (NULL);
 	}
 	if (remainder != NULL)
 	{
 		temp = ft_strchr(remainder, '\n');
 		if (temp != NULL)
-			return (ft_read_remainder(temp, buffer, &remainder, line, gc));
-		line = ft_strjoin_gnl("", remainder, gc);
+			return (ft_read_remainder(temp, &gnl, &remainder, gc));
+		gnl.line = ft_strjoin_gnl("", remainder, gc);
 		gc_free_ptr(gc, remainder);
 		remainder = NULL;
 	}
-	line = ft_read_buffer(fd, buffer, &remainder, line, gc);
-	gc_free_ptr(gc, buffer);
-	return (line);
+	gnl.line = ft_read_buffer(fd, &gnl, &remainder, gc);
+	gc_free_ptr(gc, gnl.buffer);
+	return (gnl.line);
 }

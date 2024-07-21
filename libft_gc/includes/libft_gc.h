@@ -6,7 +6,7 @@
 /*   By: jlefonde <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 11:43:46 by jlefonde          #+#    #+#             */
-/*   Updated: 2024/07/21 14:30:29 by jlefonde         ###   ########.fr       */
+/*   Updated: 2024/07/21 14:38:28 by jlefonde         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -125,6 +125,12 @@ int					ft_fprintf(int fd, const char *format, ...);
 #  ifndef FD_MAX
 #   define FD_MAX 4096
 #  endif
+
+typedef struct s_gnl
+{
+	char *line;
+	char *buffer;
+}				t_gnl;
 
 char	*ft_substr_gnl(char const *s, unsigned int start, size_t len, t_gc **gc);
 char	*ft_strjoin_gnl(const char *s1, const char *s2, t_gc **gc);
