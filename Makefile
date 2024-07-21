@@ -61,7 +61,6 @@ all: ${NAME}
 
 clean:
 	@make clean -C ./libft_gc
-	#@make clean -C ./minilibx
 	${RM} -rf ${OBJECTS_DIR}
 
 fclean: clean
@@ -72,7 +71,7 @@ re: fclean all
 
 mlx:
 	@mkdir -p minilibx
-	@wget -O minilibx/minilibx-linux.tgz https://cdn.intra.42.fr/document/document/24023/minilibx-linux.tgz
+	@wget -O minilibx/minilibx-linux.tgz https://cdn.intra.42.fr/document/document/25926/minilibx-linux.tgz
 	@tar -xzvf minilibx/minilibx-linux.tgz -C minilibx/ --strip-components=1
 	${RM} -rf minilibx/minilibx-linux.tgz
 
