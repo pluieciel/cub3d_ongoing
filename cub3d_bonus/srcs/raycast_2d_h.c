@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   raycast_2d_h.c                                      :+:      :+:    :+:   */
+/*   raycast_2d_h.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jlefonde <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: jlefonde <jlefonde@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/18 15:09:45 by jlefonde          #+#    #+#             */
-/*   Updated: 2024/07/20 17:07:59 by jlefonde         ###   ########.fr       */
+/*   Updated: 2024/07/22 09:22:02 by jlefonde         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,11 +14,11 @@
 
 static float	cast_ray(t_data *g, float x, float y, bool type)
 {
-	int		range;
+	int	range;
 
 	range = 0;
-	while (range < RAYCAST_RANGE && g->rc_h.x / B_SIZE > 0
-		&& g->rc_h.x / B_SIZE < g->map_w)
+	while (range < RAYCAST_RANGE && g->rc_h.x / B_SIZE > 0 && g->rc_h.x
+		/ B_SIZE < g->map_w)
 	{
 		g->rc_h.map_y = (int)g->rc_h.y / B_SIZE - (y < 0);
 		g->rc_h.map_x = (int)g->rc_h.x / B_SIZE;
@@ -43,8 +43,7 @@ float	raycast_2d_h(t_data *g, float x, float y, bool type)
 	else if (y > 0)
 	{
 		g->rc_h.y = g->player.y + B_SIZE - g->player.y % B_SIZE;
-		g->rc_h.x = g->player.x
-			+ (B_SIZE - g->player.y % B_SIZE) * x / y;
+		g->rc_h.x = g->player.x + (B_SIZE - g->player.y % B_SIZE) * x / y;
 		g->rc_h.dir = 1;
 	}
 	else

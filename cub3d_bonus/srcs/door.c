@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   door.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jlefonde <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: jlefonde <jlefonde@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/18 15:08:02 by jlefonde          #+#    #+#             */
-/*   Updated: 2024/07/21 17:22:28 by jlefonde         ###   ########.fr       */
+/*   Updated: 2024/07/22 09:24:30 by jlefonde         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,9 @@ static void	add_new_door(t_data *game)
 	game->coll_door_h = 0;
 	game->coll_door_v = 0;
 	check_collision(game, game->player.dir_x, game->player.dir_y, OPEN_DIS);
-	if ((game->coll_door_h || game->coll_door_v) && (game->map[(int)game->rc->map_y][(int)game->rc->map_x] == 2 || game->map[(int)game->rc->map_y][(int)game->rc->map_x] == 3))
+	if ((game->coll_door_h || game->coll_door_v)
+		&& (game->map[(int)game->rc->map_y][(int)game->rc->map_x] == 2
+		|| game->map[(int)game->rc->map_y][(int)game->rc->map_x] == 3))
 	{
 		new = gc_malloc(sizeof(t_door), &game->gc);
 		new->next = game->doors;
@@ -37,14 +39,16 @@ static void	remove_door(t_data *game)
 
 	temp = game->doors;
 	prev = NULL;
-	while (temp && (game->map[temp->y][temp->x] <= 2 || game->map[temp->y][temp->x] >= 3))
+	while (temp && (game->map[temp->y][temp->x] <= 2
+		|| game->map[temp->y][temp->x] >= 3))
 	{
 		game->doors = temp->next;
 		temp = game->doors;
 	}
 	while (temp)
 	{
-		while (temp && (game->map[temp->y][temp->x] != 2 && game->map[temp->y][temp->x] != 3))
+		while (temp && (game->map[temp->y][temp->x] != 2
+			&& game->map[temp->y][temp->x] != 3))
 		{
 			prev = temp;
 			temp = temp->next;

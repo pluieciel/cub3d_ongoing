@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   check_map.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jlefonde <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: jlefonde <jlefonde@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/18 15:07:41 by jlefonde          #+#    #+#             */
-/*   Updated: 2024/07/21 15:14:35 by jlefonde         ###   ########.fr       */
+/*   Updated: 2024/07/22 09:18:01 by jlefonde         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,12 +14,14 @@
 
 static int	check_pos(t_data *game, int x, int y)
 {
-	if (x < 0 || y < 0 || x >= game->map_w || y >= game->map_h || game->map[y][x] == -1)
+	if (x < 0 || y < 0 || x >= game->map_w || y >= game->map_h
+		|| game->map[y][x] == -1)
 		return (0);
 	if (game->visited[y][x] || game->map[y][x] == 1)
 		return (1);
 	game->visited[y][x] = 1;
-	return (check_pos(game, x + 1, y) && check_pos(game, x - 1, y) && check_pos(game, x, y + 1) && check_pos(game, x, y - 1));
+	return (check_pos(game, x + 1, y) && check_pos(game, x - 1, y)
+		&& check_pos(game, x, y + 1) && check_pos(game, x, y - 1));
 }
 
 int	isvalid_map(t_data *game)

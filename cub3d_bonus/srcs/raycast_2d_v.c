@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   raycast_2d_v.c                                      :+:      :+:    :+:   */
+/*   raycast_2d_v.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jlefonde <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: jlefonde <jlefonde@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/18 15:09:45 by jlefonde          #+#    #+#             */
-/*   Updated: 2024/07/20 17:07:38 by jlefonde         ###   ########.fr       */
+/*   Updated: 2024/07/22 09:22:14 by jlefonde         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,11 +14,11 @@
 
 static float	cast_ray(t_data *g, float x, float y, bool type)
 {
-	int		range;
+	int	range;
 
 	range = 0;
-	while (range < RAYCAST_RANGE && g->rc_v.y / B_SIZE > 0
-		&& g->rc_v.y / B_SIZE < g->map_h)
+	while (range < RAYCAST_RANGE && g->rc_v.y / B_SIZE > 0 && g->rc_v.y
+		/ B_SIZE < g->map_h)
 	{
 		g->rc_v.map_y = (int)g->rc_v.y / B_SIZE;
 		g->rc_v.map_x = (int)g->rc_v.x / B_SIZE - (x < 0);

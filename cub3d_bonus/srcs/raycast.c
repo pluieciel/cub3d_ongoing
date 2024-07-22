@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   raycast.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jlefonde <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: jlefonde <jlefonde@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/20 17:02:56 by jlefonde          #+#    #+#             */
-/*   Updated: 2024/07/21 17:22:28 by jlefonde         ###   ########.fr       */
+/*   Updated: 2024/07/22 09:20:24 by jlefonde         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,8 @@
 
 bool	is_collider(t_data *game, int x, int y, bool type)
 {
-	return (game->map[y][x] == 1 || game->map[y][x] == 2 || (type && game->map[y][x] == 3));
+	return (game->map[y][x] == 1 || game->map[y][x] == 2 || (type
+			&& game->map[y][x] == 3));
 }
 
 void	reset_ray(t_raycast *ray, t_res_rc *rc)
@@ -31,7 +32,8 @@ void	add_door(t_raycast *ray, t_res_rc *rc, t_res_rc *doors, int *num_doors)
 	doors[*num_doors].x = rc->x;
 	doors[*num_doors].y = rc->y;
 	doors[*num_doors].z = rc->z;
-	doors[*num_doors].dis = distance(rc->x, rc->y, ray->g->player.x, ray->g->player.y);
+	doors[*num_doors].dis = distance(rc->x, rc->y, ray->g->player.x,
+			ray->g->player.y);
 	doors[*num_doors].dir = rc->dir;
 	doors[*num_doors].map_x = rc->map_x;
 	doors[*num_doors].map_y = rc->map_y;

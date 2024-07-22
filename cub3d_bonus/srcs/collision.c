@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   collision.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jlefonde <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: jlefonde <jlefonde@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/18 15:07:45 by jlefonde          #+#    #+#             */
-/*   Updated: 2024/07/21 17:22:28 by jlefonde         ###   ########.fr       */
+/*   Updated: 2024/07/22 09:19:47 by jlefonde         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,8 @@ void	check_collisions(t_data *game, float dir_x, float dir_y, float scale)
 	check_collision(game, dir_x, dir_y, COLL_DIS);
 	check_collision(game, dir_y, -dir_x, COLL_DIS);
 	check_collision(game, -dir_y, dir_x, COLL_DIS);
-	check_collision(game, scale * (dir_x - dir_y), scale * (dir_x + dir_y), COLL_DIS);
-	check_collision(game, scale * (dir_x + dir_y), scale * (-dir_x + dir_y), COLL_DIS);
+	check_collision(game, scale * (dir_x - dir_y), scale * (dir_x + dir_y),
+		COLL_DIS);
+	check_collision(game, scale * (dir_x + dir_y), scale * (-dir_x + dir_y),
+		COLL_DIS);
 }

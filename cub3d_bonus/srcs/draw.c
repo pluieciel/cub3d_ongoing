@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   draw.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jlefonde <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: jlefonde <jlefonde@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/18 15:08:11 by jlefonde          #+#    #+#             */
-/*   Updated: 2024/07/21 17:22:28 by jlefonde         ###   ########.fr       */
+/*   Updated: 2024/07/22 09:27:25 by jlefonde         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,15 +44,18 @@ static void	draw_floor(t_raycast *ray, int row, int col)
 	float	shadow;
 	t_color	color;
 
-	ray->rc->x = (ray->rc->x - ray->g->player.x) * (-32 - ray->g->player.z) / ray->rc->z + ray->g->player.x;
-	ray->rc->y = (ray->rc->y - ray->g->player.y) * (-32 - ray->g->player.z) / ray->rc->z + ray->g->player.y;
+	ray->rc->x = (ray->rc->x - ray->g->player.x) * (-32 - ray->g->player.z)
+		/ ray->rc->z + ray->g->player.x;
+	ray->rc->y = (ray->rc->y - ray->g->player.y) * (-32 - ray->g->player.z)
+		/ ray->rc->z + ray->g->player.y;
 	c = fmod(ray->rc->x, B_SIZE) / B_SIZE;
 	c += (c < 0);
 	c = round((1 - c) * (ray->g->img_floor.w - 1));
 	r = fmod(ray->rc->y, B_SIZE) / B_SIZE;
 	r += (r < 0);
 	r = round((1 - r) * (ray->g->img_floor.h - 1));
-	ray->rc->dis = distance(ray->rc->x, ray->rc->y, ray->g->player.x, ray->g->player.y);
+	ray->rc->dis = distance(ray->rc->x, ray->rc->y, ray->g->player.x,
+			ray->g->player.y);
 	shadow = 1.0 - (fmin(ray->rc->dis, 8 * B_SIZE) / (8 * B_SIZE));
 	color = int_to_rgb(get_image_color(&ray->g->img_floor, r, c));
 	shade_color(&color, shadow);
@@ -69,12 +72,13 @@ static void	draw_sky(t_raycast *ray, int row, int col)
 
 	temp_x = ray->rc->x - ray->g->player.x;
 	temp_y = ray->rc->y - ray->g->player.y;
-	r = ray->rc->z / sqrt(temp_x * temp_x + temp_y * temp_y + ray->rc->z * ray->rc->z);
+	r = ray->rc->z / sqrt(temp_x * temp_x + temp_y * temp_y + ray->rc->z
+			* ray->rc->z);
 	r = fmin(1.0, r);
 	r = 1.0 - asin(r) / (M_PI / 2);
 	if (temp_x != 0)
-		c = (atan(temp_y / temp_x) + M_PI * (temp_x < 0) + (M_PI / 2))
-			/ (M_PI * 2);
+		c = (atan(temp_y / temp_x) + M_PI * (temp_x < 0) + (M_PI / 2)) / (M_PI
+				* 2);
 	else
 		c = 1.0 / 4 + 1.0 / 2 * (temp_y < 0);
 	r *= ray->g->img_sky.h;
@@ -85,13 +89,18 @@ static void	draw_sky(t_raycast *ray, int row, int col)
 
 static void	draw_door(t_raycast *ray, int row, int col)
 {
+	float	door_h_dis;
+	float	door_v_dis;
+
+	door_h_dis = ray->doors_h[ray->num_doors_h].dis;
+	door_v_dis = ray->doors_v[ray->num_doors_v].dis;
 	while (ray->num_doors_h >= 0 || ray->num_doors_v >= 0)
 	{
 		if (ray->num_doors_h < 0)
 			draw_door_v(ray, col, row);
 		else if (ray->num_doors_v < 0)
 			draw_door_h(ray, col, row);
-		else if (ray->doors_h[ray->num_doors_h].dis < ray->doors_v[ray->num_doors_v].dis)
+		else if (door_h_dis < door_v_dis)
 			draw_door_v(ray, col, row);
 		else
 			draw_door_h(ray, col, row);
@@ -101,8 +110,8 @@ static void	draw_door(t_raycast *ray, int row, int col)
 void	draw_pixel(t_raycast *ray, int col, int row)
 {
 	ray->nearest_wall_dis = RAYCAST_RANGE * B_SIZE;
-	if (ray->rc->dir != 0 && ray->rc->z + ray->g->player.z >= -32
-		&& ray->rc->z + ray->g->player.z <= 32)
+	if (ray->rc->dir != 0 && ray->rc->z + ray->g->player.z >= -32 && ray->rc->z
+		+ ray->g->player.z <= 32)
 		draw_wall(ray, row, col);
 	else if (ray->rc->z + ray->g->player.z < -32)
 		draw_floor(ray, row, col);

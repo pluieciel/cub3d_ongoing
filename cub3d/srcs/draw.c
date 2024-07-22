@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   draw.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jlefonde <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: jlefonde <jlefonde@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/18 15:08:11 by jlefonde          #+#    #+#             */
-/*   Updated: 2024/07/21 00:47:26 by jlefonde         ###   ########.fr       */
+/*   Updated: 2024/07/22 09:14:17 by jlefonde         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,12 +42,12 @@ static void	init_ray(t_data *g, t_raycast *ray)
 	ray->g = g;
 	ray->v_down = &g->player.v_down;
 	ray->v_right = &g->player.v_right;
-	ray->p.x = g->player.dir3d.x * g->dis_p_s - g->player.v_down.x
-		* WIN_H / 2 - g->player.v_right.x * WIN_W / 2;
-	ray->p.y = g->player.dir3d.y * g->dis_p_s - g->player.v_down.y
-		* WIN_H / 2 - g->player.v_right.y * WIN_W / 2;
-	ray->p.z = g->player.dir3d.z * g->dis_p_s - g->player.v_down.z
-		* WIN_H / 2 - g->player.v_right.z * WIN_W / 2;
+	ray->p.x = g->player.dir3d.x * g->dis_p_s - g->player.v_down.x * WIN_H / 2
+		- g->player.v_right.x * WIN_W / 2;
+	ray->p.y = g->player.dir3d.y * g->dis_p_s - g->player.v_down.y * WIN_H / 2
+		- g->player.v_right.y * WIN_W / 2;
+	ray->p.z = g->player.dir3d.z * g->dis_p_s - g->player.v_down.z * WIN_H / 2
+		- g->player.v_right.z * WIN_W / 2;
 }
 
 void	draw_textures(t_data *g)
@@ -84,14 +84,17 @@ void	draw_pixel(t_raycast *ray, int col, int row)
 	float	shadow;
 
 	ray->nearest_wall_dis = RAYCAST_RANGE * B_SIZE;
-	if (ray->rc->dir != 0 && ray->rc->z + ray->g->player.z >= -32
-		&& ray->rc->z + ray->g->player.z <= 32)
+	if (ray->rc->dir != 0 && ray->rc->z + ray->g->player.z >= -32 && ray->rc->z
+		+ ray->g->player.z <= 32)
 		draw_wall(ray, row, col);
 	else if (ray->rc->z + ray->g->player.z < -32)
 	{
-		ray->rc->x = (ray->rc->x - ray->g->player.x) * (-32 - ray->g->player.z) / ray->rc->z + ray->g->player.x;
-		ray->rc->y = (ray->rc->y - ray->g->player.y) * (-32 - ray->g->player.z) / ray->rc->z + ray->g->player.y;
-		ray->rc->dis = distance(ray->rc->x, ray->rc->y, ray->g->player.x, ray->g->player.y);
+		ray->rc->x = (ray->rc->x - ray->g->player.x) * (-32 - ray->g->player.z)
+			/ ray->rc->z + ray->g->player.x;
+		ray->rc->y = (ray->rc->y - ray->g->player.y) * (-32 - ray->g->player.z)
+			/ ray->rc->z + ray->g->player.y;
+		ray->rc->dis = distance(ray->rc->x, ray->rc->y, ray->g->player.x,
+				ray->g->player.y);
 		shadow = 1.0 - (fmin(ray->rc->dis, 8 * B_SIZE) / (8 * B_SIZE));
 		color = int_to_rgb(ray->g->floor_color);
 		shade_color(&color, shadow);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minimap.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jlefonde <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: jlefonde <jlefonde@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/18 15:09:14 by jlefonde          #+#    #+#             */
-/*   Updated: 2024/07/21 17:22:28 by jlefonde         ###   ########.fr       */
+/*   Updated: 2024/07/22 09:19:33 by jlefonde         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,12 +27,14 @@ static void	fill_block(t_data *game, t_point *p1, t_point *p2, t_color hud_c)
 	else if (game->map[p2->y][p2->x] == 3)
 	{
 		set_rgb(0, 0x80, 0, &c2);
-		set_image_color(&game->img, p1->x, p1->y, rgb_to_int(*(mix_color(&c, c2, 1, 1))));
+		set_image_color(&game->img, p1->x, p1->y, rgb_to_int(*(mix_color(&c, c2,
+						1, 1))));
 	}
 	else if (game->map[p2->y][p2->x] >= 2)
 	{
 		set_rgb(0x80, 0, 0, &c2);
-		set_image_color(&game->img, p1->x, p1->y, rgb_to_int(*(mix_color(&c, c2, 1, 1))));
+		set_image_color(&game->img, p1->x, p1->y, rgb_to_int(*(mix_color(&c, c2,
+						1, 1))));
 	}
 }
 
@@ -45,10 +47,14 @@ static void	draw_block(t_data *game, int i, int j, t_color hud_c)
 
 	x = ((j - MM_POS_X) * B_SIZE / MM_FACTOR + game->player.x) / B_SIZE;
 	y = ((i - MM_POS_Y) * B_SIZE / MM_FACTOR + game->player.y) / B_SIZE;
-	if (x >= 0 && y >= 0 && x < game->map_w && y < game->map_h && game->map[y][x] >= 1 && distance(i, j, MM_POS_Y, MM_POS_X) < MM_RADIUS)
+	if (x >= 0 && y >= 0 && x < game->map_w && y < game->map_h
+		&& game->map[y][x] >= 1 && distance(i, j, MM_POS_Y,
+			MM_POS_X) < MM_RADIUS)
 	{
-		p1.y = round(-(j - MM_POS_X) * game->player.dir_y + (i - MM_POS_Y) * game->player.dir_x) + MM_POS_X;
-		p1.x = round((j - MM_POS_X) * -game->player.dir_x - (i - MM_POS_Y) * game->player.dir_y) + MM_POS_Y;
+		p1.y = round(-(j - MM_POS_X) * game->player.dir_y + (i - MM_POS_Y)
+				* game->player.dir_x) + MM_POS_X;
+		p1.x = round((j - MM_POS_X) * -game->player.dir_x - (i - MM_POS_Y)
+				* game->player.dir_y) + MM_POS_Y;
 		p2.x = x;
 		p2.y = y;
 		fill_block(game, &p1, &p2, hud_c);
@@ -64,10 +70,13 @@ static void	draw_background(t_data *game, int i, int j, float angle)
 	if (distance(i, j, MM_POS_X, MM_POS_Y) < MM_RADIUS)
 	{
 		c = int_to_rgb(get_image_color(&game->img, j, i));
-		if (MM_POS_Y > j && atan(1.0 * abs(i - MM_POS_X) / (MM_POS_Y - j)) < angle)
-			set_image_color(&game->img, j, i, rgb_to_int(*mix_color(&c, hud_c, 1, 1)));
+		if (MM_POS_Y > j && atan(1.0 * abs(i - MM_POS_X) / (MM_POS_Y
+					- j)) < angle)
+			set_image_color(&game->img, j, i, rgb_to_int(*mix_color(&c, hud_c,
+						1, 1)));
 		else
-			set_image_color(&game->img, j, i, rgb_to_int(*mix_color(&c, hud_c, 2, 1)));
+			set_image_color(&game->img, j, i, rgb_to_int(*mix_color(&c, hud_c,
+						2, 1)));
 	}
 }
 

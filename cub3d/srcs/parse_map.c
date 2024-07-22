@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse_map.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jlefonde <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: jlefonde <jlefonde@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/18 15:09:24 by jlefonde          #+#    #+#             */
-/*   Updated: 2024/07/21 15:15:51 by jlefonde         ###   ########.fr       */
+/*   Updated: 2024/07/22 09:16:18 by jlefonde         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,8 +75,8 @@ static void	fill_map(t_data *game, int fd, char *line)
 
 static void	init_map(t_data *game, int fd, char *line)
 {
-	int		i;
-	int		j;
+	int	i;
+	int	j;
 
 	line = get_next_line(fd, &game->gc);
 	game->map = gc_malloc(sizeof(float *) * game->map_h, &game->gc);
