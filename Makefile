@@ -70,7 +70,7 @@ BONUS_SOURCES = animation_utils.c \
 MANDATORY_OBJECTS = $(addprefix $(MANDATORY_DIR)/$(OBJECTS_DIR)/, $(MANDATORY_SOURCES:.c=.o))
 BONUS_OBJECTS = $(addprefix $(BONUS_DIR)/$(OBJECTS_DIR)/, $(BONUS_SOURCES:.c=.o))
 
-CFLAGS = -Wall -Wextra -Werror -g -Ofast -lpthread
+CFLAGS = -Wall -Wextra -Werror -g -Ofast
 LDFLAGS = -L./libft_gc -L./minilibx -lft_gc -lmlx_Linux -lXext -lX11 -lm
 
 $(MANDATORY_DIR)/$(OBJECTS_DIR)/%.o: $(MANDATORY_DIR)/$(SOURCES_DIR)/%.c
@@ -89,7 +89,7 @@ $(NAME): $(MANDATORY_OBJECTS)
 $(BONUS_NAME): $(BONUS_OBJECTS)
 	make bonus -C ./libft_gc
 	make -C ./minilibx
-	$(CC) $(CFLAGS) -I$(BONUS_DIR)/$(HEADERS_DIR) $(BONUS_OBJECTS) -o $@ $(LDFLAGS)
+	$(CC) $(CFLAGS) -lpthread -I$(BONUS_DIR)/$(HEADERS_DIR) $(BONUS_OBJECTS) -o $@ $(LDFLAGS)
 
 bonus: $(BONUS_NAME)
 
