@@ -6,7 +6,7 @@
 /*   By: jlefonde <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/18 08:35:36 by jlefonde          #+#    #+#             */
-/*   Updated: 2024/06/26 09:12:43 by jlefonde         ###   ########.fr       */
+/*   Updated: 2024/07/21 14:21:35 by jlefonde         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@
  * @return The substring or NULL if the allocation fails.
  *
  */
-char	*ft_substr_gnl(char const *s, unsigned int start, size_t len)
+char	*ft_substr_gnl(char const *s, unsigned int start, size_t len, t_gc **gc)
 {
 	char	*substr;
 	size_t	i;
@@ -30,7 +30,7 @@ char	*ft_substr_gnl(char const *s, unsigned int start, size_t len)
 		return (NULL);
 	if (len > ft_strlen(s) - start)
 		len = ft_strlen(s) - start;
-	substr = (char *)malloc((len + 1) * sizeof(char));
+	substr = gc_malloc((len + 1) * sizeof(char), gc);
 	if (substr == NULL)
 		return (NULL);
 	i = 0;
@@ -41,7 +41,7 @@ char	*ft_substr_gnl(char const *s, unsigned int start, size_t len)
 	}
 	if (i == 0)
 	{
-		free(substr);
+		gc_free_ptr(gc, substr);
 		return (NULL);
 	}
 	substr[i] = '\0';
@@ -55,7 +55,7 @@ char	*ft_substr_gnl(char const *s, unsigned int start, size_t len)
  * @param s2 The suffix string.
  * @return The new string or NULL if the allocation fails.
  */
-char	*ft_strjoin_gnl(const char *s1, const char *s2)
+char	*ft_strjoin_gnl(const char *s1, const char *s2, t_gc **gc)
 {
 	char	*s3;
 	size_t	s1_len;
@@ -69,7 +69,7 @@ char	*ft_strjoin_gnl(const char *s1, const char *s2)
 		s2_len = ft_strlen(s2);
 	else
 		s2_len = 0;
-	s3 = (char *)malloc(s1_len + s2_len + 1);
+	s3 = gc_malloc(s1_len + s2_len + 1, gc);
 	if (s3 == NULL)
 		return (NULL);
 	if (s1 != NULL)

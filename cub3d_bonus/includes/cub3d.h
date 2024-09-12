@@ -1,0 +1,320 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   cub3d.h                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jlefonde <jlefonde@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/07/18 15:10:20 by jlefonde          #+#    #+#             */
+/*   Updated: 2024/07/22 09:18:16 by jlefonde         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#ifndef CUB3D_H
+# define CUB3D_H
+
+# include "../../libft_gc/includes/libft_gc.h"
+# include "../../minilibx/mlx.h"
+# include "../../minilibx/mlx_int.h"
+# include <X11/X.h>
+# include <dirent.h>
+# include <fcntl.h>
+# include <limits.h>
+# include <math.h>
+# include <pthread.h>
+# include <stdarg.h>
+# include <stdbool.h>
+# include <stdio.h>
+# include <stdlib.h>
+# include <string.h>
+# include <sys/time.h>
+# include <unistd.h>
+
+# define WIN_W 1280
+# define WIN_H 720
+# define FPS 60
+# define B_SIZE 64
+# define ROT_SPEED 0.1
+# define MM_FACTOR 16
+# define MM_RADIUS 100
+# define MM_POS_X 1160
+# define MM_POS_Y 600
+# define MM_RANGE 8
+# define DIS_P_S 640
+# define RAYCAST_RANGE 20
+# define ELEM_N 8
+# define COLL_DIS 20
+# define OPEN_DIS 80
+# define SPEED 2
+# define M_PI 3.14159265358979323846
+# define NUM_THREADS 8
+# define TRANSPARENT_COLOR 0xFF000000
+# define MOUSE_THRESHOLD 4
+# define GRAVITY 1500
+# define JUMP_VELOCITY 250
+# define HUD_DIR "resources/hud"
+
+typedef struct s_color
+{
+	unsigned int	r;
+	unsigned int	g;
+	unsigned int	b;
+}					t_color;
+
+typedef struct s_animation
+{
+	t_list			*frames;
+	t_list			*head;
+}					t_animation;
+
+typedef enum e_state
+{
+	IDLE,
+	DRAW,
+	ATTACK,
+	ATTACK_HIT,
+	SHOOT,
+	HOLSTER,
+	NONE
+}					t_state;
+
+typedef struct s_crowbar
+{
+	bool			equiped;
+	bool			completed;
+	t_animation		draw;
+	t_animation		attack;
+	t_animation		attack_hit;
+	t_animation		holster;
+	t_state			state;
+}					t_crowbar;
+
+typedef struct s_gun
+{
+	bool			equiped;
+	bool			completed;
+	t_animation		draw;
+	t_animation		shoot;
+	t_animation		holster;
+	t_state			state;
+}					t_gun;
+
+typedef struct s_point3d
+{
+	float			x;
+	float			y;
+	float			z;
+}					t_point3d;
+
+typedef struct s_point
+{
+	int				x;
+	int				y;
+}					t_point;
+
+typedef struct s_player
+{
+	int				speed;
+	int				x;
+	int				y;
+	float			z;
+	float			dir_x;
+	float			dir_y;
+	float			jump_velocity;
+	t_point3d		v_right;
+	t_point3d		v_down;
+	t_point3d		dir3d;
+}					t_player;
+
+typedef struct s_key
+{
+	bool			w;
+	bool			a;
+	bool			s;
+	bool			d;
+	bool			e;
+	bool			left;
+	bool			right;
+	bool			up;
+	bool			down;
+	bool			one;
+	bool			two;
+	bool			three;
+	bool			ctrl;
+	bool			shift;
+	bool			space;
+}					t_key;
+
+typedef struct s_image
+{
+	void			*ptr;
+	char			*addr;
+	int				h;
+	int				w;
+	int				bpp;
+	int				endian;
+	int				line_len;
+}					t_image;
+
+typedef struct s_hud
+{
+	t_image			*img;
+	char			name[256];
+}					t_hud;
+
+typedef struct s_door
+{
+	int				x;
+	int				y;
+	bool			closed;
+	struct s_door	*next;
+}					t_door;
+
+typedef struct s_res_rc
+{
+	float			x;
+	float			y;
+	float			z;
+	float			map_x;
+	float			map_y;
+	float			dis;
+	float			dir;
+}					t_res_rc;
+
+typedef struct s_data
+{
+	void			*mlx_ptr;
+	void			*win_ptr;
+	char			**visited;
+	float			**map;
+	int				map_w;
+	int				map_h;
+	int				map_index;
+	int				elem_n;
+	int				coll_wall_h;
+	int				coll_wall_v;
+	int				coll_door_h;
+	int				coll_door_v;
+	int				dis_p_s;
+	unsigned int	hud_color;
+	bool			mouse_centered;
+	bool			left_click;
+	t_player		player;
+	t_key			key;
+	t_gc			*gc;
+	t_image			img;
+	t_image			img_sky;
+	t_image			img_wall_no;
+	t_image			img_wall_so;
+	t_image			img_wall_ea;
+	t_image			img_wall_we;
+	t_image			img_floor;
+	t_image			img_door;
+	t_list			*hud_elem;
+	t_res_rc		rc_h;
+	t_res_rc		rc_v;
+	t_res_rc		*rc;
+	t_door			*doors;
+	t_crowbar		crowbar;
+	t_gun			handgun;
+	t_gun			shotgun;
+	__uint64_t		time;
+	__uint64_t		animation_time;
+	__uint64_t		timestep;
+}					t_data;
+
+typedef struct s_raycast
+{
+	int				col_start;
+	int				col_end;
+	int				num_doors_h;
+	int				num_doors_v;
+	t_res_rc		doors_h[20];
+	t_res_rc		doors_v[20];
+	float			nearest_wall_dis;
+	t_data			*g;
+	t_point3d		p;
+	t_point3d		*v_down;
+	t_point3d		*v_right;
+	t_res_rc		rc_h;
+	t_res_rc		rc_v;
+	t_res_rc		*rc;
+	pthread_t		thread;
+}					t_raycast;
+
+bool				is_collider(t_data *game, int x, int y, bool type);
+float				distance(float x1, float y1, float x2, float y2);
+float				raycast_2d_h(t_data *g, float x, float y, bool type);
+float				raycast_2d_v(t_data *g, float x, float y, bool type);
+float				raycast_3d_h(t_raycast *r);
+float				raycast_3d_v(t_raycast *r);
+int					close_window(t_data *game);
+int					handle_animation_state(t_data *game, t_animation *animation,
+						__uint64_t delay);
+int					handle_key_press(int key, t_data *game);
+int					handle_key_release(int key, t_data *game);
+int					isvalid_map(t_data *game);
+int					render_hud_image(t_data *game, char *name, int x, int y);
+int					render(t_data *game);
+t_color				get_wall_color(t_raycast *ray, t_image *img, float pos);
+t_color				int_to_rgb(unsigned int color);
+t_color				*mix_color(t_color *c1, t_color c2, int base, int blend);
+t_image				*get_hud_image(t_data *game, char *name);
+__uint64_t			get_timestamp_ms(void);
+unsigned int		get_image_color(t_image *img, int row, int col);
+unsigned int		rgb_to_int(t_color c);
+void				add_door(t_raycast *ray, t_res_rc *rc, t_res_rc *doors,
+						int *num_doors);
+void				check_collisions(t_data *game, float dir_x, float dir_y,
+						float scale);
+void				check_collision(t_data *game, float dir_x, float dir_y,
+						int coll_dis);
+void				check_file(t_data *game, char *path, char *ext);
+void				destroy_animations(t_data *game);
+void				destroy_hud(t_data *game);
+void				destroy_images(t_data *game);
+void				draw_door_h(t_raycast *ray, int col, int row);
+void				draw_door_v(t_raycast *ray, int col, int row);
+void				draw_hud(t_data *game);
+void				draw_minimap(t_data *game);
+void				draw_pixel(t_raycast *ray, int col, int row);
+void				draw_textures(t_data *g);
+void				exit_on_error(t_data *game, char *error_msg);
+void				get_vector_down(t_data *g, t_point3d *v_right,
+						t_point3d *v_down);
+void				get_vector_right(t_data *g, t_point3d *v_right);
+void				handle_special_keys(int key, t_data *game);
+void				hook(t_data *game);
+void				init_animations(t_data *game);
+void				init_crowbar(t_data *game);
+void				init_handgun(t_data *game);
+void				init_hud(t_data *game);
+void				init_shotgun(t_data *game);
+void				init(t_data *game);
+void				move_player(t_data *game, float dir_x, float dir_y);
+void				parse_elements(t_data *game, char *filename);
+void				parse_map(t_data *game, char *filename);
+void				raycast_2d(t_data *game, float x, float y, bool type);
+void				raycast_3d(t_raycast *ray);
+void				render_image(t_data *game, t_image *img, int x, int y);
+void				*render_section(void *arg);
+void				reset_ray(t_raycast *ray, t_res_rc *rc);
+void				rotate_player(t_data *game, float dir_x, float dir_y,
+						t_point3d *dir3d);
+void				rotate_u(t_point3d *todo, t_point3d u, t_point3d v,
+						float angle);
+void				set_dir(t_data *game, char dir);
+void				set_image_color(t_image *img, int row, int col,
+						unsigned int color);
+void				set_image(t_data *game, t_image *img, char *path);
+void				set_rgb(unsigned int r, unsigned int g, unsigned int b,
+						t_color *c);
+void				shade_color(t_color *c, float shading);
+void				update_animation(t_data *game);
+void				update_crowbar_state(t_data *game);
+void				update_doors(t_data *game);
+void				update_handgun_state(t_data *game);
+void				update_player(t_data *game);
+void				update_shotgun_state(t_data *game);
+
+#endif
