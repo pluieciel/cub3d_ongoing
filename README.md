@@ -5,7 +5,7 @@ We implemented:
 - multi thread for faster render
 - static half sphere sky, rendered floor
 - meshed doors
-- jump/squat
+- jump/squat/sprint
 - zoom in/out
 - rotating minimap
 - switch of different weapons
