@@ -1,7 +1,7 @@
 My project in 42 Luxembourg, team with @jlefonde.
 
 We implemented:
-- real 3d raycasting (raycasting on each pixel of the screen, instead of raycasting on only one row)
+- real 3d raycasting (raycasting on each pixel of the screen, instead of raycasting on only one row. support look up/down, correctly handle any direction vector in 3d space)
 - multi thread for faster render
 - static half sphere sky, rendered floor
 - meshed doors
